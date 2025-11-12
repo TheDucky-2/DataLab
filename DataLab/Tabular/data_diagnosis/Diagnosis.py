@@ -1,8 +1,6 @@
 from ..data_loader import load_tabular
 from ..computations import Statistics
 
-from ..utils import ProjectHelpers
-
 from pathlib import Path
 
 import pandas as pd
@@ -43,7 +41,6 @@ class Diagnosis:
         self.df = df
         self.columns = [column for column in columns if column in df.columns]
 
-        ProjectHelpers().print_temporarily(f'Diagnosis initialized with columns: {self.columns}')
     
     def data_summary(self):
 
@@ -226,7 +223,7 @@ class Diagnosis:
                     Diagnosis(df).check_skewness()
         
         '''
-        print('Skewness in each column of the DataFrame')
+        print('\nSkewness in each column of the DataFrame')
         
         return self.df.skew()
 
