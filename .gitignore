@@ -30,7 +30,7 @@ env/
 *.ipynb
 
 # Unignoring the notebooks we DO want:
-!/DataLab Usage Guides/**/*.ipynb
+!/guides/**/*.ipynb
 
 # --------------------------
 # BUILD ARTIFACTS
