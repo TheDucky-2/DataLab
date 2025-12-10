@@ -134,7 +134,7 @@ Understand your dataset in minutes:
 
 - Duplicate detection
 
-- Numerical & Catgeorical Data diagnosis
+- Numerical & Categorical Data diagnosis
 
 **✔️ 3. Missingness Diagnosis and Visualization**
 
