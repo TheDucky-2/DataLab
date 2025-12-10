@@ -1,4 +1,4 @@
-# Core DataLab dependencies
+# Core datalab dependencies
 
 pandas>=2.0
 numpy>=1.24
@@ -8,7 +8,8 @@ scikit-learn>=1.3
 missingno>=0.5
 pyarrow>=14.0
 
-# Development / Notebook tools (optional but recommended)
+# Development / Notebook tools
+
 jupyterlab
 notebook
 ipython
