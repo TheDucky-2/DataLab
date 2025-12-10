@@ -4,7 +4,7 @@ A Friendly, Beginner-Focused Library for Understanding Data
 
 ## What is DataLab?
 
-DataLab v0.1 is a Python library designed to make data understanding, diagnosis, cleaning, and preprocessing simple, intuitive, and beginner-friendly — without sacrificing performance.
+DataLab v0.1 is a **Python** library designed to make data understanding, diagnosis, cleaning, and preprocessing simple, intuitive, and beginner-friendly — without sacrificing performance.
 
 It is built for:
 
@@ -46,11 +46,11 @@ This is an early development release focusing on the Tabular Data Package, inclu
 
 - Computation helpers
 
-- Matplotlib-based visualization (including Missingness viz)
+- **Matplotlib**-based visualization (including Missingness viz)
 
 - Detailed beginner friendly documentation + API usage guides + workflow notebooks
 
-Even in v0.1, DataLab already supports Pandas and partially Polars (internally used for performance in some methods).
+Even in v0.1, DataLab already supports **Pandas** and partially **Polars** (internally used for performance in some methods).
 
 ## Installation (Coming Soon)
 
@@ -138,7 +138,7 @@ Understand your dataset in minutes:
 
 **✔️ 3. Missingness Diagnosis and Visualization**
 
-Uses missingno internally to visualize:
+Uses **missingno** internally to visualize:
 
 - Missingness Stats
 
