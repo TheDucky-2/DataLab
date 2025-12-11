@@ -285,7 +285,9 @@ For questions, suggestions, feedbacks or issues related to **DataLab**, you can 
 
 ⚠️ Note:
 
-This is an early pre-release. However, we aim to respond within 72 hours.
+This is an early pre-release.
+
+However, we aim to respond within 72 hours.
 
 
 
