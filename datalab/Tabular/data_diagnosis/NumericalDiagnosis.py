@@ -34,17 +34,21 @@ class NumericalDiagnosis(Diagnosis):
         else:
             self.columns = self.df.columns
             
-    def check_sparsity(self, value: int|float) -> pd.Series:
+    def check_sparsity(self, value: int|float = 0) -> pd.Series:
         '''
         Checks the ratio of a specific number (usually 0) present in the selected column of the DataFrame
 
         Parameters:
-            df   :       pd.DataFrame, a pandas DataFrame
-            value:       int or float , an integer or a decimal number
+        -----------
+            df: pd.DataFrame
+                A pandas DataFrame
+
+            value: int or float
+                An integer or a decimal number
 
         Returns:
             pd.Series
-            A pandas Series of the columns passed in, along with the ratio of the value. 
+                A pandas Series of the columns passed in, along with the ratio that value appears in the Dataframe. 
             
         Usage Recommendation:
             1. Use this function only for Exploratory Data Analysis.  
@@ -54,9 +58,8 @@ class NumericalDiagnosis(Diagnosis):
         Considerations:
             Pass numeric values after converting datatypes to int or float, instead of using strings.
             
-
         >>> Example: 
-                    Input : NumericalCleaner(df).check_sparsity(0)
+                    Input : NumericalCleaner(df).check_sparsity()
                     Output: age                  0.000000
                             income               0.000000
                             expenses             0.000000
@@ -69,12 +72,11 @@ class NumericalDiagnosis(Diagnosis):
                             dtype: float64
         '''
 
-        self.value = value
-
         # getting the ratio of value present in the column
-        sparsity = self.df[self.columns].apply(lambda column: ((column == self.value).sum()/len(column))*100)
+        sparsity = self.df[self.columns].apply(lambda column: ((column == value).sum()/len(column))*100)
 
-        print(f'\nOccurrence of {self.value} in each column of the dataframe (in %)')
+        # Shows occurence of each value in percent
+        print(f'\nOccurrence of {value} in each column of the dataframe (in %)')
         
         return sparsity
 

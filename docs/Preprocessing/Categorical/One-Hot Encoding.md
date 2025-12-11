@@ -1,6 +1,6 @@
 # One-Hot Encoding:
 -------------------
-One-Hot encoding is a way to turn categorical values (like colors, gender, cities, Ratings, etc.) into numbers so machine-learning models can understand them.
+One-Hot encoding is a way to turn categorical values or categories(like colors, gender, cities, Ratings, etc.) into numbers so machine-learning models can understand them.
 
 ### **IMPORTANT NOTE**:
 

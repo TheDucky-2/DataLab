@@ -60,7 +60,7 @@ The library is currently under active development (v0.1-pre).
 
 Once v0.1 is released, you will be able to install it using:
 
-```pip install DataLab```
+```pip install datalab```
 
 For now, if you want early access, please clone the repo:
 
@@ -93,6 +93,7 @@ datalab/
 │
 ├── pyproject.toml
 ├── requirements.txt
+├── LICENSE
 └── README.md
 ```
 
@@ -134,7 +135,7 @@ Understand your dataset in minutes:
 
 - Duplicate detection
 
-- Numerical & Catgeorical Data diagnosis
+- Numerical & Categorical Data diagnosis
 
 **✔️ 3. Missingness Diagnosis and Visualization**
 
