@@ -93,6 +93,7 @@ datalab/
 │
 ├── pyproject.toml
 ├── requirements.txt
+├── LICENSE
 └── README.md
 ```
 
