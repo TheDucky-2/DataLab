@@ -274,7 +274,14 @@ DataLab is in early development stage.
 
 Suggestions, ideas, feedbacks and contributions are absolutely welcome!
 
-## Contact:
+## Contact & Support
 
-[![Email](https://img.shields.io/badge/Contact-datalab.project@protonmail.com-blue)](mailto:datalab.project@protonmail.com)
+## Contact & Support
+
+For questions, suggestions, feedback or issues related to **DataLab**, you can reach us at:
+
+**Email:** [datalab.project@protonmail.com](mailto:datalab.project@protonmail.com)
+
+
+
 
