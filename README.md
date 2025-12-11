@@ -66,7 +66,7 @@ For now, if you want early access, please clone the repo:
 
 ```git clone https://github.com/yourusername/DataLab.git```
 
-```cd DataLab```
+```cd datalab```
 
 ## Project Structure:
 
