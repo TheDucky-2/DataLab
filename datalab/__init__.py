@@ -7,7 +7,7 @@ __version__ = '0.1.0'
 
 import importlib
 
-_subpackages = ['Tabular']
+_subpackages = ['tabular']
 
 __all__ = []
 
