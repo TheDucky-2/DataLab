@@ -1,5 +1,5 @@
 # **Data Diagnosis**
------------------
+
 Imagine you’re about to cook a meal. 
 
 Before you even start, you check the ingredients to make sure:
@@ -24,7 +24,6 @@ It means checking your data to see:
 Data Diagnosis is required because if your data is 'sick', anything you build using it (like visualizations, analysis, or predictions) will be unreliable.
 
 ## What Can I Diagnose?
-------------------------
 
 DataLab allows you to diagnose your data by dividing Diagnosis into 5 different categories:
 
@@ -39,7 +38,6 @@ DataLab allows you to diagnose your data by dividing Diagnosis into 5 different 
 This section focuses specifically on the **Diagnosis** class.
 
 ## Diagnosis Overview:
------------------------
 
 Diagnosis in DataLab refers to the diagnosis(check-up) of overall DataFrame.
 
@@ -63,7 +61,6 @@ You can import Diagnosis class directly from DataLab:
     diagnosis = Diagnosis(df)
 
 ## 1. Data Preview:
--------------------
 
 Data preview shows the first N rows of your DataFrame.
 
@@ -93,7 +90,6 @@ Example:
 
 
 ## 2. Data Summary:
--------------------
 
 Summary of data in DataLab refers to:
 
@@ -139,7 +135,6 @@ This function returns a dictionary.
 
 
 ## 3. Detecting Column Types
-------------------------- 
 
 DataLab can automatically detect:
 
@@ -162,7 +157,6 @@ This function returns a dictionary of column names and their detected column typ
      'Categorical': ['loan_amount']}
 
 ## Memory Usage:
-----------------
 
 Memory Usage refers to how much RAM the DataFrame uses.
 
@@ -177,7 +171,6 @@ Example:
 This function does not return anything, but shows memory usage in MB.
 
 ## Cardinality:
----------------
 
 In data, cardinality means how many different kinds of values are in a column.
 
@@ -206,7 +199,7 @@ So the cardinality is 4.
 Even though cardinality is usually used in Categorical data, however, it can be used for all categories of data.
 
 ### Low Cardinality
--------------------
+
 If a column has a few different values -> low cardinality
 
 Example: 
@@ -218,7 +211,6 @@ Example:
 If a column has low cardinality, it is easier for a Machine Learning model to learn from it, since there are only a few values to learn from.
 
 ### High Cardinality
---------------------
 
 If a column has many different values -> high cardinality
 
