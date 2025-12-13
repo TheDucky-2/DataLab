@@ -28,6 +28,24 @@ DataLab focuses on the foundation of data science:
 
 Bring all essential data tools under one roof, with simple APIs, strong defaults, and friendly documentation.
 
+## How DataLab Works
+
+DataLab makes working with data simple, intuitive and beginner-friendly.
+
+It understands that different types of data - numbers, categories, and date-time need different handling.
+
+With DataLab, you can:
+
+- Automatically detect column types -> No need to check manually
+
+- Run workflows for each data type -> Numerical, Categorical, and Date-Time are handled separately
+
+- Clean, prepare and visualize data independently -> For easy data understanding
+
+- Focus on insights -> Spend your time exploring data, not writing repetitive code.
+
+By handling different types of data separately, DataLab keeps your workflow simple and organized, making it easy for beginners and professionals to explore and understand their data.
+
 ## Current Version: v0.1 (Pre-Release)
 
 This is an early development release focusing on the Tabular Data Package, including:
