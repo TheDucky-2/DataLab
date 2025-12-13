@@ -44,7 +44,9 @@ With DataLab, you can:
 
 - Focus on insights -> Spend your time exploring data, not writing repetitive code.
 
-By handling different types of data separately, DataLab keeps your workflow simple and organized, making it easy for beginners and professionals to explore and understand their data.
+By handling different types of data separately, DataLab keeps your workflow simple and organized.
+
+That makes it easy for beginners and professionals to explore and understand their data.
 
 ## Current Version: v0.1 (Pre-Release)
 
