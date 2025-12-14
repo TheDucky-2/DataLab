@@ -24,10 +24,10 @@ class Diagnosis:
 
         # making sure that the passed df is a pandas DataFrame
         if isinstance(df, pd.DataFrame):
-            df = df.copy()     # using a copy to avoid modifying original df
+            self.df = df    
 
         elif isinstance(df, (str, Path)):
-            df = load_tabular(df)     # reading if a file  
+            self.df = load_tabular(df)     # reading if a file  
 
         else:
             raise TypeError(f'df must be a pandas DataFrame or a file path, got {type(df).__name__}')
@@ -38,7 +38,6 @@ class Diagnosis:
         elif not isinstance(columns, list):
             raise TypeError(f'columns must be a list of column names, got {type(self.columns).__name__}')
 
-        self.df = df
         self.columns = [column for column in columns if column in df.columns]
 
     def data_preview(self, number_of_rows=10):
