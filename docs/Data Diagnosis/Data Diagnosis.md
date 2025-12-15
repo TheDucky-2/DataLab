@@ -258,7 +258,7 @@ Let us now explore how we can do that using datalab:
 
 #### Numerical Column Types (Numbers):
 
-You can separate Numerical columns from rest of the DataFrame by using ``get_numerical_columns()`` from Diagnosis class.
+We can separate Numerical columns from rest of the DataFrame by using ``get_numerical_columns()`` from Diagnosis class.
 
 Example:
     
@@ -275,7 +275,7 @@ This function returns a pandas DataFrame of only numeric columns.
 
 #### Categorical Column Types (Categories or Text)
 
-You can separate Categorical columns from rest of the DataFrame by using ``get_categorical_columns()`` from Diagnosis class.
+We can separate Categorical columns from rest of the DataFrame by using ``get_categorical_columns()`` from Diagnosis class.
 
 Example:
 
@@ -291,7 +291,7 @@ This function returns a pandas DataFrame of only categorical columns.
 
 #### Datetime Column Types (Dates and Timestamps)
 
-You can separate Datetime columns from rest of the DataFrame by using ``get_datetime_columns()`` from Diagnosis class.
+We can separate Datetime columns from rest of the DataFrame by using ``get_datetime_columns()`` from Diagnosis class.
 
 Example:
 
