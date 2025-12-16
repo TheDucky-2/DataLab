@@ -1,6 +1,6 @@
 # 📊 DataLab (v0.1 Pre-Release)
 
-A Friendly, Beginner-Focused Library for Understanding Data
+A Beginner-Friendly Library for Understanding Data
 
 ## What is DataLab?
 
