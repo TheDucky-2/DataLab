@@ -43,78 +43,82 @@ class MissingnessDiagnosis:
         self.columns = [column for column in columns if column in df.columns]
 
 
-    def show_missing_types(self, extra_placeholders: list=None)-> dict[str, list[object]]:
-
+    def detect_numerical_missing_types(self, extra_placeholders: list | None = None)-> dict[str, dict[str, list]]:
         '''
-        Show missing types (NA or null values) present in each column, irrespective of column type (Categorical, Numerical or Datetime)
+        Detects the types of missing values in Numerical (numbers) columns of the DataFrame.
 
         Parameters:
         -----------
-        extra_placeholders  : list 
-            A list of extra placeholders you wish to pass as NA or null values
-        
-        Return:
+
+            self: pd.DataFrame
+                A pandas DataFrame of Numerical columns
+
+            Optional:
+
+                extra_placeholders: list or type None (default is None)
+                    A list of extra placeholders you wish to pass as missing values depending on your domain
+            
+        Returns:
+        --------
             dict
-            missing_per_column    : a dictionary of key, value pairs of column names and null values that match the placeholders
-        
-        Recommendation:
-            Use this function when you want to see what missing values are present in each column type: Categorical, Numerical or Datetime
+                A dictionary of numerical columns and the types of missing values in a Numerical DataFrame.
+            
+        Usage Recommendation:
+        ---------------------
+                Use this function when you want to detect what kind of missing data exists in your numbers.
+
+        Considerations:
+        ---------------
+
+            1. This function returns two categories of numerical missing data types: 
+
+                a. Pandas Missing Types (NAN) -> Pandas converts anything that is not a number to NAN (Not a Number).
+                b. Domain Dependent Missing Types-> These are the types your domain considers as missing data (Example: -1, 0 (in age where info is missing for a person))
 
         Example: 
-        
-        >>>>> show_missing_types(df) -> {'Location': ['UNKNOWN', nan, 'ERROR'], 'Quantity': [np.float64(nan)], 'Transaction ID': []}
-        
-        >>>>> show_missing_types(categorical) -> {'Transaction ID': [], 'Item': ['UNKNOWN', nan, 'ERROR'],'Payment Method': ['UNKNOWN', 'ERROR', nan],'Location': ['UNKNOWN', nan, 'ERROR']}
+        --------
+                    MissingnessDiagnosis(df).detect_numerical_missing_types()
 
-        >>>>> show_missing_types(numerical) -> {'Quantity': [np.float64(nan)], 'Price Per Unit': [np.float64(nan)], 'Total Spent': [np.float64(nan)]}
-
-        >>>>> show_missing_types(datetime) -> {'Transaction Date': []}
-
+                Output:
+                
+                    {'age': {'pandas_missing': [nan], 'placeholder_missing': [-999.0, -1.0]},
+                    'income': {'pandas_missing': [nan], 'placeholder_missing': []},
+                    'account_balance': {'pandas_missing': [nan], 'placeholder_missing': []}}
+                
+                
         '''
-        # creating a copy of original df
-        
-        self.extra_placeholders = extra_placeholders
+        self.df = df.select_dtypes(include = ['number']) # ensuring that we only work on numerical dataframe
 
-        # if a dataframe is not passed
-        if not isinstance(self.df, pd.DataFrame):
-            raise TypeError(f'df must be a pandas dataframe, got {type(self.df).__name__}')
+        # keeping a dictionary of missing values
+        missing_values = {}
 
-        # if a list of extra_placeholders is passed
-        if extra_placeholders is not None:
+        # keeping extra placeholders to be an empty list if None, otherwise creating a mask of placeholders would not be able to find something to iterate over.
+        if extra_placeholders is None:
+            extra_placeholders = []
+
+        # creating a mask of pandas considering missing values
+        pandas_mask = self.df.isna()
+
+        # creating a mask for extra placeholders user wants to detect in their missing data
+        placeholders_mask = self.df.isin(extra_placeholders)
+
+        for column in self.df[self.columns]:
+
+            # converting to object type, otherwise .unique() returned a lot of unnecessary categorical information
+            pandas_missing = self.df.loc[pandas_mask[column], column].astype('object').unique().tolist()
+
+            # getting those values that are missing
+            place_holder_missing = self.df.loc[placeholders_mask[column], column].astype('object').unique().tolist()
             
-            # if extra_placeholders is not a list
-            if not isinstance(self.extra_placeholders, list):
-                raise TypeError(f'extra_placeholders must either be a list of placeholders or None, got {type(self.extra_placeholders).__name__}')
+            # if either of the values exist, show the results
+            if pandas_missing or place_holder_missing:
+                missing_values[column] = {
+                    'pandas_missing': pandas_missing,
+                    'placeholder_missing': place_holder_missing
+                }
 
-            # for every element passed in extra_placeholders, it should be among (str, float, int, type(None)
-            if not all(isinstance(placeholder, (str, float, int, type(None))) for placeholder in self.extra_placeholders):
-                raise TypeError(f'All elements passed in extra_placeholders must be str, int, float or None type, got: {type(extra_placeholders).__name__}')
-
-
-        # a list of default common placeholders used in categorical columns
-        DEFAULT_PLACEHOLDERS= ['NA', np.nan, 'NAN', 'na', 'NaN', 'nan', 'ERROR', 'MISSING', 'Error', 'Missing', 'Not Available', None, 'not available', 'UNKNOWN', 'Unknown']
+        return missing_values
         
-        # an empty dictionary to store key, value pairs of column names as keys, and list of missing values as values
-        missing_per_column = {}   
-
-        # just creating a copy of placeholders to avoid changing original placeholders
-        placeholders = DEFAULT_PLACEHOLDERS.copy()  
-        
-        # if user passes a list of placeholders
-        if self.extra_placeholders is not None:                          
-            placeholders.extend(self.extra_placeholders)       # add more place_holders to the list
-
-        for column in self.df[self.columns]:                            
-            # creating a boolean mask values in columns that match values in the placeholders
-            bool_mask = self.df[column].isin(placeholders)              
-
-            # getting unique values of missing values that matched to placeholders in each column 
-            found_missing_values = self.df.loc[bool_mask, column].unique() 
-            
-            missing_per_column[f'{column}'] = list(found_missing_values)       
-
-        return missing_per_column
-
     def  show_missing_stats(self, how: str = 'percent') -> pd.Series:
 
         '''
