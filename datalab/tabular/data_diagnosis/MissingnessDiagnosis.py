@@ -1,6 +1,5 @@
 from ..data_loader import load_tabular
 from ..computations import Statistics
-from ..utils import ProjectHelpers
 
 from pathlib import Path
 import pandas as pd
@@ -40,7 +39,7 @@ class MissingnessDiagnosis:
             raise TypeError(f'columns must be a list of column names, got {type(self.columns).__name__}')
 
         self.df = df
-        self.columns = [column for column in columns if column in df.columns]
+        self.columns = [column for column in columns if column in self.df.columns]
 
 
     def detect_numerical_missing_types(self, extra_placeholders: list | None = None)-> dict[str, dict[str, list]]:
@@ -87,7 +86,7 @@ class MissingnessDiagnosis:
                 
                 
         '''
-        self.df = df.select_dtypes(include = ['number']) # ensuring that we only work on numerical dataframe
+        self.df = self.df.select_dtypes(include = ['number']) # ensuring that we only work on numerical dataframe
 
         # keeping a dictionary of missing values
         missing_values = {}
