@@ -295,18 +295,28 @@ class MissingnessDiagnosis:
         if extra_placeholders is None:
             extra_placeholders = []
         
-        # creating a true false mask of pandas missing types if missing returns true otherwise false
-        pandas_mask = self.df[self.columns].isna()
+        missing_categorical_data = {}
 
-        # creating a true false mask of placeholder missing types if missing returns true otherwise false
-        placeholders_mask = self.df[self.columns].isin(extra_placeholders)
+        if self.columns is None:
+            categorical_columns = self.df.select_dtypes(include = ["object", "string", "category"]).columns
+        else:
+            categorical_columns = self.columns
 
-        # if pandas or placeholder missing values exist, show either of the data
-        missing_mask = pandas_mask | placeholders_mask
+        for column in categorical_columns:
+        
+            # creating a true false mask of pandas missing types if missing returns true otherwise false
+            pandas_mask = self.df[column].isna()
 
-        # Only including a column in the output if it actually has missing values.
-        missing_categorical_data = {column: self.df.loc[missing_mask[column]] for column in self.df[self.columns] if missing_mask[column].any()}
+            # creating a true false mask of placeholder missing types if missing returns true otherwise false
+            placeholders_mask = self.df[column].isin(extra_placeholders)
 
+            # if pandas or placeholder missing values exist, show either of the data
+            missing_mask = pandas_mask | placeholders_mask
+
+            # Only including a column in the output if it actually has missing values.
+            if missing_mask.any():
+                missing_categorical_data[column] = self.df.loc[missing_mask]
+        
         return missing_categorical_data
 
     def show_missing_numerical_data(self, extra_placeholders: list|None= None)-> dict[str, pd.DataFrame]:
@@ -335,7 +345,6 @@ class MissingnessDiagnosis:
             
         '''
         # selecting only the numerical data 
-        self.df = self.df.select_dtypes(include = ['number'])
 
         if extra_placeholders is None:
             extra_placeholders = []
