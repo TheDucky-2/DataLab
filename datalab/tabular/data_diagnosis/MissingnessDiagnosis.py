@@ -169,7 +169,7 @@ class MissingnessDiagnosis:
         '''
         categorical_missing_types = {}
 
-        self.df = self.df.select_dtypes(include = ['object', 'string', 'category'])
+        self.df = self.df.select_dtypes(include = ['object', 'string', 'category']) # ensuring the operation works only on categorical dataframe
 
         if extra_placeholders is None:
             extra_placeholders = []
@@ -188,7 +188,83 @@ class MissingnessDiagnosis:
                 }
                 
         return categorical_missing_types
-        
+    
+    def detect_datetime_missing_types(self, extra_placeholders: list | None = None)-> dict[str, dict[str, list]]:
+        '''
+        Detects the types of missing values in Numerical (numbers) columns of the DataFrame.
+
+        Parameters:
+        -----------
+
+            self: pd.DataFrame
+                A pandas DataFrame of Numerical columns
+
+            Optional:
+
+                extra_placeholders: list or type None (default is None)
+                    A list of extra placeholders you wish to pass as missing values depending on your domain
+            
+        Returns:
+        --------
+            dict
+                A dictionary of datetime columns and the types of missing values in a Datetime DataFrame.
+            
+        Usage Recommendation:
+        ---------------------
+                Use this function when you want to detect what kind of missing data exists in your dates or time data.
+
+        Considerations:
+        ---------------
+
+            1. This function returns two categories of date-time missing data types: 
+
+                a. Pandas Missing Types (NAN) -> Pandas converts anything that is not a number to NAT (Not a Time).
+                b. Domain Dependent Missing Types-> These are the types your domain considers as missing data (Example: 00-00-0000 for missing date or time)
+
+        Example: 
+        --------
+                    MissingnessDiagnosis(df).detect_datetime_missing_types()
+
+                Output:
+                
+                    {'age': {'pandas_missing': [nan], 'placeholder_missing': [-999.0, -1.0]},
+                    'income': {'pandas_missing': [nan], 'placeholder_missing': []},
+                    'account_balance': {'pandas_missing': [nan], 'placeholder_missing': []}}
+                
+                
+        '''
+        self.df = self.df.select_dtypes(include = ['datetime']) # ensuring that we only work on datetime dataframe
+
+        # keeping a dictionary of missing values
+        datetime_missing_values = {}
+
+        # keeping extra placeholders to be an empty list if None, otherwise creating a mask of placeholders would not be able to find something to iterate over.
+        if extra_placeholders is None:
+            extra_placeholders = []
+
+        # creating a mask of pandas considering missing values
+        pandas_mask = self.df.isna()
+
+        # creating a mask for extra placeholders user wants to detect in their missing data
+        placeholders_mask = self.df.isin(extra_placeholders)
+
+        for column in self.df[self.columns]:
+
+            # converting to object type, otherwise .unique() returned a lot of unnecessary categorical information
+            pandas_missing = self.df.loc[pandas_mask[column], column].astype('object').unique().tolist()
+
+            # getting those values that are missing
+            place_holder_missing = self.df.loc[placeholders_mask[column], column].astype('object').unique().tolist()
+            
+            # if either of the values exist, show the results
+            if pandas_missing or place_holder_missing:
+                datetime_missing_values[column] = {
+                    'pandas_missing': pandas_missing,
+                    'placeholder_missing': place_holder_missing
+                }
+
+        return datetime_missing_values
+
     def  show_missing_stats(self, how: str = 'percent') -> pd.Series:
 
         '''
