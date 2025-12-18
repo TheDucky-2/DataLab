@@ -365,17 +365,17 @@ class MissingnessDiagnosis:
                 
         return missing_datetime_data
 
-    def missing_data_summary(self, method='sum', extra_placeholders :list | None = None):
+    def missing_data_summary(self, method='count', extra_placeholders :list | None = None):
         '''
         Shows the number of rows with missing values present in each column, irrespective of column type (Categorical, Numerical or Datetime)
 
         Parameters:
         -----------
-        method : str (default is 'sum')
+        method : str (default is 'count')
 
             How you would like to show the total of missing values.
 
-                - 'sum'    : Shows a count of rows with missing values per column
+                - 'count'    : Shows a count of rows with missing values per column
                 - 'percent': Shows the percentage of rows with missing values per column
 
             Optional:
@@ -391,7 +391,7 @@ class MissingnessDiagnosis:
         
         Usage Recommendation:
         ---------------------
-            Use this function when you want to see the sum or percentage of missing values before deciding whether to drop or fill missing values.
+            Use this function when you want to see a count or percentage of missing values before deciding whether to drop or fill missing values.
             
         '''
         # creating a list of extra placeholdes to iterate from
@@ -416,7 +416,7 @@ class MissingnessDiagnosis:
             if mask[col].any():
 
                 # to ensure user can get a count of rows where values are missing
-                if method == 'sum':
+                if method == 'count':
 
                     missing_data_summary[col] = len(self.df.loc[mask[col]])
 
@@ -427,7 +427,7 @@ class MissingnessDiagnosis:
 
                 # only sum and percent are acceptable types
                 else:
-                    raise ValueError(f"method must be 'sum' or 'percent', got {method}")
+                    raise ValueError(f"method must be 'count' or 'percent', got {method}")
 
         # rounding off values to 2 decimal places
         missing_data_summary = {col: round(value, 2) for col, value in missing_data_summary.items()}
