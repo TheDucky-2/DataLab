@@ -265,7 +265,7 @@ class MissingnessDiagnosis:
 
         return datetime_missing_values
 
-    def show_missing_categorical_data(self, extra_placeholders: list|None= None)-> dict[str, pd.DataFrame]:
+    def show_missing_rows_in_categorical_columns(self, extra_placeholders: list|None= None)-> dict[str, pd.DataFrame]:
         '''
         Shows the rows where data is missing in Categorical columns of the DataFrame
 
@@ -319,7 +319,7 @@ class MissingnessDiagnosis:
         
         return missing_categorical_data
 
-    def show_missing_numerical_data(self, extra_placeholders: list|None= None)-> dict[str, pd.DataFrame]:
+    def show_missing_rows_in_numerical_columns(self, extra_placeholders: list|None= None)-> dict[str, pd.DataFrame]:
         '''
         Shows the rows where data is missing in Numerical columns of the DataFrame
 
@@ -344,7 +344,6 @@ class MissingnessDiagnosis:
             Use this function to see missing values in numerical columns before deciding how to clean or handle them.
             
         '''
-        # selecting only the numerical data 
 
         if extra_placeholders is None:
             extra_placeholders = []
@@ -352,6 +351,7 @@ class MissingnessDiagnosis:
         missing_numerical_data = {}
         
         if self.columns is None:
+            # selecting only the numerical data 
             numerical_columns = self.df.select_dtypes(include = ['number']).columns
         else:
             numerical_columns = self.columns
@@ -373,7 +373,7 @@ class MissingnessDiagnosis:
 
         return missing_numerical_data
 
-    def show_missing_datetime_data(self, extra_placeholders: list|None= None)-> dict[str, pd.DataFrame]:
+    def show_missing_rows_in_datetime_columns(self, extra_placeholders: list|None= None)-> dict[str, pd.DataFrame]:
         '''
         Shows the rows where data is missing in Date or Time columns of the DataFrame
 
