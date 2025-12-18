@@ -4,9 +4,9 @@ We are now at the first step of understanding our missing data.
 
 ## What is this step about?
 
-This step is simply about ``finding missing information in your data``.
+This step is simply about ``finding missing types in your data``.
 
-Before fixing or filling missing values, DataLab first checks where data is missing and how it is represented.
+Before fixing or filling missing values, DataLab first checks what data is missing and how it is represented.
 
 Think of this as a **health check-up** of your dataset.
 
@@ -34,9 +34,9 @@ DataLab looks for missing values in three simple steps:
 
 The results are grouped into:
 
-* Numerical missing values
-* Categorical missing values
-* Datetime missing values
+- Numerical missing values
+- Categorical missing values
+- Datetime missing values
 
 ## Two kinds of missing values
 
@@ -46,9 +46,9 @@ DataLab finds **two kinds of missing data** in every column:
 
 These are the values Pandas automatically understands as missing:
 
-* Numbers **->** ``NaN``
-* Text **->** ``NaN``, ``None``
-* Dates **->** ``NaT``
+- Numbers **->** ``NaN``
+- Text **->** ``NaN``, ``None``
+- Dates **->** ``NaT``
 
 ### 2. Placeholder missing values (user‑defined)
 
@@ -56,12 +56,11 @@ These are values that ``look real but actually mean 'missing'`` in your data, de
 
 Examples:
 
-* Numbers **->** `-1`, `0`, `9999`
-* Text **->**  `"UNKNOWN"`, `"?"`, `"MISSING"`
-* Dates **->** `"00-00-0000"`
+- Numbers **->** `-1`, `0`, `9999`
+- Text **->**  `"UNKNOWN"`, `"?"`, `"MISSING"`
+- Dates **->** `"00-00-0000"`
 
 Pandas does NOT treat these as missing by default - so DataLab lets you tell it what to look for.
-
 
 ## **DataLab Usage:**
 
