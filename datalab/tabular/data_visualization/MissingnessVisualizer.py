@@ -17,7 +17,7 @@ class MissingnessVisualizer(DataVisualizer):
         else:
             self.columns = columns
 
-    def plot_missing(self, viz_type: str|None = 'bar') -> matplotlib.axes.Axes:  # viz : alias for 'visualization'
+    def plot_missing(df: pd.DataFrame, viz_type = 'bar', extra_placeholders=None):
         '''
         Visualize missing values in each column of the DataFrame
 
@@ -51,20 +51,31 @@ class MissingnessVisualizer(DataVisualizer):
             1. This function uses missingno library under the hood. Just make sure you have it installed or use 'pip install missingno'
             2. For assistance with handling missing values, use missing_data_guide() along with this function for better decision making.
 
-        '''
-        import missingno as msno
-        import matplotlib
-        
-        if viz_type is not None:
+            '''
+        if extra_placeholders is None:
+            extra_placeholders = []
 
-            if viz_type == 'heatmap':
-                return msno.heatmap(self.df)
-            
-            elif viz_type == 'bar':
-                return msno.bar(self.df)
-            
-            elif viz_type == 'matrix':
-                return msno.matrix(self.df)
-            
-            elif viz_type == 'dendrogram':
-                return msno.dendrogram(self.df)
+        # getting pandas truly missing values
+        pandas_mask = df.isna()
+
+        # getting placeholder missing values
+        placeholder_mask = df.isin(extra_placeholders)
+
+        # getting both the missing types
+        mask = pandas_mask | placeholder_mask
+
+        # since missingno does not have separate support for placeholder values, converting all missing types to np.nan
+        df[mask] = np.nan
+
+        if viz_type == 'heatmap':
+            return msno.heatmap(df)
+        
+        elif viz_type == 'bar':
+            return msno.bar(df)
+        
+        elif viz_type == 'matrix':
+            return msno.matrix(df)
+        
+        elif viz_type == 'dendrogram':
+            return msno.dendrogram(df)
+        
