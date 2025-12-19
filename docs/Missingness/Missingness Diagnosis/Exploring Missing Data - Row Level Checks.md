@@ -48,7 +48,7 @@ DataLab supports two main types of row-level checks:
 1. Rows with all columns having missing data
 2. Rows with only specific columns having missing data
 
-Let us now move to exploring this data:
+Let us now move to exploring these checks:
 
 ## **DataLab Usage**
 
@@ -63,8 +63,6 @@ Let us use an example dataset of all missing values to understand that.
 | missing_data   | NaN       | NaN    | NaN            | NaN    | NaN     | NaN         | NaN   | NaN   | NaN          | NaN       | NaN         | NaN        | NaN            |
 | missing_data   | NaN       | NaN    | NaN            | NaN    | NaN     | NaN         | NaN   | NaN   | NaN          | NaN       | NaN         | NaN        | NaN            |
 | missing_data   | NaN       | NaN    | NaN            | NaN    | NaN     | NaN         | NaN   | NaN   | NaN          | NaN       | NaN         | NaN        | NaN            |
-
-<br>
 
 We can see:
 
@@ -86,8 +84,7 @@ Output:
 
 | customer_id | age | income | account_balance | gender | country | device_type | email | notes | phone_number | is_active | signup_date | last_login | event_timestamp |
 |-------------|-----|--------|----------------|--------|---------|-------------|-------|-------|--------------|-----------|-------------|------------|----------------|
-<br>
-<br>
+
 We can see:
 
 - We got an empty DataFrame
@@ -162,8 +159,6 @@ Output:
 
 | age | income | customer_id |
 |-----|--------|-------------|
-<br>
-<br>
 
 We can see:
 
