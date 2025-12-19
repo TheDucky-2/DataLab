@@ -72,17 +72,39 @@ This is an early development release focusing on the Tabular Data Package, inclu
 
 Even in v0.1, DataLab already supports **Pandas** and partially **Polars** (internally used for performance in some methods).
 
-## Installation (Coming Soon)
+## Installation (v0.1 Pre-Release)
 
-DataLab is not yet published to PyPI.
+DataLab is currently in early pre-release (v0.1) and is available on TestPyPI for testing and feedback.
 
-The library is currently under active development (v0.1-pre).
+This allows you to try DataLab without cloning the repository.
 
-Once v0.1 is released, you will be able to install it using:
+You can now Install DataLab pre-release using **pip**:
 
-```pip install datalab```
+``pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple datalab-pre-release==0.1.0a1``
 
-For now, if you want early access, please clone the repo:
+#### Why this long command? 
+
+That is because DataLab itself is downloaded from TestPyPI, while required dependencies (such as pandas) are downloaded from PyPI.
+
+#### Important Naming Clarification
+
+- Install name will show as **datalab-pre-release==0.1.0a1**
+
+- However, you will always import the library simply as:
+
+        import datalab 
+
+### Very Important:
+
+This is an early pre-release, which is why APIs and internal code may change.
+
+That is why DataLab is still not yet recommended for production use.
+
+Moreover, You can **uninstall** DataLab safely with:
+
+``pip uninstall datalab-pre-release``
+
+If you want to explore the source code, you can still clone the repo:
 
 ```git clone https://github.com/yourusername/DataLab.git```
 
