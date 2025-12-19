@@ -1,4 +1,4 @@
-# Visualization of Missing Data (Missingness Visualization)
+# STEP 4: Visualization of Missing Data (Missingness Visualization)
 
 In the previous steps, we focused on understanding what is missing data before touching the data itself:
 
@@ -68,8 +68,6 @@ DataLab also allows us to:
 
 However, placeholders are converted only and only for visualization (**original data remains absolutely unchanged**).
 
-
-
 ## But, what are these 'Easy to Understand' plots?
 
 DataLab supports the most commonly used plots for visualizing missing data.
@@ -100,7 +98,6 @@ This looks like **matchsticks lying on a table - you keep adding the most simila
 
 This shows which columns have missing values in similar places.
 
-
 ## **DataLab Usage**
 
 We can begin visualizing our missing data by importing ``MissingnessVisualizer`` class from datalab.
@@ -119,14 +116,14 @@ We can create a bar plot of missing data using ``plot_missing()`` method from **
 
 > Here is an annotated image of **bar plot** used for better understanding of the plot:
 
-![Bar Plot of Missing Data](example_images\Bar_Plot_of_Missing_Data.png)
+![Bar Plot of Missing Data](example_images/Bar_Plot_of_Missing_Data.png)
 
 We can see:
 
 - Column *'customer_id'* has a full bar, which means it is full and does not have missing data.
-- Columns *'signup_date'* and *'event_timestamp* have less than 500 rows missing, out of 500000.
-- Columns *'email*, *'notes'* and *phone_number* have a lot of missing data. 
-- Column *'phone_number'* is the shortest bar of chocolate as it is missing most of data.
+- Columns *'signup_date'* and *'event_timestamp'* have less than 500 rows missing, out of 500000.
+- Columns *'email'*, *'notes'* and *'phone_number'* have a lot of missing data. 
+- Column *'phone_number'* is the shortest bar of chocolate as it is missing most of the data.
 
 ## Bar Plot - With Placeholders:
 
