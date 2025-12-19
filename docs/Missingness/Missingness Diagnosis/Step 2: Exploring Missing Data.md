@@ -388,7 +388,7 @@ By the end of **Step 2**, we will know:
 
 - Whether missingness is random or has a pattern
 
-Only after seeing this clearly does it make sense to visualize the missing data.
+Only after seeing this clearly does it make sense to look at the rows of data where everything is missing.
 
 This leads naturally into the next step of the workflow.
 
