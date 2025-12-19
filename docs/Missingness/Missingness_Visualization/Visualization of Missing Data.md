@@ -119,7 +119,7 @@ We can create a bar plot of missing data using ``plot_missing()`` method from **
 
 > Here is an annotated image of **bar plot** used for better understanding of the plot:
 
-![Bar Plot of Missing Data](example_images\Bar_Plot_of_Missing_Data.png)
+![Bar Plot of Missing Data](example_images/Bar_Plot_of_Missing_Data.png)
 
 We can see:
 
