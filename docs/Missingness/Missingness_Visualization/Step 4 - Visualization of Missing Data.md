@@ -169,11 +169,10 @@ Before we know why we even need this useful stuff, let us explore what we miss w
 
 > Here is a plot of missing data without good stuff:
 
-<br>
 
-![Blank Bar Plot](example_images\Blank_Bar_plot.png)
+![Blank Bar Plot](example_images/Blank_Bar_plot.png) 
 
-<br>
+
 
 We can see:
 
