@@ -1,16 +1,11 @@
-from .DataVisualizer import DataVisualizer
-
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import missingno as msno
 
-
-class MissingnessVisualizer(DataVisualizer):
+class MissingnessVisualizer():
 
     def __init__(self, df: pd.DataFrame, columns:list = None):
-
-        super().__init__(df, columns)
 
         self.df = df
 
