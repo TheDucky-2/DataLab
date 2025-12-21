@@ -2,14 +2,23 @@
 
 def testing_datalab_imports():
 
-    import datalab 
-    import datalab.tabular.data_loader
-    import datalab.tabular.data_diagnosis
-    import datalab.tabular.data_cleaner
-    import datalab.tabular.data_preprocessor
-    import datalab.tabular.data_visualization
-    import datalab.tabular.data_analysis
-    import datalab.tabular.computations
-    import datalab.tabular.utils
+    modules = ['datalab',
+               'datalab.tabular.data_loader',
+               'datalab.tabular.data_diagnosis',
+               'datalab.tabular.data_cleaner',
+               'datalab.tabular.data_preprocessor',
+               'datalab.tabular.data_visualization',
+               'datalab.tabular.data_analysis',
+               'datalab.tabular.computations',
+               'datalab.tabular.utils'] 
+    
+    for module in modules:
+        try:
+            __import__(module)
 
-    print("Tests Successful!")
+        except ModuleNotFoundError as error:
+            print(f'Module not found {mod}: {error}')
+            raise error
+
+    print("Imported datalab modules successfully!")
+
