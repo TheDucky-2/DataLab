@@ -135,12 +135,14 @@ class ColumnConverter:
         def convert_to_datetime_without_changes(value):
             try:
                 # applying datetime to each value
-                pd.to_datetime(value)
+                return pd.to_datetime(value)
 
             # accepting both Value and Type Errors
             except (ValueError, TypeError):
                 # and return original value if cannot be converted to datetime
                 return value
+
+            return pd.to_datetime(value)
 
         if inplace:
             # apply datetime conversion to all columns.
