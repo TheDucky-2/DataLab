@@ -55,7 +55,7 @@ class ColumnConverter:
         
         Considerations:
         ---------------
-            This function converts non-convertible values into np.nan (Not a Number) by default.
+            This function converts non-convertible values to NaN and then restores those values back from NaN to original.
 
         Examples:
         
@@ -72,17 +72,21 @@ class ColumnConverter:
         if not isinstance(errors, str):
             raise TypeError(f'errors must be a string, got {type(errors).__name__}')
 
-        self.errors = errors
-        self.inplace = inplace
+        if inplace:
+            # first converting all data to numerical, and non-numerical get converted to NaN
+            self.df[self.columns] = self.df[self.columns].apply(pd.to_numeric, errors = errors)
 
-        if self.inplace:
-            self.df[self.columns] = self.df[self.columns].apply(pd.to_numeric, errors=self.errors, **self.kwargs)
+            #  reverting NaN values back to original missing values
+            self.df[self.columns] = self.df[self.columns].combine_first(self.df[self.columns])
             return None
 
         else:
             df_copy = self.df.copy()
-            df_copy[self.columns] = df_copy[self.columns].apply(pd.to_numeric, errors=self.errors, **self.kwargs)
-            
+            # first converting all data to numerical, and non-numerical get converted to NaN
+            df_copy[self.columns] = df_copy[self.columns].apply(pd.to_numeric, errors = errors)
+
+            #  reverting NaN values back to original missing values
+            df_copy[self.columns] = df_copy[self.columns].combine_first(df_copy[self.columns])
             return df_copy
 
     def to_datetime(self, inplace: bool=False) -> pd.DataFrame:
@@ -121,12 +125,12 @@ class ColumnConverter:
         self.inplace=inplace
 
         if self.inplace:
-            self.df[self.columns] = self.df[self.columns].apply(pd.to_datetime, errors='coerce', **self.kwargs)
+            self.df[self.columns] = self.df[self.columns].apply(pd.to_datetime, errors='ignore', **self.kwargs)
             return df
 
         else:
             df_copy = self.df.copy()
-            df_copy[self.columns] = df_copy[self.columns].apply(pd.to_datetime, errors='coerce', **self.kwargs)
+            df_copy[self.columns] = df_copy[self.columns].apply(pd.to_datetime, errors='ignore', **self.kwargs)
             return df_copy
 
     def to_categorical(self,inplace: bool=False)-> pd.DataFrame:
@@ -195,58 +199,3 @@ class ColumnConverter:
         else:
             return df_copy
             
-
-    def to_string(self, inplace:bool=False):
-        '''
-        Convert one or more columns column into string type columns.
-
-        Parameters:
-            df       : pd.DataFrame or str
-                A pandas DataFrame or a file path. E.g: (pd.DataFrame or 'example.csv')
-
-            columns  : list 
-                List of columns to convert into string type. E.g: ['Player ID', 'Club', 'Nationality', 'Bank Account No.']
-
-            inplace  : bool (default, False)
-                If True, modifies the original DataFrame in place.
-                If False, returns a new DataFrame with only the converted columns.
-            
-        Returns:
-            a pandas DataFrame 
-            1. If inplace=True, returns the original DataFrame with the converted string columns.
-            2. If inplace=False, returns a DataFrame of only the converted columns.
-
-        Usage Recommendation:
-            1. Use this function to convert any column into text-based column for text cleaning later.
-            2. Use this function when there are many unique values in each column. 
-            3. Don't use this for columns that contain categories. E.g: ['Good', 'Great', 'Poor'] or ['High', 'Low', 'Medium']. 
-            For those columns, use `to_categorical` instead.
-
-        Considerations:
-            This function converts mostly everything into string type. 
-            If anything fails, it gets converted to <NA> (pandas null string).
-        
-        Examples:
-        
-        >>> dl.ColumnConverter(df, ['Transaction ID']).to_string(inplace=True) 
-        #   returns modified original dataframe with converted columns
-
-        >>> dl.ColumnConverter(df, ['Transaction ID']).to_string() 
-        #   returns a copy of the dataframe with converted columns
-        '''
-
-        if not isinstance(inplace, bool):
-            raise TypeError(f'inplace must be a boolean: True or False, got {type(inplace).__name__}')
-
-        self.inplace=inplace
-
-        # converting columns into string type
-        self.df[columns] = df[columns].apply(lambda column: column.astype('string'))
-
-        if inplace:
-            self.df[self.columns] = self.df[self.columns].apply(lambda column: column.astype('string'))
-            return None
-        else:
-            df_copy = self.df.copy()
-            return df_copy
-
