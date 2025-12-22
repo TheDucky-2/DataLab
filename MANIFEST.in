@@ -1,0 +1,15 @@
+# Excluding python cache files
+
+global-exclude __pycache__
+global-exclude *.pyc *.pyo *.pyd
+
+# excluding .egg metadata
+
+prune *.egg-info
+prune **/**.egg-info
+
+# Excluding OS generated junk files
+
+global-exclude *.swp *.swo
+global-exclude .DS_Store
+global-exclude Thumbs.db
