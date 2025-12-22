@@ -94,20 +94,29 @@ class ColumnConverter:
         Convert one or more columns column into datetime columns.
 
         Parameters:
-            df       : A pandas DataFrame or a file path (pd.DataFrame or 'example.csv')
-            columns  : list of columns to convert into datetime columns
-            inplace  : True or False, default False
+        -----------
+            self: pd.DataFrame
+                A pandas DataFrame
+
+            Optional:
+
+            inplace  : bool (default is False)
+                Whether you want to apply changes to dataframe. 
         
         Returns:
-            a pandas DataFrame 
+        --------
+            A pandas DataFrame 
+
             1. return the original dataframe with converted datetime columns, if inplace=True
-            2. return only the dataframe of converted datetime columns, if inplace=False
+            2. return only the dataframe of converted datetime columns with rest of the DataFrame unchanged, if default.-
 
         Usage Recommendation:
+        ---------------------
             Use this function to convert columns into datetime columns for extracting date and time later
 
         Considerations:
-            This function converts non-convertible values into np.nan (Not a Number)
+        ---------------
+            This function converts keeps the values that cannot be converted as they are.
 
         Examples:
         
@@ -122,15 +131,25 @@ class ColumnConverter:
         if not isinstance(inplace, bool):
             raise TypeError(f'inplace must be a boolean: True or False, got {type(inplace).__name__}')
 
-        self.inplace=inplace
+        # we will be creating a function to convert each value to datetime if valid, else we will leave it as it is.
+        def convert_to_datetime_without_changes(value):
+            try:
+                # applying datetime to each value
+                pd.to_datetime(value)
 
-        if self.inplace:
-            self.df[self.columns] = self.df[self.columns].apply(pd.to_datetime, errors='ignore', **self.kwargs)
-            return df
+            # accepting both Value and Type Errors
+            except (ValueError, TypeError):
+                # and return original value if cannot be converted to datetime
+                return value
+
+        if inplace:
+            # apply datetime conversion to all columns.
+            self.df[self.columns] = self.df[self.columns].apply(convert_to_datetime_without_changes)
+            return None
 
         else:
             df_copy = self.df.copy()
-            df_copy[self.columns] = df_copy[self.columns].apply(pd.to_datetime, errors='ignore', **self.kwargs)
+            df_copy[self.columns] = df_copy[self.columns].apply(convert_to_datetime_without_changes)
             return df_copy
 
     def to_categorical(self,inplace: bool=False)-> pd.DataFrame:
