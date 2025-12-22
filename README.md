@@ -80,7 +80,7 @@ This allows you to try DataLab without cloning the repository.
 
 You can now Install DataLab pre-release using **pip**:
 
-``pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple datalab-pre-release==0.1.0a1``
+``pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple datalab-pre-release==0.1.0a2``
 
 ### Why this long command? 
 
@@ -97,6 +97,12 @@ You can simply import datalab after installing it like this:
 You can also watch the 4-minute **Installation & Getting-Started with DataLab** video on Youtube, using the link below:
 
 👉 https://youtu.be/RC4SzXxRSHk 
+
+### Updating to the Latest TestPyPI Version
+
+If you already installed an earlier pre-release version of DataLab from TestPyPI, you can upgrade to the latest test version using:
+
+``pip install --upgrade --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple datalab-pre-release``
 
 **⚠️ Note:**
 
