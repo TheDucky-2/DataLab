@@ -104,6 +104,8 @@ If you already installed an earlier pre-release version of DataLab from TestPyPI
 
 ``pip install --upgrade --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple datalab-pre-release``
 
+This ensures you always get the most recent pre-release version available on TestPyPI.
+
 **⚠️ Note:**
 
 The library is not yet ready for production use.
