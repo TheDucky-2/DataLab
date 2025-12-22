@@ -142,8 +142,6 @@ class ColumnConverter:
                 # and return original value if cannot be converted to datetime
                 return value
 
-            return pd.to_datetime(value)
-
         if inplace:
             # apply datetime conversion to all columns.
             self.df[self.columns] = self.df[self.columns].apply(convert_to_datetime_without_changes)
