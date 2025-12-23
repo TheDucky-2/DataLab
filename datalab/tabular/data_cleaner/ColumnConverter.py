@@ -130,26 +130,33 @@ class ColumnConverter:
 
         if not isinstance(inplace, bool):
             raise TypeError(f'inplace must be a boolean: True or False, got {type(inplace).__name__}')
-
         # we will be creating a function to convert each value to datetime if valid, else we will leave it as it is.
-        def convert_to_datetime_without_changes(value):
-            try:
-                # applying datetime to each value
-                return pd.to_datetime(value)
 
-            # accepting both Value and Type Errors
-            except (ValueError, TypeError):
-                # and return original value if cannot be converted to datetime
-                return value
+        df_copy = self.df.copy()
+
+        for column in self.columns:
+
+            # apply datetime conversion to all columns passed
+            converted_to_datetime = pd.to_datetime(df_copy[column], errors = 'coerce')
+            
+            conversion_successful = converted_to_datetime.notna()
+            # now check scenarios where conversion to datetime failed but is not invalid value in the DataFrame
+            conversion_failed = converted_to_datetime.isna() & df_copy[column].notna()
+
+            # if conversion to datetime does not fail
+            if not conversion_failed.any():
+
+                # assign converted values to the whole columns of the DataFrame
+                df_copy[column] = converted_to_datetime
+            else:
+                if conversion_successful.any():
+                    # if conversion fails, only convert correct datetime values and leave others as they are
+                    df_copy.loc[converted_to_datetime.notna(), column] = converted_to_datetime[converted_to_datetime.notna()]
 
         if inplace:
-            # apply datetime conversion to all columns.
-            self.df[self.columns] = self.df[self.columns].apply(convert_to_datetime_without_changes)
             return None
-
+            
         else:
-            df_copy = self.df.copy()
-            df_copy[self.columns] = df_copy[self.columns].apply(convert_to_datetime_without_changes)
             return df_copy
 
     def to_categorical(self,inplace: bool=False)-> pd.DataFrame:
