@@ -351,7 +351,7 @@ Output:
 | 92          | 65.0  | 25530.131462  | 2891.337813     | Female | US      | tablet      | user@example.com | OK                            | 123-456-7890  | True      | 2016-11-09  | NaT        | 2022-05-09 09:58:00   |
 | 133         | 56.0  | 34950.921308  | NaN             | NaN    | UK      | tablet      | NaN              | OK                            | NaN            | False     | 2020-01-17  | NaT        | 2019-10-29 19:45:00   |
 
-#### Missing data in Categorical columns - With Placeholders:
+#### Missing data in Datetime columns - With Placeholders:
 
 Sometimes, missing dates are stored as fake or invalid dates like "00-00-0000".
 
@@ -360,7 +360,7 @@ We can include such placeholders like this:
     placeholder_missing_dates = MissingnessDiagnosis(df).show_missing_rows_in_datetime_columns(extra_placeholders = ['00-00-0000'])
     placeholder_missing_dates['last_login']
 
-output: 
+Output: 
 
 | customer_id | age   | income        | account_balance | gender | country | device_type | email            | notes | phone_number   | is_active | signup_date | last_login | event_timestamp       |
 |------------:|------:|---------------:|----------------:|--------|---------|-------------|------------------|-------|----------------|-----------|-------------|------------|-----------------------|
