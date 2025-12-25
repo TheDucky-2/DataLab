@@ -55,7 +55,10 @@ We can see:
 
 - Columns *'notes'* and *'account_closed_at'* remain separate for the longest time and only connect at the very bottom of the tree, which means **They are usually missing and only appear in special cases.**
 
-One very important thing to remember in Dendrograms: ``Columns that connect earlier in the dendrogram behave similarly, and columns that connect later behave differently.``
+###  Very Important:
+One very important thing to remember in Dendrograms is this:
+
+> ``Columns that connect earlier in the dendrogram behave similarly, and columns that connect later behave differently.``
 
 Great!
 
@@ -67,4 +70,67 @@ Let us now explore what happens when we pass a list of placeholders that we cons
 
 ## Dendrogram - With Placeholders:
 
--- TO BE UPDATED -- 
+We can create a dendrogram of missing data including placeholders by passing **extra_placeholders** in the ``plot_missing()`` method of **MissingnessVisualizer** class.
+
+Example:
+
+    MissingnessVisualizer(df).plot_missing(
+        viz_type='dendrogram',
+        extra_placeholders = [-999, 'UNKNOWN_DATE', 'CLOSED_UNKNOWN','ERROR', -1]
+        )
+
+Output:
+
+> Here is an annotated image of **Dendrogram** used for better understanding of the plot:
+
+![Dendrogram of Missing Data with Placeholders](example_images/Dendrogram_of_Missing_Data_with_Placeholders.png)
+
+We can see:
+
+- We can now see clear separation of two groups we saw earlier, into several sub-groups based on similar/different patterns of missing data.
+
+- Columns *'age'* and *'user_id'* and *'gender'* join each other very early and form a small group (GROUP 1), which means **Missing data in these columns is almost always present together**.
+
+- Columns [*'account_created_at'*, *'billing_amount'* and *'city'*] joined each other first as GROUP 2 and then joined GROUP 1 later, meaning they also have similar missingness however not like columns in GROUP 1.
+
+- Columns [*'session_length_sec'*, *'event_time'*, *'country_code'*,and *'plan_tier'*], also joined each first as GROUP 3 and then joined GROUPS 1 and 2, which means **They often appear together and are often missing together, however differently than GROUPS 1 and 2**.
+
+- Columns [*'event_type*, *'last_seen_at'*, *'feedback_score'*], also joined each first as GROUP 4 and then joined GROUPS 1, 2 and 3 late, which means **They are similar to each other and are often missing together, however they are different from GROUPS 1, 2 and 3**.
+
+- Columns *'phone'* and *'email'* connect at a low height almost immediately however, they join other groups very late, which means **They are missing together in the same rows however, they are not similar at all to other GROUPS in terms of missingness**.
+
+- Columns *'notes'* and *'account_closed_at'* remain separate for the longest time and only connect at the very bottom of the tree, which means **They are usually missing and only appear in special cases.**
+
+Great!
+
+We now know:
+
+- That dendrogram looks like a leafless tree.
+
+- How we can create and understand **Dendrograms** for missing data, using datalab.
+
+- It helps us see groups of that are similar to each other and different from each other.
+
+- After adding placeholders we consider as missing data, we can see how groups of similar/ different columns change in a dendrogram.
+
+Alright!
+
+I now know what counts as missing data, how to explore and visualize that data.
+
+Now what?
+
+We will explore how to handle missing data in the upcoming steps.
+
+## Summary:
+
+- We can use 'Easy to Understand' plots to easily see where data is missing.
+
+- A bar plot shows how much data is missing in data.
+
+- A matrix plot shows what rows are missing data (black (data present) and white (data missing)) in columns.
+
+- We can notice considerable changes in missing data if we include placeholders.
+
+- A heatmap shows which columns are missing data together.
+
+- A dendrogram shows groups of columns that may have similar or different missing data patterns.
