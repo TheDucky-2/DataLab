@@ -245,31 +245,14 @@ We now know:
 
 - How we can create and understand **Heatmaps** for missing data, using datalab.
 
-## Dendrogram:
+Okay!
 
-For now, we will be skipping docs for dendrograms as they are Optional and will be added later in v0.2.0 of DataLab. 
+But, in **Heatmaps** we explored relationships between only 2 columns at once. 
 
-However, they are useful in checking groups of columns where data is missing similarly and groups of columns that are missing data differently.
+What if multiple columns, like 3 or 4 are missing data together? What do we do then?
 
-If you wish to plot dendrograms of missing data, you can do that by using **'dendrogram'** as **viz_type** in ``plot_missing()`` method of **MissingnessVisualizer** class.
+It will be very hard to explore and know if our columns are related together using **Heatmaps**, won't it?
 
-Example:
+**Absolutely.**
 
-    MissingnessVisualizer(df).plot_missing(viz_type = 'dendrogram')
-
-Output:
-
-![Dendrogram of Missing Data](example_images/Dendrogram_of_missing_data.png)
-
-
-## Summary:
-
-- We can use 'Easy to Understand' plots to easily see where data is missing.
-
-- A bar plot shows how much data is missing in data.
-
-- A matrix plot shows what rows are missing data (black (data present) and white (data missing)) in columns.
-
-- We can see notice considerable changes in missing data if we include placeholders.
-
-- A heatmap shows which columns are missing data together.
+Which is exactly what we will explore and identify next.
