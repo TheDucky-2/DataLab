@@ -256,3 +256,15 @@ It will be very hard to explore and know if our columns are related together usi
 **Absolutely.**
 
 Which is exactly what we will explore and identify next.
+
+## Summary:
+
+- We can use 'Easy to Understand' plots to easily see where data is missing.
+
+- A bar plot shows how much data is missing in data.
+
+- A matrix plot shows what rows are missing data (black (data present) and white (data missing)) in columns.
+
+- We can notice considerable changes in missing data if we include placeholders.
+
+- A heatmap shows which columns are missing data together.
