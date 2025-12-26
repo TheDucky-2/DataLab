@@ -1,3 +1,5 @@
+![DataLab logo](https://github.com/TheDucky-2/DataLab/blob/main/DataLab_logo_images/DataLab_logo.png)
+
 # Change Logs
 
 All versions listed below `0.1.0` are **pre-releases published to TestPyPI only**.
