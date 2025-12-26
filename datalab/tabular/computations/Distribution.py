@@ -209,9 +209,9 @@ class Distribution(Computation):
 
         '''
         n = len(self.df)
-        std_dev =Statistics(df).standard_deviation()
+        std_dev =Statistics(self.df).standard_deviation()
 
-        IQR = Statistics(df).IQR()
+        IQR = Statistics(self.df).IQR()
         
         KDE_dict = {}
 
@@ -231,8 +231,8 @@ class Distribution(Computation):
                 Bandwidth = (IQR/1.349) * (n ** (-1/5))
 
             # importing the Distrubution computation and using bin centers to compute KDE since it is easier that way
-            bin_centers = Distribution(df).compute_histogram()[col]['bin_centers']
-            counts = Distribution(df).compute_histogram()[col]['counts']
+            bin_centers = Distribution(self.df).compute_histogram()[column]['bin_centers']
+            counts = Distribution(self.df).compute_histogram()[column]['counts']
             
             # calculating grid size using bin_centers 
             grid_size = len(bin_centers)
@@ -240,10 +240,10 @@ class Distribution(Computation):
             #### CALCULATING KERNEL (Bump) FUNCTION 
 
             # creating an artifical axis around zero, for kernel
-            x_axis = np.linspace(-3 * Bandwidth[col], 3 * Bandwidth[col], grid_size)
+            x_axis = np.linspace(-3 * Bandwidth[column], 3 * Bandwidth[column], grid_size)
             
             # creating kernel for making the curve
-            kernel = np.exp((-x_axis**2)/(2 * Bandwidth[col]**2))
+            kernel = np.exp((-x_axis**2)/(2 * Bandwidth[column]**2))
             
             # making sure all values add up to 1
             kernel/=kernel.sum()
@@ -251,7 +251,7 @@ class Distribution(Computation):
             # Using Fourier's for convolution (sliding across histogram like in neural nets)
             KDE = fftconvolve(counts, kernel, mode='same')
 
-            KDE_dict[col] = KDE
+            KDE_dict[column] = KDE
 
         return pd.DataFrame(KDE_dict)
 
