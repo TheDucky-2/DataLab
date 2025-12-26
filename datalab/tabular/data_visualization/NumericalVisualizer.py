@@ -243,7 +243,7 @@ class NumericalVisualizer(DataVisualizer):
         # compute_KDE() returns a DataFrame
         kde_df= Distribution(self.df).compute_KDE(bandwidth_method=bandwidth_method)
 
-        for column in df.columns:
+        for column in self.df[self.columns]:
             # using bin_centers from histogram computation as values for x-axis.
             x= Distribution(self.df).compute_histogram()[column]['bin_centers']
 
