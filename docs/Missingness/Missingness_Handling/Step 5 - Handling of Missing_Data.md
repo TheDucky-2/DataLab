@@ -60,7 +60,7 @@ When we remove or replace missing data, we are really changing our data.
 
 Once we make the changes, we cannot see or revert back to the original data anymore.
 
-If we rush and make that change too early:
+If we rush and make those changes too early:
 
 - We may hide values that were unusually big or small, and could help us learn more about our data.
 
