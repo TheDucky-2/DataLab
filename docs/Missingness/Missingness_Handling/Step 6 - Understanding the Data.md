@@ -7,7 +7,7 @@ We now know:
 
 - Which values count as missing (pandas built-in + placeholders).
 
-- Which missing values exist in what columns. 
+- Which missing values exist in which columns. 
 
 - How missing data can be explored in rows and columns.
 
@@ -39,7 +39,7 @@ Example:
 
 These questions actually help us understand the shape and behavior of our data.
 
-In DataLab, this understanding comes from ``Diagnosis`` and ``Visualization``.
+In DataLab, this understanding comes from ``Data Diagnosis`` and ``Data Visualization``.
 
 Behind the scenes, this involves mathematical computations like counts, summaries, and statistics - but as a user, you don’t need to think about those yet.
 
@@ -51,28 +51,29 @@ Imagine we went out and asked for age and income of 20 people we met randomly.
 
 Let's say this is the data we get:
 
-| Age | Income |
-|-----|--------|
-| 22  | 32000  |
-| 25  | 34000  |
-| 27  | 27000  |
-| 29  | 36000  |
-| 31  |   -    |
-| 33  | 38000  |
-| 35  | 40000  |
-| 16  |   0    |
-| 39  | 42000  |
-| 41  | 45000  |
-| 43  |  NaN   |
-| 45  | 48000  |
-| 47  |  NaN   |
-| 49  | 750000 |
-| 52  |  NaN   |
-| 43  |  NaN   |
-| 45  | 48000  |
-| 47  | 500000 |
-| 49  | 750000 |
-| 52  |1000000 |
+| Row | Age | Income |
+|-----|-----|--------|
+| 1   | 22  | 32000  |
+| 2   | 25  | 34000  |
+| 3   | 27  | 27000  |
+| 4   | 29  | 36000  |
+| 5   | 31  |   -    |
+| 6   | 33  | 38000  |
+| 7   | 35  | 40000  |
+| 8   | 16  |   0    |
+| 9   | 39  | 42000  |
+| 10  | 41  | 45000  |
+| 11  | 43  |  NaN   |
+| 12  | 45  | 48000  |
+| 13  | 47  |  NaN   |
+| 14  | 49  | 750000 |
+| 15  | 52  |  NaN   |
+| 16  | 43  |  NaN   |
+| 17  | 45  | 48000  |
+| 18  | 47  | 500000 |
+| 19  | 49  | 750000 |
+| 20  | 52  | 1000000|
+
 
 We can see that out of these 20 rows:
 
@@ -82,13 +83,13 @@ We can see that out of these 20 rows:
 
 - We met 6 people who chose not to share their income and due to that, some values are missing. 
 
-We know that income of 10 people in our data is between 20000 - 50,000, 6 people did not answer and only 4 people had incomes between 500,000 - 1,000,000
+We know that income of 10 people in our data is between 20,000 - 50,000, 6 people did not answer and only 4 people had incomes between 500,000 - 1,000,000
 
-However, the average income is coming out to be 226000. 
+However, the average income is coming out to be 226,000. 
 
-Now, saying that 'Average income of these 20 people is 226000' **would be misleading**.
+Now, saying that 'Average income of these 20 people is 226,000' **would be misleading**.
 
-That is because it is giving us a sense that everyone is earning around 226000, but we know that most people are earning between 20,000 - 50000.
+That is because it is giving us a sense that everyone is earning around 226,000, but we know that most people are earning between 20,000 - 50,000.
 
 ``In order to ensure we avoid situations like this during missing data handling, this step exists.``
 
@@ -104,7 +105,9 @@ In this section, we will be exploring very simple concepts like:
 
 - How often values appear
 
-We will be exploring and understanding these ideas using:
+We will be working with **Diagnosis** and **Visualization** modules from DataLab to help us answer these questions. 
+
+We will be learning and understanding these ideas using:
 
 - Beginner-Friendly language
 
