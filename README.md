@@ -1,3 +1,5 @@
+![DataLab logo](https://github.com/TheDucky-2/DataLab/blob/main/DataLab_logo_images/DataLab_logo.png)
+
 # 📊 DataLab (v0.1 Pre-Release)
 
 A Beginner-Friendly Library for Understanding Data
