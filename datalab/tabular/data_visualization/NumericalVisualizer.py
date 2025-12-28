@@ -1,8 +1,8 @@
+# from datalab
 from .DataVisualizer import DataVisualizer
 from ..computations import Distribution
 
 import pandas as pd
-import matplotlib.pyplot as plt
 
 class NumericalVisualizer(DataVisualizer):
 
@@ -61,10 +61,9 @@ class NumericalVisualizer(DataVisualizer):
         ----------------------
             Use this method of visualization only for numerical data.
         
-        How to Interpret:
-        -----------------
-            Guide on 'Histogram Interpretation' is available under Interpretation Guide section of DataLab Docs. 
         '''
+
+        import matplotlib.pyplot as plt
 
         for column in self.df[self.columns]:
 
@@ -89,7 +88,7 @@ class NumericalVisualizer(DataVisualizer):
 
             plt.show()
 
-    def boxplot(self, 
+    def plot_box(self, 
                 orientation : str = 'vertical',
                 xlabel:str|type(None) = None,
                 ylabel:str|type(None) = None,
@@ -235,10 +234,6 @@ class NumericalVisualizer(DataVisualizer):
         ---------------
             This function uses compute_KDE() and compute_histogram() from Distribution class of the Computation Package
 
-        How to Interpret:
-        -----------------
-            Guide on 'KDE Interpretation' is available under Interpretation Guide section of DataLab Docs. 
-
             '''
         import matplotlib.pyplot as plt
 
@@ -272,6 +267,72 @@ class NumericalVisualizer(DataVisualizer):
                 ax.set_ylabel('Count')
 
             ax.legend()
+
             plt.show()
 
+    def plot_QQ(self, distribution_type: str = 'norm', title: str =None, points_color: str = 'green'):
+
+        '''
+        Visualize Quantile-Quantile plot (QQ plot) for each column of Numerical DataFrame
+
+        Parameters:
+        -----------
+
+        self : pd.DataFrame
+            A pandas DataFrame
+
+        Optional:
+
+            distribution_type: str (default is 'norm')
+                Type of Distribution you would like to see
+
+            title : str or type None
+                Title of the plot. Adds column name by default.
+
+            points_color : str (default is 'green')
+                Color of data points
+
+        Returns:
+        --------
+            None
+                This function is intended for visualization only. 
+                It only displays the plot and does not return anything.
+
+        Usage Recommendations:
+        ----------------------
+            Use this method of visualization only for numerical data.
+
+        '''
+        from scipy import stats
+        import matplotlib.pyplot as plt
+
+        if distribution_type is None:
+            raise ValueError(f'Unknown distribution: {distribution_type}')
             
+        distribution_name = getattr(stats, distribution_type, None)
+
+        for column in self.df[self.columns]:
+
+            fig, ax = plt.subplots()
+            
+            # using probplot to create a QQ plot
+            stats.probplot(self.df[column], dist=distribution_name, plot=ax)
+
+            # removing underscores in column names if they exist, for title
+            split_column_names= column.split('_')
+            column_names = " ".join(split_column_names)
+
+            if title:
+                ax.set_title(title)
+            else:
+                ax.set_title(f'QQ plot of {column_names}')
+            
+            # setting color of data points
+
+            ax.get_lines()[0].set_color(points_color)   # points
+            
+        plt.show()
+        
+
+
+                
