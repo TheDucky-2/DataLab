@@ -42,7 +42,7 @@ Let us see what our above example looks like visually:
 
 **Example:**
 
-![Example Histogram](Example_histogram.png)
+![Example Histogram](example_images/Example_histogram.png)
 
 We can see that out of 60 people:
 
@@ -60,7 +60,7 @@ We can see categories of people present (Students, Friends, Teachers) and number
 
 **Example:**
 
-![Example Histogram](Example_histogram2.png)
+![Example Histogram](example_images/Example_histogram2.png)
 
 We can see:
 
@@ -118,7 +118,7 @@ This time, we decide to give candies more evenly.
 
 Let us look at this visually to understand:
 
-![Normal Distribution](Example_histogram3.png)
+![Normal Distribution](example_images/Example_histogram3.png)
 
 
 We can see:
