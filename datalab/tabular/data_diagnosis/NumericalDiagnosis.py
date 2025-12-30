@@ -4,13 +4,10 @@ from ..computations import Distribution
 from pathlib import Path
 
 import pandas as pd
-import numpy as np
 
 class NumericalDiagnosis(Diagnosis):
 
     def __init__(self, df: pd.DataFrame, columns:list = None):
-        import pandas as pd
-        import numpy as np
 
         '''
         Initializing the Diagnosis
@@ -80,44 +77,75 @@ class NumericalDiagnosis(Diagnosis):
         
         return sparsity
 
-    def detect_outliers(self, method='IQR'):
-        
-        print("\nUses IQR method by default. If you want to detect outliers using z-score, pass the parameter 'z-score'")
-        
-        self.method = method
+    def detect_outliers(self, method: str ='IQR')-> dict[str, pd.Series]:
 
-        if self.method == 'IQR':
+        '''
+        Detects outliers in each Numerical column of the DataFrame
 
-            outliers = {}
+        Parameters:
+        -----------
+            self
 
-            for column in self.df.columns:
+            Optional:
 
-                Q1 = self.df[column].quantile(0.25)
-                Q3 = self.df[column].quantile(0.75)
+                method : str (default is 'IQR')
 
-                # Inter Quartile Range
-                IQR = Q3 - Q1 
+                    Method using which you wish to detecting outliers. Supports:
+                    
+                    - IQR
+                    - z-score
+        Returns:
+            pd.Series
+            A pandas Series of columns with outliers
+            
+        Usage Recommendation:
+            1. Use this function when you want to check if there are any outliers in your data.
+            2. Use this function only for Numerical data (numbers).
 
-                lower_bound = Q1 - (1.5 * IQR)
-                upper_bound = Q3 + (1.5 * IQR)
+        >>> Example: 
+                NumericalDiagnosis(df).detect_outliers()
+            
+        '''
+        outliers_dict  = {}
 
-                outliers[column] = self.df[(self.df[column] < lower_bound) | (self.df[column] > upper_bound)]
-
-        elif self.method == 'z-score':
-
-            outliers = {}
-
-            for column in self.df.columns:
-                mean = self.df[column].mean()
-                std_dev = self.df[column].std()
-
-                z_scores = np.abs((self.df[column] - self.df[column].mean())/self.df[column].std())
-
-                outliers_per_column = self.df[column][z_scores > 3].to_list()
-                outliers[column] = outliers_per_column
+        for col in self.df[self.columns]:
+            
+            if method == 'IQR':
                 
-        return outliers
+                # the 1st quartile 
+                q1 = self.df[col].quantile(0.25)
 
+                # the 3rd quartile
+                q3 = self.df[col].quantile(0.75)
+
+                # the remaining 50% of data in the middle
+                IQR = q3 - q1
+
+                # we are subtracting 1.5 times of 50% of data from the 25% quantile, which means values would be very high in negative
+                lower_bound = q1 - (1.5 * IQR)
+
+                # we are add 1.5 times of 50% of data to the 75% quantile, which means values would be very high in positive
+                upper_bound = q3 + (1.5 * IQR)
+
+                # getting outliers that are numbers which are either lower than lower boundary or higher than higher boundary
+                outliers_dict[col] = self.df[((self.df[col]) < lower_bound) | ((self.df[col]) > upper_bound)][col]
+
+            elif method == 'z-score':
+                mean = self.df[col].mean()
+                std = self.df[col].std()
+
+                z_score = np.abs((self.df[col] - mean)/std)
+                
+                # getting outliers which have a z-score of more than 3 
+                outliers = (self.df[col][z_score>3])
+
+                outliers_dict[col] = outliers
+
+        # getting only the columns where outliers actually exist
+        outliers_dict = {col: df for col, df in outliers_dict.items() if not df.empty}
+        print("\nUses IQR method by default. If you want to detect outliers using z-score, use method = 'z-score'")
+            
+        return outliers_dict
     def check_skewness(self)-> pd.Series:
         '''
         Checks the skewness in each column of the DataFrame
@@ -155,11 +183,11 @@ class NumericalDiagnosis(Diagnosis):
 
                 skewness_threshold: int or float (default is 1)
         
-                    The absolute value for skewness |skewness| below which the data distribution is considered to be a Normal Distribution.
+                    The absolute value for skewness(|skewness|) below which the data distribution is considered to be a Normal Distribution.
                     
                 kurtosis_threshold: int or float( default is 2)
 
-                    The absolute value for kurtosis |kurtosis| below which the data distribution is considered to be a Normal Distribution.
+                    The absolute value for kurtosis(|kurtosis|) below which the data distribution is considered to be a Normal Distribution.
 
         Returns:
             pd.Series
@@ -184,6 +212,7 @@ class NumericalDiagnosis(Diagnosis):
                     risk_score               Normal Distribution
                     dtype: object
         '''
+        # getting Skewness from numerical diagnosis class and kurtosis calculation from Distribution class
         skewness = NumericalDiagnosis(self.df).check_skewness()
         kurtosis = Distribution(self.df).excess_kurtosis()
 
