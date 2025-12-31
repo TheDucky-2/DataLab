@@ -89,7 +89,7 @@ class ColumnConverter:
             df_copy[self.columns] = df_copy[self.columns].combine_first(df_copy[self.columns])
             return df_copy
 
-    def to_datetime(self, inplace: bool=False) -> pd.DataFrame:
+    def to_datetime(self, inplace: bool=False, dayfirst=False) -> pd.DataFrame:
         '''
         Convert one or more columns column into datetime columns.
 
@@ -102,6 +102,9 @@ class ColumnConverter:
 
             inplace  : bool (default is False)
                 Whether you want to apply changes to dataframe. 
+
+            dayfirst : bool (default is False)
+                Whether you would like day to appear first or months to appear first, in dates.
         
         Returns:
         --------
@@ -132,13 +135,20 @@ class ColumnConverter:
             raise TypeError(f'inplace must be a boolean: True or False, got {type(inplace).__name__}')
         # we will be creating a function to convert each value to datetime if valid, else we will leave it as it is.
 
+        if not isinstance(dayfirst, bool):
+            raise TypeError(f'dayfirst must be True or False, got {type(dayfirst).__name__}')
+
         df_copy = self.df.copy()
 
-        for column in self.columns:
-
-            # apply datetime conversion to all columns passed
-            converted_to_datetime = pd.to_datetime(df_copy[column], errors = 'coerce')
+        for column in df_copy[self.columns]:
             
+            if dayfirst:
+                # apply datetime conversion to all columns passed
+                converted_to_datetime = pd.to_datetime(df_copy[column], dayfirst=True, errors = 'coerce')
+            
+            else:
+                converted_to_datetime = pd.to_datetime(df_copy[column], dayfirst=False,errors='coerce')
+                
             conversion_successful = converted_to_datetime.notna()
             # now check scenarios where conversion to datetime failed but is not invalid value in the DataFrame
             conversion_failed = converted_to_datetime.isna() & df_copy[column].notna()
