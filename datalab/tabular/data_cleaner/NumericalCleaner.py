@@ -17,60 +17,6 @@ class NumericalCleaner(DataCleaner):
         
         print(f'NumericalCleaner initialized with columns: {self.columns}')
 
-    def float_to_Int64(self, inplace: bool=False) -> pd.DataFrame:
-        '''
-        Convert datatypes of one or more columns from 'float' to 'Int64' safely (using nullable integers)
-
-        Parameters:
-            df:       pd.DataFrame, a pandas DataFrame
-            columns : list of column names
-            inplace  : bool (default, False)
-                If True, modifies the original DataFrame in place.
-                If False, returns a new DataFrame with only the converted columns.
-
-        Return:
-            pd.DataFrame
-            A pandas DataFrame of only the columns with values converted from float to Int64 (nullable, which means it can include null values)
-
-        Usage Recommendation:
-            Use this function when you want to convert float (decimals) into int (integer), including null values & np.nan.
-
-        Considerations:
-            This function keeps null values and np.nan, but converts them to <NA> (Int64Dtype)
-
-        >>> Example: 
-                    Input   :   df['age'] = [56.0, 64.0, 75.0, 23.0, NaN]
-                    Function:   df = float_to_Int64(df, ['age'], inplace=True) 
-                    Output  :   Entire Original DataFrame, with values converted in column 'age' as [56, 64, 75, 23, <NA>]
-
-            Example: 
-                    Input   :   df['age']               = [56.0, 64.0, 75.0, 23.0, NaN]
-                                df['num_of_dependents'] = [0.0, 1.0, NaN, 5.0, 2.0]
-
-                    Function:   df = float_to_Int64(df, ['age', 'num_of_dependents'], inplace=True) 
-
-                    Output  :   DataFrame of columns 'age' and 'num_of_dependents'.
-                                df['age']                 = [56, 64, 75, 23, <NA>]
-                                df['num_of_dependents']   = [0, 1, <NA>, 5, 2]
-
-        '''
-        if not isinstance(self.df, pd.DataFrame):
-            raise TypeError(f'df must be a pandas dataframe, got {type(self.df).__name__}')
-
-        if not isinstance(self.columns, list):
-            raise TypeError(f'columns must be a list of column names, got {type(self.columns).__name__}')
-        
-        missing_columns = [column for column in self.columns if column not in self.df.columns]
-        if missing_columns:
-            raise ValueError(f'The following columns are not in the dataframe: {missing_columns}')
-
-        self.df[self.columns] = self.df[self.columns].apply(lambda col: col.astype('Int64'))
-
-        if inplace:
-            return None
-        else:
-            return self.df[self.columns].copy()
-
     def round_off(self, decimals:int, inplace:bool=False):
         '''
         Round off numbers by 
