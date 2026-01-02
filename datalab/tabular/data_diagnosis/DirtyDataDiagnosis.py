@@ -1,5 +1,4 @@
 from ..utils.Logger import datalab_logger
-
 import pandas as pd
 
 logger = datalab_logger(name = __name__.split('.')[-1])
@@ -8,9 +7,8 @@ class DirtyDataDiagnosis:
 
     def __init__(self, df: pd.DataFrame, columns: list = None):
         '''
-        Initialising the Dirty Data Diagnosis
+        Initializing the Dirty Data Diagnosis
         '''
-
         self.df = df
      
         if columns is not None:
@@ -18,21 +16,125 @@ class DirtyDataDiagnosis:
         else:
             self.columns = self.df.columns
     
-        logger.info(f'Dirty Data Diagnosis initialized with columns: {self.columns.tolist()}')
-        
+        logger.info(f'Dirty Data Diagnosis initialized!')
         
     def detect_clean_numerical_data(self):
+        '''
+        Shows rows of numerical data that includes just +ve or -ve numbers including decimals in each column of the DataFrame.
 
-        logger.info('Detecting clean numerical data....')
+        Parameters:
+        -----------
+            self : pd.DataFrame
+                A pandas DataFrame
+
+        Returns:
+        --------
+            dict
+                A python dictionary of column names and rows of clean numerical data
+        
+        Usage Recommendation:
+        ---------------------
+            1. Use this function when you want to see what rows in your data contains only numbers to separate rows 
+
+        Example:
+        --------
+            DirtyDataDiagnosis(df).detect_clean_numerical_data()
+        '''
 
         # creating an empty dictionary
         clean_numbers = {}
 
         for column in self.df[self.columns]:
-
+            
+            # using the regex pattern to only detect numbers or numbers with decimals
             clean_numbers[column] = self.df[self.df[column].astype(str).str.match(r'^[+-]?\d+(\.\d+)?$')]
+
+        logger.info(f'Done!')
 
         return clean_numbers
         
+    def detect_dirty_numerical_data(df, pattern=None):
+        '''
+        Shows rows of numerical data that do not include +ve or -ve numbers including decimals in each column of the DataFrame.
+
+        Parameters:
+        -----------
+            self : pd.DataFrame
+                A pandas DataFrame
+
+        Returns:
+        --------
+            dict
+                A python dictionary of column names and rows of dirty numerical data
+        
+        Usage Recommendation:
+        ---------------------
+            1. Use this function when you want to see rows with non-numbers or numbers that include text or symbols to separate dirty data for cleaning 
+
+        Example:
+        --------
+            DirtyDataDiagnosis(df).detect_dirty_numerical_data()
+        '''
+        if pattern is None:
+            pattern = r'^[+-]?\d+(\.\d+)?$'
+        else:
+            pattern = pattern
+
+        dirty_numerical_data = {}
+
+        for col in self.df[self.columns]:
+            # detecting the rows that are not clean numbers
+            dirty_numerical_data[col] = self.df[~self.df[col].astype(str).str.match(pattern)]
+
+        logger.info(f'Done!')
+
+        return dirty_numerical_data
+
+    def detect_spaces_in_numerical_data(self):
+        '''
+        Shows rows of numerical data that contain leading or trailing spaces or both, for each column of DataFrame
+
+        Parameters:
+        -----------
+            self : pd.DataFrame
+                A pandas DataFrame
+
+        Returns:
+        --------
+            dict
+                A python dictionary of column names and rows of data that contain numbers with leading or trailing spaces
+        
+        Usage Recommendation:
+        ---------------------
+            1. Use this function when you want to see what rows in your data contains only numbers with leading or trailing spaces.
+
+        Example:
+        --------
+            DirtyDataDiagnosis(df).detect_clean_numerical_data()
+        '''
+
+        leading_spaces_pattern = r'^\s+[+-]?\d+(\.\d+)?$'
+        trailing_spaces_pattern = r'^[+-]?\d+(\.\d+)?\s+$'
+        leading_and_trailing_spaces_pattern = r'^\s+[+-]?\d+(\.\d+)?\s+$'
+
+        spaces_in_numerical_data = {}
+
+        for column in self.df[self.columns]:
+            # getting rows of data with leading spaces
+            detected_leading_spaces = self.df[column].astype(str).str.match(leading_spaces_pattern, na=False)
+            # getting rows of data with trailing spaces
+            detected_trailing_spaces = self.df[column].astype(str).str.match(trailing_spaces_pattern, na=False)
+            # getting rows of data with leading and trailing spaces
+            detected_leading_and_trailing_spaces = self.df[column].astype(str).str.match(leading_and_trailing_spaces_pattern, na=False)
+
+            mask = detected_trailing_spaces | detected_leading_spaces | detected_leading_and_trailing_spaces
+
+            spaces_in_numerical_data[column] = self.df[mask]
+
+        logger.info(f'Done!')
+        
+        return spaces_in_numerical_data
+
+                
 
 
