@@ -167,5 +167,36 @@ class DirtyDataDiagnosis:
 
         return commas_dict
                     
+    def detect_currency_symbols_in_numbers(self):
+        '''
+        Shows rows of numerical data that contain currency symbols in beginning or end, in each column of the DataFrame
 
+        Parameters:
+        -----------
+            self : pd.DataFrame
+                A pandas DataFrame
+
+        Returns:
+        --------
+            dict
+                A python dictionary of column names and rows of numbers that contain symbols in start or end
+        
+        Usage Recommendation:
+        ---------------------
+            1. Use this function when you want to see what numbers contain currency symbols
+
+        Example:
+        --------
+            DirtyDataDiagnosis(df).detect_currency_symbols_in_numbers()
+        '''
+        currency_symbols=  {}
+
+        # detecting currency symbols in end or beginning
+        detecting_currency_in_start_or_end = r'^[\$\£\€\¥\₹]\s*\d[\d,]*(\.\d+)?$|^\d[\d,]*(\.\d+)?\s*[\$\£\€\¥\₹]$'
+
+        for col in self.df[self.columns]:
+
+            currency_symbols[col] = self.df[self.df[col].astype(str).str.match(detecting_currency_in_start_or_end)]
+
+        return currency_symbols
 
