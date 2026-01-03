@@ -200,3 +200,36 @@ class DirtyDataDiagnosis:
 
         return currency_symbols
 
+    def detect_scientific_notation_in_numbers(self):
+
+        '''
+        Shows rows of numerical data that have numbers in scientific notation in each column of the DataFrame
+
+        Parameters:
+        -----------
+            self : pd.DataFrame
+                A pandas DataFrame
+
+        Returns:
+        --------
+            dict
+                A python dictionary of column names and rows of numbers that are scientific notation
+        
+        Usage Recommendation:
+        ---------------------
+            1. Use this function when you want to see what numbers contain scientific notation
+
+        Example:
+        --------
+            DirtyDataDiagnosis(df).detect_scientific_notation_in_numbers()
+        ''' 
+        # detecting scientific notation in both decimals or commas
+        pattern = r'^[+-]?\d+(?:[.,]\d+)[eE][+-]?\d+'
+
+        detected_scientific_notation = {}
+        
+        for col in self.df[self.columns]:  
+            detected_scientific_notation[col] = self.df[self.df[col].astype(str).str.match(pattern, na=False)]
+
+        return detected_scientific_notation
+
