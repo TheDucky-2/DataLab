@@ -53,7 +53,7 @@ class DirtyDataDiagnosis:
 
         return clean_numbers
         
-    def detect_dirty_numerical_data(df, pattern=None):
+    def detect_dirty_numerical_data(self, pattern=None):
         '''
         Shows rows of numerical data that do not include +ve or -ve numbers including decimals in each column of the DataFrame.
 
@@ -135,6 +135,37 @@ class DirtyDataDiagnosis:
         
         return spaces_in_numerical_data
 
-                
+    def detect_commas_in_numbers(self):
+        '''
+        Shows rows of numerical data that contain commas in each column of the DataFrame
+
+        Parameters:
+        -----------
+            self : pd.DataFrame
+                A pandas DataFrame
+
+        Returns:
+        --------
+            dict
+                A python dictionary of column names and rows of numbers that contain commas
+        
+        Usage Recommendation:
+        ---------------------
+            1. Use this function when you want to see what numbers contain commas.
+
+        Example:
+        --------
+            DirtyDataDiagnosis(df).detect_commas_in_numbers()
+            '''
+        commas_dict = {}
+
+        pattern = r'\d[\d.,]*,\d'
+
+        for col in self.df[self.columns]:
+            # using regex pattern for detecting commas 
+            commas_dict[col] = self.df[self.df[col].astype(str).str.match(pattern, na=False)]
+
+        return commas_dict
+                    
 
 
