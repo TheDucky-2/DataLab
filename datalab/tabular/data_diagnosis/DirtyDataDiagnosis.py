@@ -383,4 +383,24 @@ class DirtyDataDiagnosis:
 
         return commas_and_decimals_count
         
+    def detect_symbols_in_numbers(self):
+
+        '''
+        Detects everything that is not an alphabet, a number, a space, +ve or -ve sign, commas and decimals, in each column of the DataFrame
+
+        Returns:
+            dict
+                A python dictionary of columns and rows of data that contain symbols
+
+        Example:
+            DirtyDataDiagnosis(df).detect_symbols_in_numbers()
+        '''
+
+        symbols_dict={}
+
+        for col in self.df[self.columns]:
+            
+            symbols_dict[col]=self.df[self.df[col].astype(str).str.contains(r'[^A-Za-z0-9\s,.+-]+', na=False)]
+
+        return symbols_dict
 
