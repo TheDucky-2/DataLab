@@ -268,3 +268,37 @@ class DirtyDataDiagnosis:
 
         return units_in_numbers_dict
 
+    def detect_only_letters(self):
+        '''
+        Detects rows that contain only alphabets with or with spaces in each column of the DataFrame.
+
+        Parameters:
+        -----------
+            self : pd.DataFrame
+                A pandas DataFrame
+
+        Returns:
+        --------
+            dict
+                A python dictionary of column names and rows of numbers containing only letters and spaces
+        
+        Usage Recommendation:
+        ---------------------
+            1. Use this function when you want to see what rows contain only letters and spaces.
+
+        Example:
+        --------
+            DirtyDataDiagnosis(df).detect_only_letters()
+        '''
+        # detect text pattern
+        text_pattern = r'[A-Za-z ]+'
+
+        text_only_dict = {}
+
+        for col in df.columns:
+            # using fullmatch to ensure only rows containing only letters is detected
+            text_only_dict[col]=self.df[self.df[col].astype('string').str.fullmatch(text_pattern, na=False)]
+
+        return text_only_dict
+    
+
