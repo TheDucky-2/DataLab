@@ -142,4 +142,32 @@ class NumericalCleaner(DataCleaner):
 
         return self.df
 
+    def replace_commas_with_decimals(self):
+        '''
+        Replaces commas (,) that are used as decimal replacements, with decimals (.) in each column of the DataFrame
+
+        Returns:
+        --------
+            pd.DataFrame
+                A pandas DataFrame
+
+        Usage Recommendation:
+        ---------------------
+            1. Use this function when you want to replace commas with decimal values during numerical cleaning
+        
+        Example:
+        ---------
+            NumericalCleaner(df).replace_commas_with_decimals()
+        '''
+
+        commas_pattern = r'^-?\d+(\,\d+)$'
+
+        for col in self.df[self.columns]:
+            # creating a mask of matched values
+            mask = self.df[col].astype(str).str.match(commas_pattern, na=False)
+            # replacing commas with decimals in those values
+            self.df.loc[mask, col]= self.df.loc[mask, col].astype(str).str.replace(',', '.')
+
+        return self.df
+
 
