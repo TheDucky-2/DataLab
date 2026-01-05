@@ -109,6 +109,37 @@ class NumericalCleaner(DataCleaner):
             
         return self.df
 
-    
+    def remove_units(self)-> pd.DataFrame:
+        '''
+        Detects units (like cm or kg) appearing after numbers and removes them in each column of the DataFrame.
+
+        Returns:
+        --------
+            pd.DataFrame
+                A pandas DataFrame
+
+        Usage Recommendation:
+        ---------------------
+            1. Use this function when you want to clean numbers that contain units or text appearing after numbers.
+
+        Example:
+        --------
+            NumericalCleaner(df).remove_units()
+        
+        '''
+
+        # pattern for detecting rows containing units
+        detect_units_pattern = r'^[+-]?\d+(?:[,.]\d+)?\s*[A-Za-z]+$'
+
+        # pattern for detecting only text, so we can use this to replace the units
+        units = r'\s*[A-Za-z]+$'
+
+        for col in self.df[self.columns]:
+
+            unit_mask = self.df[col].astype('string').str.match(detect_units_pattern, na=False)
+
+            self.df.loc[unit_mask, col] = self.df.loc[unit_mask, col].astype('string').str.replace(units, "", regex=True)
+
+        return self.df
 
 
