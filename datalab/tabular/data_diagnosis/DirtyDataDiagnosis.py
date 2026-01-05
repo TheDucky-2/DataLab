@@ -400,7 +400,7 @@ class DirtyDataDiagnosis:
 
         for col in self.df[self.columns]:
             
-            symbols_dict[col]=self.df[self.df[col].astype(str).str.contains(r'[^A-Za-z0-9\s,.+-]+', na=False)]
+            symbols_dict[col]=self.df[self.df[col].astype(str).str.contains(r'[^A-Za-z0-9\s,.+\-$€£¥₹₩₺₫₦₱₪฿₲₴₡]+',regex=True, na=False)]
 
         return symbols_dict
 
