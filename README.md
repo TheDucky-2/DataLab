@@ -179,6 +179,8 @@ datalab/
 
 - Numerical & categorical diagnosis
 
+- Dirty data diagnosis
+
 **✔️ 3. Missingness Diagnosis and Visualization**
 
 - Missing value statistics
