@@ -142,6 +142,35 @@ class NumericalCleaner(DataCleaner):
 
         return self.df
 
+    def remove_currency_symbols(self):
+        '''
+        Removes currency symbols appearing before or after numbers in each column of the DataFrame
+
+        Returns:
+        --------
+            pd.DataFrame
+                A pandas DataFrame
+
+        Usage Recommendation:
+        ---------------------
+            1. Use this function when you want to remove currency symbols like $.
+        
+        Example:
+        ---------
+            NumericalCleaner(df).remove_currency_symbols()
+        '''
+        # ensuring that currency is detected at beginning or end of string
+        currency_in_start_or_end = r'^[\$\€\£\¥\₹\₩\₺\₫\₦\₱\₪\฿\₲\₴\₡]\s*\d[\d,]*(\.\d+)?$|^\d[\d,]*(\.\d+)?\s*[\$\€\£\¥\₹\₩\₺\₫\₦\₱\₪\฿\₲\₴\₡]$'
+
+
+        for col in self.df[self.columns]:
+            mask = self.df[col].astype(str).str.match(currency_in_start_or_end, na=False)
+            
+            # removing currency symbols
+            self.df.loc[mask, col] = self.df.loc[mask, col].astype(str).str.replace(r'[\$\€\£\¥\₹\₩\₺\₫\₦\₱\₪\฿\₲\₴\₡]', '', regex=True)
+
+        return self.df
+
     def replace_commas_with_decimals(self):
         '''
         Replaces commas (,) that are used as decimal replacements, with decimals (.) in each column of the DataFrame
