@@ -184,19 +184,19 @@ class DirtyDataDiagnosis:
 
         return numeric_diagnosis
 
-    def diagnose_text(self)-> dict[str, dict[str, pd.DataFrame]]:
+    def diagnose_text(self, show_available_methods=False)-> dict[str, dict[str, pd.DataFrame]]:
         '''
         Detects patterns and common formatting issues in text in each column of the DataFrame.
 
         The following diagnostics are computed per column:
         
         - only_symbols: Values containing only symbols.
-        - only_text: Values containing alphabetic characters and spaces
-        - is_dirty: Values that are not strictly text
-        - has_symbols: Values containing non-alphanumeric or special symbols
-        - is_null: Values that are null or missing values.
-        - has_numbers: Values that contain numbers in text.
-        - has_spaces: Values that contain leading or trailing spaces 
+        - only_text:    Values containing alphabetic characters and spaces
+        - is_dirty:     Values that are not strictly text
+        - has_symbols:  Values containing non-alphanumeric or special symbols
+        - is_null:      Values that are null or missing values.
+        - has_numbers:  Values that contain numbers in text.
+        - has_spaces:   Values that contain leading or trailing spaces 
 
         Returns:
         --------
@@ -209,15 +209,14 @@ class DirtyDataDiagnosis:
 
         Considerations:
         ---------------
-            1. All pattern matching is performed using Polars regex.
-            2. Each diagnostic is converted back to pandas before being returned.
-            3. This method is intended for diagnostic purposes, not data mutation.
+            1. This method uses Polars regex under the hood for pattern matching and is converted back to pandas before being returned.
+            2. This method is intended for diagnostic purposes, not data mutation.
 
         Example:
         --------
         >>>     diagnostics = DirtyDataDiagnosis(df).diagnose_text()
 
-        >>>     diagnostics["price"]["is_dirty"].head()
+        >>>     diagnostics['user_id']['is_dirty'].head()
         
         '''
         from ..utils.BackendConverter import BackendConverter
@@ -245,6 +244,9 @@ class DirtyDataDiagnosis:
             text_diagnosis[col]['has_numbers'] = BackendConverter(pol_df.filter(pl.col(col).str.contains(r'\p{N}'))).polars_to_pandas()
             text_diagnosis[col]['is_null'] = BackendConverter(pol_df.filter(pl.col(col).is_null())).polars_to_pandas()
             text_diagnosis[col]['has_spaces'] = BackendConverter(pol_df.filter(pl.col(col).str.contains(r'^\s|\s$'))).polars_to_pandas()
+
+        if show_available_methods:
+            logger.info(f'Available diagnostic methods: {list(text_diagnosis[col].keys())}')
 
         return text_diagnosis
 
