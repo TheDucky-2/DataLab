@@ -91,10 +91,22 @@ class DirtyDataDiagnosis:
 
         return commas_and_decimals_count
 
-
     def diagnose_numbers(self)-> pd.DataFrame:
         '''
         Detects patterns and common formatting issues in numbers in each column of the DataFrame.
+
+        The following diagnostics are computed per column:
+
+        - only_numbers: Values containing only integers or decimals (optionally signed)
+        - only_text: Values containing alphabetic characters and spaces
+        - is_dirty: Values that are not strictly numeric
+        - has_commas: Numeric values containing comma separators
+        - has_decimals: Numeric values containing decimal points
+        - has_units: Numeric values suffixed with alphabetic units (e.g., "10kg")
+        - has_symbols: Values containing non-alphanumeric or special symbols
+        - has_currency: Values containing currency symbols (prefix or suffix)
+        - has_scientific_notation: Values expressed in scientific notation
+        - has_spaces: Values that contain leading or trailing spaces
 
         Returns:
         --------
@@ -136,7 +148,10 @@ class DirtyDataDiagnosis:
                 'has_units': None,
                 'has_symbols': None,
                 'has_scientific_notation': None,
-                'only_text': None
+                'only_text': None,
+                'has_currency': None,
+                'has_double_decimals': None,
+                'has_spaces': None
             }
             
             # checking patterns using polars string expressions and converting to pandas DataFrame
@@ -149,5 +164,72 @@ class DirtyDataDiagnosis:
             numeric_diagnosis[col]['has_currency']= BackendConverter(polars_df.filter(pl.col(col).str.contains(r'^[$€£¥₹₩₺₫₦₱₪฿₲₴₡]\s*\d[\d,]*(\.\d+)?$|^\d[\d,]*(\.\d+)?\s*[$€£¥₹₩₺₫₦₱₪฿₲₴₡]$'))).polars_to_pandas()
             numeric_diagnosis[col]['has_scientific_notation']= BackendConverter(polars_df.filter(pl.col(col).str.contains(r'^[+-]?\d+(?:[.,]\d+)[eE][+-]?\d+'))).polars_to_pandas()
             numeric_diagnosis[col]['has_double_decimals']= BackendConverter(polars_df.filter(pl.col(col).str.contains(r'^[+-]?\d+(?:\.\d+){2,}$'))).polars_to_pandas()
-        
+            numeric_diagnosis[col]['has_spaces']= BackendConverter(polars_df.filter(pl.col(col).str.contains(r'^\s+[+-]?\d+(?:\.\d+)?$|^[+-]?\d+(?:\.\d+)?\s+$|^\s+[+-]?\d+(?:\.\d+)?\s+$'))).polars_to_pandas()
+            
         return numeric_diagnosis
+
+    def diagnose_text(self):
+        '''
+        Detects patterns and common formatting issues in text in each column of the DataFrame.
+
+        The following diagnostics are computed per column:
+        
+        - only_symbols: Values containing only symbols.
+        - only_text: Values containing alphabetic characters and spaces
+        - is_dirty: Values that are not strictly text
+        - has_symbols: Values containing non-alphanumeric or special symbols
+        - is_null: Values that are null or missing values.
+        - has_numbers: Values that contain numbers in text.
+        - has_spaces: Values that contain leading or trailing spaces 
+
+        Returns:
+        --------
+            pd.DataFrame
+                A pandas DataFrame
+
+        Usage Recommendation:
+        ---------------------
+            1. Use this function when you want to see what kind of issues exist in columns that contain text in your DataFrame
+
+        Considerations:
+        ---------------
+            1. All pattern matching is performed using Polars regex.
+            2. Each diagnostic is converted back to pandas before being returned.
+            3. This method is intended for diagnostic purposes, not data mutation.
+
+        Example:
+        --------
+        >>>     diagnostics = DirtyDataDiagnosis(df).diagnose_text()
+
+        >>>     diagnostics["price"]["is_dirty"].head()
+        
+        '''
+        from ..utils.BackendConverter import BackendConverter
+        
+        pol_df = BackendConverter(self.df).pandas_to_polars()
+
+        text_diagnosis = {}
+
+        for col in pol_df.columns:
+
+            text_diagnosis[col] = {
+                'is_dirty':None,
+                'only_symbols': None,
+                'has_symbols': None,
+                'only_text': None,
+                'is_null': None,
+                'has_spaces': None,
+                'has_numbers': None
+            }
+
+            text_diagnosis[col]['is_dirty']= BackendConverter(pol_df.filter(pl.col(col).str.contains(r'[^A-Za-z]'))).polars_to_pandas()
+            text_diagnosis[col]['only_text'] = BackendConverter(pol_df.filter(pl.col(col).str.contains(r'^[A-Za-z ]+$'))).polars_to_pandas()
+            text_diagnosis[col]['only_symbols'] = BackendConverter(pol_df.filter(pl.col(col).str.contains(r'^[^\p{L}]+$'))).polars_to_pandas()
+            text_diagnosis[col]['has_symbols'] = BackendConverter(pol_df.filter(pl.col(col).str.contains(r'\p{L}.*[^\p{L}]|[^\p{L}].*\p{L}'))).polars_to_pandas()
+            text_diagnosis[col]['has_numbers'] = BackendConverter(pol_df.filter(pl.col(col).str.contains(r'\p{N}'))).polars_to_pandas()
+            text_diagnosis[col]['is_null'] = BackendConverter(pol_df.filter(pl.col(col).is_null())).polars_to_pandas()
+            text_diagnosis[col]['has_spaces'] = BackendConverter(pol_df.filter(pl.col(col).str.contains(r'^\s|\s$'))).polars_to_pandas()
+
+        return text_diagnosis
+
+
