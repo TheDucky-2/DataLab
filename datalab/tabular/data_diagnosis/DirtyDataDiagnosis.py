@@ -148,5 +148,6 @@ class DirtyDataDiagnosis:
             numeric_diagnosis[col]['has_commas']= BackendConverter(polars_df.filter(pl.col(col).str.contains(r'\d[\d.,]*,\d'))).polars_to_pandas()
             numeric_diagnosis[col]['has_currency']= BackendConverter(polars_df.filter(pl.col(col).str.contains(r'^[$€£¥₹₩₺₫₦₱₪฿₲₴₡]\s*\d[\d,]*(\.\d+)?$|^\d[\d,]*(\.\d+)?\s*[$€£¥₹₩₺₫₦₱₪฿₲₴₡]$'))).polars_to_pandas()
             numeric_diagnosis[col]['has_scientific_notation']= BackendConverter(polars_df.filter(pl.col(col).str.contains(r'^[+-]?\d+(?:[.,]\d+)[eE][+-]?\d+'))).polars_to_pandas()
+            numeric_diagnosis[col]['has_double_decimals']= BackendConverter(polars_df.filter(pl.col(col).str.contains(r'^[+-]?\d+(?:\.\d+){2,}$'))).polars_to_pandas()
         
         return numeric_diagnosis
