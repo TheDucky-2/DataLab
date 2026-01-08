@@ -1,4 +1,3 @@
-from .Diagnosis import Diagnosis
 from ..utils import BackendConverter
 
 from pathlib import Path
@@ -6,7 +5,7 @@ from pathlib import Path
 import pandas as pd
 import polars as pl
 
-class TextDiagnosis(Diagnosis):
+class TextDiagnosis():
 
     def __init__(self, df: pd.DataFrame, columns:list = None):
         from pathlib import Path
@@ -26,12 +25,10 @@ class TextDiagnosis(Diagnosis):
             
             However, it accepts pandas DataFrame as input and returns a pandas DataFrame as output.
         '''
-        super().__init__(df, columns)
-
         self.df = df.select_dtypes(include = ['string', 'object', 'category'])
 
         if columns is not None:
-            self.columns = [column for column in columns if column in df.columns]
+            self.columns = [column for column in columns if column in self.df.columns]
         else:
             self.columns = self.df.columns
     
@@ -120,7 +117,7 @@ class TextDiagnosis(Diagnosis):
         
         return multiple_spaces_df
 
-    def detect_dots_within_text(df)-> pd.DataFrame:
+    def detect_dots_within_text(self)-> pd.DataFrame:
         '''
         Detects dots within words or strings for one or multiple columns of the DataFrame.
 
@@ -138,10 +135,28 @@ class TextDiagnosis(Diagnosis):
             TextDiagnosis(df).detect_dots_within_text()
 
         '''
-        polars_df = BackendConverter(df).pandas_to_polars()
+        polars_df = BackendConverter(self.df).pandas_to_polars()
         
         text_with_dots_df = polars_df.filter(pl.any_horizontal(pl.col(pl.Utf8).str.contains(r'\.')))
 
         text_with_dots = BackendConverter(text_with_dots_df).polars_to_pandas()
 
         return text_with_dots
+
+    def detect_splitters(self, splitters = [","]):
+
+        polars_df = BackendConverter(self.df).pandas_to_polars()
+
+        # joining splitters to convert them into a regex pattern for detecting splitters
+        joined_splitters=f'[{"".join(splitters)}]+'
+
+        # filtering rowx where text contains splitters passed in by the user
+        splitters_df = polars_df.filter(
+        pl.any_horizontal(
+        [pl.col(column).str.contains(joined_splitters) for column in self.columns]))
+
+        df = BackendConverter(splitters_df).polars_to_pandas()
+
+        return df
+
+
