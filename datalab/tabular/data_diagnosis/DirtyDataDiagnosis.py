@@ -180,17 +180,17 @@ class DirtyDataDiagnosis:
             for method, pattern in patterns.items():
                 
                 if method == 'is_null':
-                    mask = series.is_null()
+                    pattern_mask = series.is_null()
 
                 elif method == 'is_dirty':
 
-                    mask = ~series.str.contains(patterns['is_dirty'])
+                    pattern_mask = ~series.str.contains(patterns['is_dirty'])
 
                 else:
-                    mask = series.str.contains(pattern)
+                    pattern_mask = series.str.contains(pattern)
                 
                 # filtering pattern masks out of the polars dataframe 
-                result_df = BackendConverter(polars_df.filter(mask)).polars_to_pandas()
+                result_df = BackendConverter(polars_df.filter(pattern_mask)).polars_to_pandas()
 
                 # setting default index to be 'index'
                 result_df.set_index('index', inplace=True)
@@ -227,8 +227,11 @@ class DirtyDataDiagnosis:
 
         Considerations:
         ---------------
-            1. This method uses Polars regex under the hood for pattern matching and is converted back to pandas before being returned.
-            2. This method is intended for diagnostic purposes, not data mutation.
+            1. This method adds a default **index** column by resetting the DataFrame's index.
+            2. This is necessary to preserve original row IDs during conversion to Polars and back.
+            3. The index column DOES NOT AFFECT your transformations and are automatically restored in all returned DataFrames
+            4. This method also uses Polars regex under the hood for pattern matching
+            5. This method is intended for diagnostic purposes, not data mutation.
 
         Example:
         --------
@@ -238,34 +241,49 @@ class DirtyDataDiagnosis:
         
         '''
         from ..utils.BackendConverter import BackendConverter
+
+        self.df = self.df.reset_index()
         
-        pol_df = BackendConverter(self.df).pandas_to_polars()
+        polars_df = BackendConverter(self.df).pandas_to_polars()
+
+        columns_to_diagnose = [column for column in polars_df.columns if column!= 'index']
 
         text_diagnosis = {}
 
-        for col in pol_df.columns:
-
-            text_diagnosis[col] = {
-                'is_dirty':None,
-                'only_symbols': None,
-                'has_symbols': None,
-                'only_text': None,
+        patterns = {
+                'is_dirty': r'[^A-Za-z]',
+                'only_symbols': r'^[^\p{L}]+$',
+                'has_symbols': r'\p{L}.*[^\p{L}]|[^\p{L}].*\p{L}',
+                'only_text': r'^[A-Za-z ]+$',
                 'is_null': None,
-                'has_spaces': None,
-                'has_numbers': None
+                'has_spaces': r'^\s|\s$',
+                'has_numbers': r'\p{N}'
             }
 
-            text_diagnosis[col]['is_dirty']= BackendConverter(pol_df.filter(pl.col(col).str.contains(r'[^A-Za-z]'))).polars_to_pandas()
-            text_diagnosis[col]['only_text'] = BackendConverter(pol_df.filter(pl.col(col).str.contains(r'^[A-Za-z ]+$'))).polars_to_pandas()
-            text_diagnosis[col]['only_symbols'] = BackendConverter(pol_df.filter(pl.col(col).str.contains(r'^[^\p{L}]+$'))).polars_to_pandas()
-            text_diagnosis[col]['has_symbols'] = BackendConverter(pol_df.filter(pl.col(col).str.contains(r'\p{L}.*[^\p{L}]|[^\p{L}].*\p{L}'))).polars_to_pandas()
-            text_diagnosis[col]['has_numbers'] = BackendConverter(pol_df.filter(pl.col(col).str.contains(r'\p{N}'))).polars_to_pandas()
-            text_diagnosis[col]['is_null'] = BackendConverter(pol_df.filter(pl.col(col).is_null())).polars_to_pandas()
-            text_diagnosis[col]['has_spaces'] = BackendConverter(pol_df.filter(pl.col(col).str.contains(r'^\s|\s$'))).polars_to_pandas()
+        for col in columns_to_diagnose:
+
+            text_diagnosis[col] = {}
+
+            series = polars_df[col]
+
+            for method, pattern in patterns.items():
+                
+                if method == 'is_null': 
+                    pattern_mask = series.is_null()
+
+                elif method == 'is_dirty':
+                    pattern_mask = series.str.contains(patterns['is_dirty'])
+
+                else:
+                    pattern_mask = series.str.contains(pattern)
+
+                result_df = BackendConverter(polars_df.filter(pattern_mask)).polars_to_pandas()
+
+                result_df.set_index('index', inplace=True)
+
+                text_diagnosis[col][method] = result_df
 
         if show_available_methods:
             logger.info(f'Available diagnostic methods: {list(text_diagnosis[col].keys())}')
 
         return text_diagnosis
-
-
