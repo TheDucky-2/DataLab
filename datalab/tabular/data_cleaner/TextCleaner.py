@@ -11,7 +11,6 @@ class TextCleaner(DataCleaner):
         from ..utils import BackendConverter
         import pandas as pd
         
-
         if not isinstance(df, (pd.DataFrame, pd.Series)):
             raise TypeError(f'df must be a pandas DataFrame or pandas Series, got {type(df).__name__}')
 
@@ -72,29 +71,69 @@ class TextCleaner(DataCleaner):
         
         return replaced_polars_df
 
-    def replace_dots_within_text(self)-> pd.DataFrame:
+    def replace_splitters(self, splitters:list[str]=None, replacement:str=None):
+        '''
+        Replaces different kinds of splitters present in data, with a single splitter in each column of the DataFrame.
+
+        Parameters:
+        -----------
+            self
+
+            Optional:
+
+            splitters : list or type None (default is ',')
+                A list of splitters you have data separated by
+
+            replacement: str or type None (default is ',')
+                A single splitter you want to use for converting splitters to one single type of splitter
+
+        Returns:
+        --------
+            pd.DataFrame
+                A pandas DataFrame
+
+        Usage Recommendation:
+        ----------------------
+            Use this function when you want to normalize multiple splitters with one kind of splitter
+
+        Consideration:
+        ---------------
+            Uses polars's with_columns to apply regex to all string columns
+
+        Example:
+        --------
+        >>>    TextCleaner(df, columns=['user_status]).replace_splitters(splitters = [',', '/', '-'], replacement = ',')
 
         '''
-            Replaces dots within words or strings with an empty string (" ") for one or multiple columns of the DataFrame.
+        from ..utils.BackendConverter import BackendConverter
+        
+        if splitters is None:
+            splitters = [',']
+        
+        if replacement is None:
+            replacement = ','
 
-            Returns:
-                pd.DataFrame
-                A pandas DataFrame of columns with replaced text.
+        if not all(isinstance(splitter, str) for splitter in splitters):
+            raise TypeError(f"splitters must be a list of strings like ',', '/' etc., got {type(splitter)}")
 
-            Usage Recommendation:
-                Use this function when you want to remove dots.
+        if not isinstance(replacement, str):
+            raise TypeError(f"replacement must be a strings like ',' etc., got {type(replacement)}")
 
-            Consideration:
-                Use detect_dots_within_text() for Exploring data before replacing dots with this function.
+        splitters = f'[{"".join(splitters)}]'
 
-            Example:
-                TextCleaner(df).replace_dots_within_text()
+        polars_df = BackendConverter(self.df[self.columns]).pandas_to_polars()
 
-        '''
-        polars_df = BackendConverter(self.df).pandas_to_polars()
+        for column in self.columns:
+            pattern_mask = polars_df[column].str.contains(splitters)
 
-        polars_df = polars_df.with_columns(pl.col(pl.Utf8).str.replace_all(r'\.', ""))
+            cleaned = polars_df[column].str.replace_all(splitters, replacement)
 
-        replaced_df = BackendConverter(polars_df).polars_to_pandas()
+            polars_df = polars_df.with_columns(
+                pl.when(pattern_mask)
+                .then(cleaned)
+                .otherwise(pl.col(column))
+            )
 
-        return replaced_df
+        self.df = BackendConverter(polars_df).polars_to_pandas()
+
+        return self.df
