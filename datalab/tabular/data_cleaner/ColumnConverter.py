@@ -113,7 +113,7 @@ class ColumnConverter:
         else:
             return df_copy
 
-    def to_categorical(self,inplace: bool=False)-> pd.DataFrame:
+    def to_categorical(self,inplace: bool=False, **kwargs)-> pd.DataFrame:
         '''
         Convert a column to a Categorical column
 
@@ -157,10 +157,8 @@ class ColumnConverter:
         if not isinstance(inplace, bool):
             raise TypeError(f'inplace must be True or False, got {type(inplace).__name__}')
 
-        self.inplace = inplace
-
-        categories = self.kwargs.get('categories', None)
-        ordered = self.kwargs.get('ordered', False)
+        categories = kwargs.get('categories', None)
+        ordered = kwargs.get('ordered', False)
 
         # created a copy of the data that we will be working on, to assign to self.df if inplace = True later
         df_copy = self.df if inplace else self.df.copy()
@@ -172,7 +170,7 @@ class ColumnConverter:
             else:
                 df_copy[column] = df_copy[column].astype('category')
 
-        if self.inplace:
+        if inplace:
             self.df = df_copy
             return None
             
@@ -217,6 +215,7 @@ class ColumnConverter:
 
         if inplace:
             original_columns = self.df[self.columns].copy()
+            
             # first converting all data to numerical, and non-numerical get converted to NaN
             self.df[self.columns] = self.df[self.columns].apply(pd.to_numeric, errors = 'coerce')
 
