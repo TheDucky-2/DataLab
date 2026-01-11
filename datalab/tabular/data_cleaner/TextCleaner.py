@@ -133,9 +133,11 @@ class TextCleaner(DataCleaner):
 
         return self.df
 
-    def replace_splitters(self, splitters:list[str]=None, replacement:str=None):
+    def replace_splitters(self, splitters_and_replacements=None):
         '''
         Replaces different kinds of splitters present in data, with a single splitter in each column of the DataFrame.
+
+        Example: 'active/member' -> 'active-member', 'masters/ male' -> 'masters, male'
 
         Parameters:
         -----------
@@ -143,11 +145,8 @@ class TextCleaner(DataCleaner):
 
             Optional:
 
-            splitters : list or type None (default is ',')
-                A list of splitters you have data separated by
-
-            replacement: str or type None (default is ',')
-                A single splitter you want to use for converting splitters to one single type of splitter
+            splitters_and_replacements: dict 
+                A dictionary of splitters and their replacements
 
         Returns:
         --------
@@ -165,42 +164,30 @@ class TextCleaner(DataCleaner):
 
         Example:
         --------
-        >>>    TextCleaner(df, columns=['user_status]).replace_splitters(splitters = [',', '/', '-'], replacement = ',')
+        >>>    TextCleaner(df, columns=['user_status]).replace_splitters({',': ''})
 
         '''
-        from ..utils.BackendConverter import BackendConverter
+        from datalab import BackendConverter
+        import re
         
-        if splitters is None:
-            splitters = [',']
-        
-        if replacement is None:
-            replacement = ','
-
-        if not all(isinstance(splitter, str) for splitter in splitters):
-            raise TypeError(f"splitters must be a list of strings like ',', '/' etc., got {type(splitter)}")
-
-        if not isinstance(replacement, str):
-            raise TypeError(f"replacement must be a string like ',' etc., got {type(replacement)}")
+        if splitters_and_replacements is None:
+            splitters_and_replacements={'':''}
 
         # joining splitters to ensure they are passed as regex
-        splitters = f'[{"".join(splitters)}]'
 
         polars_df = BackendConverter(self.df[self.columns]).pandas_to_polars()
 
-        for column in self.columns:
-            pattern_mask = polars_df[column].str.contains(splitters)
+        for column in polars_df.columns:
+            
+            for splitter, replacement in splitters_and_replacements.items():
 
-            cleaned = polars_df[column].str.replace_all(splitters, replacement)
-
-            polars_df = polars_df.with_columns(
-                pl.when(pattern_mask)
-                .then(cleaned)
-                .otherwise(pl.col(column))
-            )
-
+                polars_df=polars_df.with_columns(
+                    pl.when(pl.col(column).str.contains(re.escape(splitter)))
+                    .then(pl.col(column).str.replace_all(re.escape(splitter), replacement))
+                    .otherwise(pl.col(column))
+                )
+                
         self.df = BackendConverter(polars_df).polars_to_pandas()
-
-        logger.info('Replaced splitters!')
 
         return self.df
 
