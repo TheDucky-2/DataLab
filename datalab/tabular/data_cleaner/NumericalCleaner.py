@@ -1,13 +1,12 @@
 import pandas as pd
 
-from .BaseCleaner import DataCleaner
-from ..data_diagnosis import DirtyDataDiagnosis
-from ..utils.Logger import datalab_logger
+from .BaseCleaner import DataCleaner # base data cleaner class 
+from ..utils.Logger import datalab_logger # logger for logging
 
 logger = datalab_logger(name = __name__.split('.')[-1])
 
 class NumericalCleaner(DataCleaner):
-
+    
     def __init__(self, df: pd.DataFrame, columns: list = None):
         # Initializing the base data cleaner
         super().__init__(df, columns)
@@ -21,40 +20,44 @@ class NumericalCleaner(DataCleaner):
         
         logger.info(f'NumericalCleaner initialized...')
 
-    def round_off(self, decimals:int, inplace:bool=False)-> pd.DataFrame:
+    def round_off(self, decimals:int=2, inplace:bool=False)-> pd.DataFrame:
         '''
-        Round off numbers by 
+        Round off numbers by N decimals in one or multiple columns of the DataFrame
+
+        E.g: '23.00000000757575'-> '23.00', '3333556.89786'-> '3333556.89'
 
         Parameters:
-            df       : pd.DataFrame, a pandas DataFrame
-            decimals : int 
+        -----------
+            self
+                A pandas DataFrame
+
+            decimals : int (default is 2)
+                Number of decimals you want to round off by
+
             inplace  : bool (default, False)
                 If True, modifies the original DataFrame in place.
                 If False, returns a new DataFrame with only the converted columns.
 
-        Return:
+        Returns:
+        --------
             pd.DataFrame
-            A pandas DataFrame of only the columns with float values rounded off (upto usually 2 or 3 decimal places).
+                A pandas DataFrame 
 
         Usage Recommendation:
-            Use this function when you want to round off floats (decimals) to either 2 or 3 decimal places.
-            (If you wish to remove the decimals completely, convert to int type and use float_to_Int64 (if your column includes null types))
+        ---------------------
+           1. Use this function when you want to round off floats (decimals) to either 2 or 3 decimal places.
 
         Considerations:
-            Pass numeric values after converting datatypes to float, instead of strings.
+        ----------------
+            1. Use this method only on numerical data.
 
-        >>> Example: 
-                    Input   :   df['salary'] = ["73892.871297", "55599.652884", "17417.103660", "18809.367362655572", "72700.914047"]
-                    Usage   :   NumericalCleaner(df, ['salary']).round_off(3, inplace=True)
-                    Output  :   Entire Original DataFrame, with values converted in column 'salary' as ["73892.871", "55599.652", "17417.103", "18809.367", "72700.914"]
+        Example:
+        ---------
 
-            Example: 
-                
-                    Input   :   df['salary'] = ["73892.871297", "55599.652884", "17417.103660", "18809.367362655572", "72700.914047"]
-                    Usage   :   NumericalCleaner(df, ['salary']).round_off(3)
-                    Output  :   Pandas series, with values converted in column 'salary' as ["73892.871", "55599.652", "17417.103", "18809.367", "72700.914"]
+        >>> NumericalCleaner(df, ['salary']).round_off(3, inplace=True)
+        
+        >>> NumericalCleaner(df, ['salary']).round_off(3)
         '''
-
         if inplace:
             self.df[self.columns]= self.df[self.columns].apply(lambda column: column.round(decimals))
             return None
@@ -125,9 +128,7 @@ class NumericalCleaner(DataCleaner):
         Example:
         --------
             NumericalCleaner(df).remove_units()
-        
         '''
-
         # pattern for detecting rows containing units
         detect_units_pattern = r'^[+-]?\d+(?:[,.]\d+)?\s*[A-Za-z]+$'
 
@@ -188,7 +189,6 @@ class NumericalCleaner(DataCleaner):
         ---------
             NumericalCleaner(df).replace_commas_with_decimals()
         '''
-
         commas_pattern = r'^-?\d+(\,\d+)$'
 
         for col in self.df[self.columns]:
@@ -215,9 +215,7 @@ class NumericalCleaner(DataCleaner):
         Example:
         --------
             NumericalCleaner(df).convert_scientific_notation_into_numbers()
-
         '''
-
         from decimal import Decimal
 
         pattern = r'^[+-]?\d+(?:([.,])\d+)?[eE][+-]?\d+$'
@@ -234,4 +232,53 @@ class NumericalCleaner(DataCleaner):
             
         return self.df
 
+    def convert_text_to_numbers(self, text_and_number: dict[str,str]=None)-> pd.DataFrame:
+        '''
+        Converts text to numbers in one or multiple columns of the DataFrame
+
+        E.g: 'five' ->  5, 'one' -> 1, 'thirty' -> 30 etc.
+
+        Parameters:
+        -----------
+            self
+
+            Optional:
+            ---------
+                text_and_number : dict
+                    A dictionary of text and its number replacement.
+
+        Returns:
+        ---------
+            pd.DataFrame
+                A pandas DataFrame
+        
+        Usage Recommendation:
+        ----------------------
+            1. Use this method to convert textual numbers like 'one', 'two' to numbers like 1, 2, during numerical cleaning.
+        
+        Considerations:
+        ---------------
+            1. This method keeps the converted number into a string datatype, instead of a numerical datatype like int or float.
+
+        Example:
+        --------
+        >>>    NumericalCleaner(df).convert_text_to_numbers({'five': 5, 'two': 2, 'one': 1})
+        '''
+        
+        if text_and_number is None:
+            logger.info('No text-to-number mapping received, hence, no changes made!')
+            return self.df
+            
+        if not isinstance(text_and_number, dict):
+            raise TypeError(f'Expected a dictionary of text and its numerical replacement, got {type(text_and_number)}')
+
+        for text, number in text_and_number.items():
+
+            for column in self.df[self.columns]:
+
+                self.df[column] = self.df[column].str.replace(text, str(number))
+
+            logger.info(f"Converted '{text}' to '{number}'.")
+
+        return self.df
 
