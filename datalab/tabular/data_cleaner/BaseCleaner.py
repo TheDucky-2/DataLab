@@ -37,7 +37,22 @@ class DataCleaner:
 
         return self.df.drop_duplicates(subset=in_columns)
     
-    def track_not_cleaned(self, method=None, col:'str'=None, before: pd.Series=None, mask:pd.Series=None, after:pd.Series=None):
+    def track_not_cleaned(self, *, method:str, col:str, before: pd.Series, mask:pd.Series, after:pd.Series):
+
+        if not isinstance(method, str):
+            raise TypeError(f"'method' must be a str, got {type(method)}")
+
+        if not isinstance(col, str):
+            raise TypeError(f"'col' must be a str, got {type(col)}")
+
+        if not isinstance(before, pd.Series):
+            raise TypeError(f"'before' must be a str, got {type(before)}")
+
+        if not isinstance(mask, pd.Series):
+            raise TypeError(f"'mask' must be a str, got {type(mask)}")
+
+        if not isinstance(after, pd.Series):
+            raise TypeError(f"'after' must be a str, got {type(after)}")
 
         # if conversion failed, 
         cleaning_failed = mask & (before == after)
