@@ -21,8 +21,8 @@ class DataCleaner:
             # columns would be the list of columns passed
             self.columns = columns
 
-        
-    
+        self.not_cleaned = {}
+
     def validate_columns(self):
         '''
         This function just makes sure that the columns passed by the user actually exist in the dataframe
@@ -33,8 +33,24 @@ class DataCleaner:
         if missing_columns:
             raise TypeError(f'Columns not found in dataframe: {missing_columns}')
 
-
     def drop_duplicates(self, in_columns=None):
 
         return self.df.drop_duplicates(subset=in_columns)
+    
+    def track_not_cleaned(self, method=None, col:'str'=None, before: pd.Series=None, mask:pd.Series=None, after:pd.Series=None):
+
+        # if conversion failed, 
+        cleaning_failed = mask & (before == after)
+
+        if cleaning_failed.any():
+            self.not_cleaned.setdefault(col, {})
+            self.not_cleaned[col].setdefault(method, set() )
+
+            self.not_cleaned[col][method].update(before[cleaning_failed].tolist())
+
+
+
+
+
+
     
