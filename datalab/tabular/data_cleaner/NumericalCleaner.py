@@ -1,6 +1,8 @@
 import pandas as pd
+import polars as pl
 
 from .BaseCleaner import DataCleaner # base data cleaner class 
+from ..utils.BackendConverter import BackendConverter
 from ..utils.Logger import datalab_logger # logger for logging
 
 logger = datalab_logger(name = __name__.split('.')[-1])
@@ -20,7 +22,7 @@ class NumericalCleaner(DataCleaner):
         
         logger.info(f'NumericalCleaner initialized...')
 
-    def round_off(self, decimals:int=2, inplace:bool=False)-> pd.DataFrame:
+    def round_off(self, decimals:int=2)-> pd.DataFrame:
         '''
         Round off numbers by N decimals in one or multiple columns of the DataFrame
 
@@ -34,10 +36,6 @@ class NumericalCleaner(DataCleaner):
             decimals : int (default is 2)
                 Number of decimals you want to round off by
 
-            inplace  : bool (default, False)
-                If True, modifies the original DataFrame in place.
-                If False, returns a new DataFrame with only the converted columns.
-
         Returns:
         --------
             pd.DataFrame
@@ -45,7 +43,7 @@ class NumericalCleaner(DataCleaner):
 
         Usage Recommendation:
         ---------------------
-           1. Use this function when you want to round off floats (decimals) to either 2 or 3 decimal places.
+            1. Use this function when you want to round off floats (decimals) to either 2 or 3 decimal places.
 
         Considerations:
         ----------------
@@ -53,18 +51,28 @@ class NumericalCleaner(DataCleaner):
 
         Example:
         ---------
-
-        >>> NumericalCleaner(df, ['salary']).round_off(3, inplace=True)
+        >>> NumericalCleaner(df, ['salary']).round_off(3)
         
         >>> NumericalCleaner(df, ['salary']).round_off(3)
         '''
-        if inplace:
-            self.df[self.columns]= self.df[self.columns].apply(lambda column: column.round(decimals))
-            return None
-        else:
-            self.df[self.columns]= self.df[self.columns].apply(lambda column: column.round(decimals))
-            logger.info(f'Rounded off to {decimals} decimals.')
-            return self.df.copy()
+
+        polars_df = BackendConverter(self.df[self.columns]).pandas_to_polars()
+
+        for col in polars_df.columns:
+            before = polars_df.select(pl.col(col)).to_series()
+            
+            mask = pl.Series(values=[True] * polars_df.height, dtype=pl.Boolean)
+            polars_df=polars_df.with_columns(
+                pl.col(col).round(decimals)
+            )
+            after = polars_df.select(pl.col(col)).to_series()
+            self.track_not_cleaned(col=col, method = 'round_off',mask=mask, before=before, after=after)
+            
+        self.df = BackendConverter(polars_df).polars_to_pandas()
+        
+        logger.info(f'Rounded off to {decimals} decimals.')
+
+        return self.df
 
     def remove_spaces(self)->pd.DataFrame:
         '''
