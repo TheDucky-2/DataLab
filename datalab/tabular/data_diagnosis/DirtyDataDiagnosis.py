@@ -157,6 +157,7 @@ class DirtyDataDiagnosis:
         patterns = {
             'only_numbers': r'^[+-]?\d+(\.\d+)?$',
             'only_text': r'^[A-Za-z ]+$',
+            'only_symbols': r'^[^A-Za-z0-9]$',
             'is_dirty': r'^[+-]?\d+(\.\d+)?$',
             'has_units': r'^[+-]?\d+(?:[,.]\d+)?\s*[A-Za-z]+$',
             'has_symbols': r'[^A-Za-z0-9\s,.+$€£¥₹₩₺₫₦₱₪฿₲₴₡-]',
