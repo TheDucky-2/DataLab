@@ -3,13 +3,16 @@ import polars as pl
 
 class DataCleaner:
     
-    def __init__(self, df:pd.DataFrame, columns:list=None):
+    def __init__(self, df:pd.DataFrame, columns:list=None, inplace: bool=False):
 
         if not isinstance(df, (pd.DataFrame, pd.Series)):
             raise TypeError(f'df must be a pandas DataFrame or pandas Series, got {type(df).__name__}')
 
         if not isinstance(columns, (list, type(None))):
             raise TypeError(f'columns must be a list of strings or type None, got {type(columns).__name__}')
+        
+        if not isinstance(inplace, bool):
+            raise TypeError(f'inplace must be True or False, got {type(inplace).__name__}')
             
         # creating a copy of the original dataframe
         self.df = df.copy()  
@@ -23,7 +26,8 @@ class DataCleaner:
             self.columns = columns
 
         self.not_cleaned = {}
-
+        self.inplace = inplace
+        
     def validate_columns(self):
         '''
         This function just makes sure that the columns passed by the user actually exist in the dataframe
