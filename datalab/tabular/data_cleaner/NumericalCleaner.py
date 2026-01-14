@@ -9,9 +9,9 @@ logger = datalab_logger(name = __name__.split('.')[-1])
 
 class NumericalCleaner(DataCleaner):
     
-    def __init__(self, df: pd.DataFrame, columns: list = None):
+    def __init__(self, df: pd.DataFrame, columns: list = None, inplace:bool=False):
         # Initializing the base data cleaner
-        super().__init__(df, columns)
+        super().__init__(df, columns, inplace)
         self.df = df 
 
         if columns is None: 
@@ -20,6 +20,8 @@ class NumericalCleaner(DataCleaner):
         else:
             self.columns = [column for column in columns if column in self.df.columns]
         
+        self.inplace = inplace
+
         logger.info(f'NumericalCleaner initialized...')
 
     def round_off(self, decimals:int=2)-> pd.DataFrame:
@@ -32,9 +34,15 @@ class NumericalCleaner(DataCleaner):
         -----------
             self
                 A pandas DataFrame
+            
+            Optional:
+            ---------
+                decimals : int (default is 2)
+                    Number of decimals you want to round off by
 
-            decimals : int (default is 2)
-                Number of decimals you want to round off by
+                inplace : bool (default is False)
+                    If True, modifies the DataFrame in place and returns None.
+                    If False, returns a new DataFrame.
 
         Returns:
         --------
@@ -51,30 +59,38 @@ class NumericalCleaner(DataCleaner):
 
         Example:
         ---------
-        >>> NumericalCleaner(df, ['salary']).round_off(3)
-        
-        >>> NumericalCleaner(df, ['salary']).round_off(3)
+        >>> cleaner = NumericalCleaner(df, columns= ['salary'])
+        >>> cleaner.round_off(3, inplace=True)
         '''
+        if not isinstance(decimals, int):
+            raise TypeError(f'decimals must be a int, got {type(decimals).__name__}')
 
         polars_df = BackendConverter(self.df[self.columns]).pandas_to_polars()
 
         for col in polars_df.columns:
+            # getting values before conversion
             before = polars_df.select(pl.col(col)).to_series()
-            
+            # keeping a simple mask of values as rounding off is applied to all rows of the DataFrame
             mask = pl.Series(values=[True] * polars_df.height, dtype=pl.Boolean)
+            # applying conversion
             polars_df=polars_df.with_columns(
                 pl.col(col).round(decimals)
-            )
+                )
+            # getting values after conversion
             after = polars_df.select(pl.col(col)).to_series()
+            # updating the not_cleaned dictionary to store values 
             self.track_not_cleaned(col=col, method = 'round_off',mask=mask, before=before, after=after)
             
-        self.df = BackendConverter(polars_df).polars_to_pandas()
-        
-        logger.info(f'Rounded off to {decimals} decimals.')
-
-        return self.df
-
-    def remove_spaces(self)->pd.DataFrame:
+        if self.inplace:
+            self.df[self.columns] = BackendConverter(polars_df).polars_to_pandas()
+            logger.info(f'Rounded off to {decimals} decimals, inplace.')
+            return None
+        else:
+            df = BackendConverter(polars_df).polars_to_pandas()
+            logger.info(f'Rounded off to {decimals} decimals')
+            return df
+    
+    def remove_spaces(self):
         '''
         Removes leading or trailing spaces in numerical data for each column of DataFrame
 
@@ -94,31 +110,36 @@ class NumericalCleaner(DataCleaner):
 
         Example:
         --------
-            DirtyDataDiagnosis(df).detect_clean_numerical_data()
+            DirtyDataDiagnosis(df).remove_spaces()
         '''
+        SPACES_PATTERN = r'^\s+|\s+$'
 
-        leading_spaces_pattern = r'^\s+[+-]?\d+(\.\d+)?$'
-        trailing_spaces_pattern = r'^[+-]?\d+(\.\d+)?\s+$'
-        leading_and_trailing_spaces_pattern = r'^\s+[+-]?\d+(\.\d+)?\s+$'
+        polars_df = BackendConverter(self.df[self.columns]).pandas_to_polars()
 
-        spaces_in_numerical_data = {}
-
-        for column in self.df[self.columns]:
-            # getting rows of data with leading spaces
-            detected_leading_spaces = self.df[column].astype(str).str.match(leading_spaces_pattern, na=False)
-            # getting rows of data with trailing spaces
-            detected_trailing_spaces = self.df[column].astype(str).str.match(trailing_spaces_pattern, na=False)
-            # getting rows of data with leading and trailing spaces
-            detected_leading_and_trailing_spaces = self.df[column].astype(str).str.match(leading_and_trailing_spaces_pattern, na=False)
-
-            mask = detected_trailing_spaces | detected_leading_spaces | detected_leading_and_trailing_spaces
-
-            # getting rows of the data with leading and trailing spaces and removing the spaces
-            self.df.loc[mask, column] = self.df.loc[mask, column].astype(str).str.strip()
+        for col in polars_df.columns:
+            # keeping a track of values before conversion
+            before = polars_df.select(pl.col(col)).to_series()
+            # creating a mask of values with spaces
+            mask = polars_df.select(pl.col(col).str.contains(SPACES_PATTERN)).to_series()
+            # making changes to the dataframe if spaces are present
+            polars_df = polars_df.with_columns(
+                pl.when(pl.col(col).str.contains(SPACES_PATTERN))
+                .then(pl.col(col).str.replace_all(SPACES_PATTERN, ""))
+                .otherwise(pl.col(col))
+                )
+            # tracking values after conversion
+            after = polars_df.select(pl.col(col)).to_series()
+            # storing data in the tracker
+            self.track_not_cleaned(col = col, method= 'remove_spaces', before = before, mask = mask, after = after)
         
-        logger.info('Removed leading and trailing spaces!')
-            
-        return self.df
+        if self.inplace:
+            self.df[self.columns] = BackendConverter(polars_df).polars_to_pandas()
+            logger.info(f'Removed leading or trailing spaces in place.')
+            return None    
+        else:
+            df = BackendConverter(polars_df).polars_to_pandas()
+            logger.info(f'Removed leading or trailing spaces.')
+            return df
 
     def remove_units(self)-> pd.DataFrame:
         '''
