@@ -33,7 +33,8 @@ DataLab allows you to diagnose your data by dividing Diagnosis into 5 different 
 | Missing Values      | MissingnessDiagnosis   | Missing counts, missing structure                                                   |
 | Numeric Columns     | NumericalDiagnosis     | Stats, distributions, outliers                                                     |
 | Categorical Columns | CategoricalDiagnosis   | Unique values, frequencies                                                          |
-| Datetime Columns    | DatetimeDiagnosis      | Time patterns, completeness                                                         |
+| Datetime Columns    | DatetimeDiagnosis      | Time patterns, completeness                                                         | 
+| Dirty Data          | DirtyDataDiagnosis     | Inconsistencies or formatting issues with the Numerical, Text or Datetime Data      |
 
 This section focuses specifically on the **Diagnosis** class.
 
@@ -57,7 +58,7 @@ Diagnosis helps you to see:
 
 You can import Diagnosis class directly from DataLab:
 
-    from DataLab import Diagnosis
+    from dataLab import Diagnosis
 
     diagnosis = Diagnosis(df)
 
