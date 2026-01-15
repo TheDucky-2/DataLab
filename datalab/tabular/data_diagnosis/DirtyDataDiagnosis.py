@@ -97,8 +97,8 @@ class DirtyDataDiagnosis:
 
             The following diagnostics are computed per column:
 
-            - only_numbers:            Values containing only integers or decimals (e.g: 1000, -10.048)
-            - only_text:               Values containing alphabetic characters and spaces ('unknown', 'error', 'missing', what)
+            - is_valid:                Values containing only valid integers or decimals (e.g: 1000, -10.048)
+            - is_text:               Values containing alphabetic characters and spaces ('unknown', 'error', 'missing', what)
             - is_dirty:                Values that are not strictly numeric (e.g: approx 1000, $100,00CD#44)
             - is_null:                 Values that are null or missing values (pandas missing types- NA or NaN)
             - has_commas:              Numeric values containing comma separators (e.g: 10,000 or 1,000,000)
@@ -106,7 +106,7 @@ class DirtyDataDiagnosis:
             - has_units:               Numeric values suffixed with alphabetic units (e.g., "10kg")
             - has_symbols:             Values containing non-alphanumeric or special symbols (e.g: '?', '/' , '.')
             - has_currency:            Values containing currency symbols (prefix or suffix) (e.g. $10 or 10$)
-            - has_scientific_notation: Values expressed in scientific notation (e.g: 1.06E+1)
+            - is_scientific_notation: Values expressed in scientific notation (e.g: 1.06E+1)
             - has_spaces:              Values that contain leading or trailing spaces (e.g: '  missing', '1.066 ', '1.34    ')
             - has_double_decimals:     Values that contain double decimals (e.g: 1.34.567, 1.4444.0000)
 
@@ -155,18 +155,18 @@ class DirtyDataDiagnosis:
 
         # patterns is a dictionary of available methods and regex patterns to detect them 
         patterns = {
-            'only_numbers': r'^[+-]?\d+(\.\d+)?$',
-            'only_text': r'^[A-Za-z ]+$',
-            'only_symbols': r'^[^A-Za-z0-9]$',
+            'is_valid': r'^[+-]?\d+(\.\d+)?$',
+            'is_text': r'^[A-Za-z ]+$',
+            'is_symbol': r'^[^A-Za-z0-9]$',
             'is_dirty': r'^[+-]?\d+(\.\d+)?$',
+            'is_null': None,
+            'is_scientific_notation': r'^[+-]?\d+(?:[.,]\d+)?[eE][+-]?\d*$',
             'has_units': r'^[+-]?\d+(?:[,.]\d+)?\s*[A-Za-z]+$',
             'has_symbols': r'[^A-Za-z0-9\s,.+$€£¥₹₩₺₫₦₱₪฿₲₴₡-]',
             'has_commas': r'\d[\d.,]*,\d',
             'has_currency': r'^[$€£¥₹₩₺₫₦₱₪฿₲₴₡]\s*\d[\d,]*(\.\d+)?$|^\d[\d,]*(\.\d+)?\s*[$€£¥₹₩₺₫₦₱₪฿₲₴₡]$',
-            'has_scientific_notation': r'^[+-]?\d+(?:[.,]\d+)?[eE][+-]?\d*$',
             'has_double_decimals': r'^[+-]?\d+(?:\.\d+){2,}$',
             'has_spaces': r'^\s+[+-]?\d+(?:\.\d+)?$|^[+-]?\d+(?:\.\d+)?\s+$|^\s+[+-]?\d+(?:\.\d+)?\s+$',
-            'is_null': None,
             'has_decimals': r'^[+-]?\d*\.\d+$'
             }
 
@@ -209,8 +209,8 @@ class DirtyDataDiagnosis:
 
         The following diagnostics are computed per column:
         
-        - only_symbols: Values containing only symbols.
-        - only_text:    Values containing alphabetic characters and spaces
+        - is_symbol:    Values containing only symbols.
+        - is_valid:     Values containing alphabetic characters and spaces
         - is_dirty:     Values that are not strictly text
         - has_symbols:  Values containing non-alphanumeric or special symbols
         - is_null:      Values that are null or missing values.
@@ -253,9 +253,9 @@ class DirtyDataDiagnosis:
 
         patterns = {
                 'is_dirty': r'[^A-Za-z]',
-                'only_symbols': r'^[^\p{L}]+$',
+                'is_symbol': r'^[^\p{L}]+$',
                 'has_symbols': r'\p{L}.*[^\p{L}]|[^\p{L}].*\p{L}',
-                'only_text': r'^[A-Za-z ]+$',
+                'is_valid': r'^[A-Za-z ]+$',
                 'is_null': None,
                 'has_spaces': r'^\s|\s$',
                 'has_numbers': r'\p{N}'
