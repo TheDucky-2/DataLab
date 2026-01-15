@@ -100,7 +100,7 @@ class DirtyDataDiagnosis:
             - is_valid:                Values containing only valid integers or decimals (e.g: 1000, -10.048)
             - is_text:               Values containing alphabetic characters and spaces ('unknown', 'error', 'missing', what)
             - is_dirty:                Values that are not strictly numeric (e.g: approx 1000, $100,00CD#44)
-            - is_null:                 Values that are null or missing values (pandas missing types- NA or NaN)
+            - is_missing:                 Values that are null or missing values (pandas missing types- NA or NaN)
             - has_commas:              Numeric values containing comma separators (e.g: 10,000 or 1,000,000)
             - has_decimals:            Numeric values containing decimal points (e.g: -1.62, 1000.44)
             - has_units:               Numeric values suffixed with alphabetic units (e.g., "10kg")
@@ -159,7 +159,7 @@ class DirtyDataDiagnosis:
             'is_text': r'^[A-Za-z ]+$',
             'is_symbol': r'^[^A-Za-z0-9]$',
             'is_dirty': r'^[+-]?\d+(\.\d+)?$',
-            'is_null': None,
+            'is_missing': None,
             'is_scientific_notation': r'^[+-]?\d+(?:[.,]\d+)?[eE][+-]?\d*$',
             'has_units': r'^[+-]?\d+(?:[,.]\d+)?\s*[A-Za-z]+$',
             'has_symbols': r'[^A-Za-z0-9\s,.+$€£¥₹₩₺₫₦₱₪฿₲₴₡-]',
@@ -213,7 +213,7 @@ class DirtyDataDiagnosis:
         - is_valid:     Values containing alphabetic characters and spaces
         - is_dirty:     Values that are not strictly text
         - has_symbols:  Values containing non-alphanumeric or special symbols
-        - is_null:      Values that are null or missing values.
+        - is_missing:      Values that are null or missing values.
         - has_numbers:  Values that contain numbers in text.
         - has_spaces:   Values that contain leading or trailing spaces 
 
@@ -256,7 +256,7 @@ class DirtyDataDiagnosis:
                 'is_symbol': r'^[^\p{L}]+$',
                 'has_symbols': r'\p{L}.*[^\p{L}]|[^\p{L}].*\p{L}',
                 'is_valid': r'^[A-Za-z ]+$',
-                'is_null': None,
+                'is_missing': None,
                 'has_spaces': r'^\s|\s$',
                 'has_numbers': r'\p{N}'
             }
