@@ -301,7 +301,7 @@ class NumericalCleaner(DataCleaner):
     
         return self.df
 
-    def convert_text_to_numbers(self, text_and_number: dict[str,str]=None)-> pd.DataFrame:
+    def convert_text_to_numbers(self, text_to_number:dict[str, str]=None)-> pd.DataFrame:
         '''
         Converts text to numbers in one or multiple columns of the DataFrame
 
@@ -313,8 +313,8 @@ class NumericalCleaner(DataCleaner):
 
             Optional:
             ---------
-                text_and_number : dict
-                    A dictionary of text and its number replacement.
+                text_to_number : dict
+                    A dictionary of text and its replacement number.
 
         Returns:
         ---------
@@ -323,33 +323,44 @@ class NumericalCleaner(DataCleaner):
         
         Usage Recommendation:
         ----------------------
-            1. Use this method to convert textual numbers like 'one', 'two' to numbers like 1, 2, during numerical cleaning.
+            1. Use this method to convert textual numbers 'one', 'two' to numbers like 1, 2, during numerical cleaning.
         
         Considerations:
         ---------------
-            1. This method keeps the converted number into a string datatype, instead of a numerical datatype like int or float.
+            1. This method keeps the converted number as string instead of a numerical datatype like int or float.
 
         Example:
         --------
         >>>    NumericalCleaner(df).convert_text_to_numbers({'five': 5, 'two': 2, 'one': 1})
         '''
-        
-        if text_and_number is None:
+        polars_df = BackendConverter(self.df[self.columns]).pandas_to_polars()
+
+        if text_to_number is None:
             logger.info('No text-to-number mapping received, hence, no changes made!')
             return self.df
-            
-        if not isinstance(text_and_number, dict):
-            raise TypeError(f'Expected a dictionary of text and its numerical replacement, got {type(text_and_number)}')
 
-        for text, number in text_and_number.items():
+        for col in polars_df.columns:
+            for text, number in text_to_number.items():
 
-            for column in self.df[self.columns]:
+                before = polars_df.select(pl.col(col)).to_series()
+                mask = polars_df.select(pl.col(col).str.contains(text)).to_series()
+                polars_df = polars_df.with_columns(
+                    pl.when(pl.col(col).str.contains(text))
+                    .then(pl.col(col).str.replace_all(text, number))
+                    .otherwise(pl.col(col))
+                )
 
-                self.df[column] = self.df[column].astype('string').str.replace(text, str(number))
+                after = polars_df.select(pl.col(col)).to_series()
 
+                self.track_not_cleaned(col=col, method = 'convert_text_to_numbers', before = before, mask = mask, after = after)
+
+        if self.inplace:
+            self.df[self.columns] = BackendConverter(polars_df).polars_to_pandas()
+            logger.info(f"Converted '{text}' to '{number}' in place.")
+            return None
+
+        else:
+            df = BackendConverter(polars_df).polars_to_pandas()
             logger.info(f"Converted '{text}' to '{number}'.")
-
-        return self.df
-
-    
-
+            return df
+                
