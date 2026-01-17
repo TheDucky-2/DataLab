@@ -17,7 +17,7 @@ def datalab_logger(name:str='DataLab'):
         handler = logging.StreamHandler()
         
         # setting formatter
-        formatter = logging.Formatter('%(name)s - %(levelname)s - %(message)s at %(asctime)s', datefmt= '%Y-%m-%d %H:%M-%S')
+        formatter = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
 
         # applying format to handler
         handler.setFormatter(formatter)
