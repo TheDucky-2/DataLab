@@ -8,7 +8,7 @@ class DirtyDataDiagnosis:
 
     def __init__(self, df: pd.DataFrame, columns: list = None):
         '''
-        Initializing the Dirty Data Diagnosis
+        Initializing the Numerical Dirty Data Diagnosis
         '''
         self.df = df
      
@@ -16,7 +16,9 @@ class DirtyDataDiagnosis:
             self.columns = [column for column in columns if column in self.df.columns]
         else:
             self.columns = self.df.columns
-    
+
+        self.method_masks = {}
+
         logger.info(f'Dirty Data Diagnosis initialized!')
     
     def count_commas(self)-> dict[str, int]:
@@ -164,7 +166,7 @@ class DirtyDataDiagnosis:
             'is_scientific_notation': r'^[+-]?\d+(?:[.,]\d+)?[eE][+-]?\d*$',
             'has_units': r'^[+-]?\d+(?:[,.]\d+)?\s*[A-Za-z]+$',
             'has_symbols': r'[^A-Za-z0-9\s,.+$€£¥₹₩₺₫₦₱₪฿₲₴₡-]',
-            'has_commas': r'\d[\d.,]*,\d',
+            'has_commas': r'^\d*,\d*$',
             'has_currency': r'^[$€£¥₹₩₺₫₦₱₪฿₲₴₡]\s*\d[\d,]*(\.\d+)?$|^\d[\d,]*(\.\d+)?\s*[$€£¥₹₩₺₫₦₱₪฿₲₴₡]$',
             'has_multiple_decimals': r'^[+-]?\d*(?:\.\d+){2,}$',
             'has_multiple_commas': r'^[+-]?\d*(?:,\d+){2,}$',
@@ -297,3 +299,92 @@ class DirtyDataDiagnosis:
             logger.info(f'Available diagnostic methods: {list(text_diagnosis[col].keys())}')
 
         return text_diagnosis
+
+    def diagnose_datetime(self, show_available_methods=False):
+
+        '''
+        Detects patterns and formatting issues in date-time in one or multiple columns of the DataFrame.
+
+        The following diagnostics are computed per column:
+        
+            'is_valid_date': Datetime values that are correct dates. (like 01-01-2024 or 2024-01-01) 
+            'is_valid_time': Datetime values that are correct time. (like 13:21:07 or 00:00)
+            'is_valid_datetime': Datetime values that are both correct date and time (like 2025-09-29 23:54:02)
+            'is_text': Datetime values that contain just text (like 'yesterday' or 'tomorrow')
+            'is_number': Datetime values that are just plain numbers (like 01012024)
+            'is_missing': Pandas built-in missing values
+            'is_dirty': Values that are not correct date/time or dae
+            }
+            
+        Returns:
+        --------
+            pd.DataFrame
+                A pandas DataFrame
+
+        Usage Recommendation:
+        ---------------------
+            1. Use this function when you want to see what kind of issues exist in columns that contain datetime data in your DataFrame
+
+        Considerations:
+        ---------------
+            1. This method adds a default **index** column by resetting the DataFrame's index.
+            2. This is necessary to preserve original row IDs during conversion to Polars and back.
+            3. The index column DOES NOT AFFECT your transformations and are automatically restored in all returned DataFrames
+            4. This method also uses Polars regex under the hood for pattern matching
+            5. This method is intended for diagnostic purposes, not data mutation.
+
+        Example:
+        --------
+        >>>     diagnostics = DirtyDataDiagnosis(df).diagnose_datetime()
+
+        >>>     diagnostics['signup_date']['is_dirty'].head()
+        
+        '''
+        from ..utils.BackendConverter import BackendConverter
+        
+        self.df = self.df.reset_index()
+
+        pol_df = BackendConverter(self.df).pandas_to_polars()
+        
+        datetime_diagnosis = {}
+
+        PATTERNS = {
+            'is_valid_date': r'^(?:\d{2,4}[\/-]\d{1,2}[\/-]\d{1,2}|\d{1,2}[\/-]\d{1,2}[\/-]\d{2,4})$',
+            'is_valid_time': r'^\d{1,2}:\d{2}(?::\d{2})?$',
+            'is_valid_datetime':r'^(?:\d{2,4}[\/-]\d{1,2}[\/-]\d{1,2}[ T]\d{1,2}:\d{2}(?::\d{2})?|\d{1,2}[\/-]\d{1,2}[\/-]\d{2,4}[ T]\d{1,2}:\d{2}(?::\d{2})?)$',
+            'is_text': r'^[a-zA-Z ]+$',
+            'is_number':  r'^\d{6}$|^\d{8}$|^\d{12}$|^\d{14}$',
+            'is_missing':None,
+            'is_dirty': None
+            }
+
+        cols_to_diagnose = [column for column in pol_df.columns if column!='index']
+
+        for col in cols_to_diagnose:
+            datetime_diagnosis[col] = {}
+
+            for method, pattern in PATTERNS.items():
+
+                series = pol_df[col]
+
+                if method == 'is_missing':
+                    pattern_mask = series.is_null()
+                if method == 'is_dirty':
+                    pattern_mask = (
+                        ~series.str.contains(PATTERNS['is_valid_date'])
+                        & ~series.str.contains(PATTERNS['is_valid_time'])
+                        & ~series.str.contains(PATTERNS['is_valid_datetime'])
+                    )
+                else:
+                    pattern_mask = series.str.contains(pattern)
+
+                result_df =BackendConverter(pol_df.filter(pattern_mask)).polars_to_pandas()
+
+                result_df.set_index('index', inplace=True)
+
+                datetime_diagnosis[col][method] = result_df
+
+        if show_available_methods:
+            logger.info(f'Available diagnostic methods: {list(datetime_diagnosis[col].keys())}')
+        
+        return datetime_diagnosis
