@@ -46,7 +46,7 @@ We can explore dirty data by importing ``DirtyDataDiagnosis`` class from DataLab
 
     diagnosis = DirtyDataDiagnosis(df)
 
-## Considerations before we explore dirty data
+## Before We Explore Dirty Data
 
 Before running any dirty data diagnosis in DataLab, we will learn about a few considerations:
 
@@ -74,7 +74,7 @@ This ensures:
 
 These considerations help ensure your system does not slow down or crash while exploring real-world messy data.
 
-## Performance Considerations
+## Performance Note
 
 ``DirtyDataDiagnosis`` has been tested on datasets with over 5 million rows and performs reliably using Arrow-backed pandas conversion.
 
