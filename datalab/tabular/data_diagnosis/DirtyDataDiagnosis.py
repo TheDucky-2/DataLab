@@ -20,80 +20,8 @@ class DirtyDataDiagnosis:
         self.method_masks = {}
 
         logger.info(f'Dirty Data Diagnosis initialized!')
-    
-    def count_commas(self)-> dict[str, int]:
 
-        '''
-        Counts the number of rows with strings that contain commas in each column of the DataFrame
-        
-        Returns:
-        --------
-            dict
-                A python dictionary of columns and number of rows with comma
-        '''
-
-        comma_count = {}
-
-        for col in self.df[self.columns]:
-
-            #  taking a count of strings that contain a comma ','
-            comma_count[col] = int(self.df[col].astype('string').str.count(',').sum())
-
-        return comma_count
-
-    def count_decimals(self)-> dict[str, int]:
-
-        '''
-        Counts the number of rows that have decimals, in each column of the DataFrame
-        
-        Returns:
-        --------
-            dict
-                A python dictionary of columns and number of rows with decimal (.)
-
-        Example:
-        -------
-            DirtyDataDiagnosis(df).count_decimals()
-        '''
-
-        decimal_count = {}
-
-        for col in self.df[self.columns]:
-            #  taking a count of strings that contain a decimal
-            decimal_count[col] = int(self.df[col].astype('string').str.count(r'\.').sum())
-
-        return decimal_count
-
-    def count_commas_with_decimals(self)-> dict[str, int]:
-        '''
-        Counts the number of rows that have decimals and commas both in each column of the DataFrame
-        
-        Returns:
-        --------
-            dict
-                A python dictionary of columns and number of rows with decimal (.) and commas. (E.g: 1,250.40)
-            
-        Example:
-        -------
-            DirtyDataDiagnosis(df).count_commas_with_decimals()
-            
-        '''
-        commas_and_decimals_count = {}
-
-        for col in self.df[self.columns]:
-
-            # ensuring that string contains a dot(or decimal)
-            has_decimals = self.df[col].astype('string').str.count(r'\.')
-
-            # ensuring that string contains a comma
-            has_commas = self.df[col].astype('string').str.count(r',')
-
-            # the string must atleast have 1 dot and 1 comma
-            commas_and_decimals_count[col] = int(((has_decimals >=1) & (has_commas>=1)).sum())
-
-        return commas_and_decimals_count
-
-    def diagnose_numbers(self, show_available_methods: bool=False)-> dict[str, dict[str, pd.DataFrame]]:
+    def diagnose_numbers(self, show_available_methods: bool=False, array_type: str='auto', conversion_threshold: int=None)-> dict[str, dict[str, pd.DataFrame]]:
         '''
             Detects patterns and common formatting issues in numbers in each column of the DataFrame.
 
@@ -202,7 +130,7 @@ class DirtyDataDiagnosis:
                     pattern_mask = series.str.contains(pattern)
                 
                 # filtering pattern masks out of the polars dataframe 
-                result_df = BackendConverter(polars_df.filter(pattern_mask)).polars_to_pandas()
+                result_df = BackendConverter(polars_df.filter(pattern_mask)).polars_to_pandas(array_type=array_type, conversion_threshold=conversion_threshold)
 
                 # setting default index to be 'index'
                 result_df.set_index('index', inplace=True)
@@ -214,7 +142,7 @@ class DirtyDataDiagnosis:
 
         return numeric_diagnosis
 
-    def diagnose_text(self, show_available_methods=False)-> dict[str, dict[str, pd.DataFrame]]:
+    def diagnose_text(self, show_available_methods=False, array_type: str='auto', conversion_threshold: int=None)-> dict[str, dict[str, pd.DataFrame]]:
         '''
         Detects patterns and common formatting issues in text in each column of the DataFrame.
 
@@ -223,6 +151,7 @@ class DirtyDataDiagnosis:
         - is_symbol:    Values containing only symbols.
         - is_valid:     Values containing alphabetic characters and spaces
         - is_dirty:     Values that are not strictly text
+        - is_empty:     Values that are empty strings
         - has_symbols:  Values containing non-alphanumeric or special symbols
         - is_missing:      Values that are null or missing values.
         - has_numbers:  Values that contain numbers in text.
@@ -265,6 +194,7 @@ class DirtyDataDiagnosis:
         patterns = {
                 'is_dirty': r'[^A-Za-z]',
                 'is_symbol': r'^[^\p{L}]+$',
+                'is_empty': r'^$'
                 'has_symbols': r'\p{L}.*[^\p{L}]|[^\p{L}].*\p{L}',
                 'is_valid': r'^[A-Za-z ]+$',
                 'is_missing': None,
@@ -289,7 +219,9 @@ class DirtyDataDiagnosis:
                 else:
                     pattern_mask = series.str.contains(pattern)
 
-                result_df = BackendConverter(polars_df.filter(pattern_mask)).polars_to_pandas()
+                # ensuring by default, pyarrow is used for datasets over 100000 rows
+                
+                result_df = BackendConverter(polars_df.filter(pattern_mask)).polars_to_pandas(array_type=array_type, conversion_threshold=conversion_threshold)
 
                 result_df.set_index('index', inplace=True)
 
@@ -300,7 +232,7 @@ class DirtyDataDiagnosis:
 
         return text_diagnosis
 
-    def diagnose_datetime(self, show_available_methods=False):
+    def diagnose_datetime(self, show_available_methods=False,array_type: str='auto', conversion_threshold: int=None):
 
         '''
         Detects patterns and formatting issues in date-time in one or multiple columns of the DataFrame.
@@ -377,8 +309,9 @@ class DirtyDataDiagnosis:
                     )
                 else:
                     pattern_mask = series.str.contains(pattern)
-
-                result_df =BackendConverter(pol_df.filter(pattern_mask)).polars_to_pandas()
+                    
+                # ensuring by default, pyarrow is used for datasets over 100000 rows
+                result_df =BackendConverter(pol_df.filter(pattern_mask)).polars_to_pandas(array_type=array_type, conversion_threshold=conversion_threshold)
 
                 result_df.set_index('index', inplace=True)
 
