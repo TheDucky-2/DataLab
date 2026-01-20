@@ -194,7 +194,7 @@ class DirtyDataDiagnosis:
         patterns = {
                 'is_dirty': r'[^A-Za-z]',
                 'is_symbol': r'^[^\p{L}]+$',
-                'is_empty': r'^$'
+                'is_empty': r'^$',
                 'has_symbols': r'\p{L}.*[^\p{L}]|[^\p{L}].*\p{L}',
                 'is_valid': r'^[A-Za-z ]+$',
                 'is_missing': None,
