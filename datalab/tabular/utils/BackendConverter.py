@@ -13,28 +13,46 @@ class BackendConverter:
             raise TypeError(f'columns must be a list or type None, got {type(df).__name__}')
 
         if isinstance(df, pd.DataFrame):
+
             self.df = df.copy()
 
             if columns is None:
-                self.columns = df.columns.to_list()
+                self.columns = self.df.columns.to_list()
 
             else:
-                self.columns = [column for column in columns if column in df.columns]
+                self.columns = [column for column in columns if column in self.df.columns]
 
         elif isinstance (df, pl.DataFrame):
             
             self.df = df.clone()
 
             if columns is None:
-                self.columns = df.columns
+                self.columns = self.df.columns
 
             else:
-                self.columns = [column for column in columns if column in df.columns]
+                self.columns = [column for column in columns if column in self.df.columns]
 
-    def polars_to_pandas(self:pd.DataFrame, array_type='numpy')-> pd.DataFrame:
+    def polars_to_pandas(self, array_type='auto', conversion_threshold: int=None)-> pd.DataFrame:
+
+        if not isinstance(self.df, pl.DataFrame):
+            raise TypeError(f'Expected a polars DataFrame, got {type(self.df).__name__}')
 
         if not isinstance(array_type, str):
             raise TypeError(f'array type must be a string, got {type(array_type).__name__}')
+        
+        if not isinstance(conversion_threshold, (int, type(None))):
+            raise TypeError(f'conversion threshold must be an integer or type None, got {type(conversion_threshold).__name__}')
+
+        if conversion_threshold is None:
+            conversion_threshold = 100_000
+
+        df_size = self.df.height
+
+        if array_type == 'auto':
+            if df_size > conversion_threshold:
+                return self.df.to_pandas(use_pyarrow_extension_array=True)
+            else:
+                return self.df.to_pandas()
 
         if array_type == 'numpy':
             
@@ -47,7 +65,7 @@ class BackendConverter:
 
             return pandas_df 
 
-    def pandas_to_polars(self, include_index=False)-> pl.DataFrame:
+    def pandas_to_polars(self: pd.DataFrame, include_index=False)-> pl.DataFrame:
         
         if not isinstance(include_index, bool):
             raise TypeError(f'include_index must be either True or False, got {type(include_index).__name__}')
