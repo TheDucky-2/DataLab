@@ -1,9 +1,7 @@
 """
-DataLab: Unified End to End Data Library 
-for Tabular and Graph data.
+"DataLab v0.1.0a5 - Pre-release: structured dirty data diagnosis, Polars + backend optimization, and enhanced data visualization."
 """
-
-__version__ = '0.1.0a4'
+__version__ = '0.1.0b1'
 
 import importlib
 
