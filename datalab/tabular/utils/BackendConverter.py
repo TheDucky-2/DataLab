@@ -49,7 +49,7 @@ class BackendConverter:
         df_size = self.df.height
 
         if array_type == 'auto':
-            if df_size > conversion_threshold:
+            if df_size >= conversion_threshold:
                 return self.df.to_pandas(use_pyarrow_extension_array=True)
             else:
                 return self.df.to_pandas()
