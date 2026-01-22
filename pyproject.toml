@@ -6,8 +6,8 @@ build-backend = "setuptools.build_meta"
 [project] 
 
 name = "datalab_pre_release"             
-version = "0.1.0b1"
-description = "DataLab v0.1.0a5 - Pre-release: structured dirty data diagnosis, Polars + backend optimization, and enhanced data visualization."
+version = "0.1.0b2"
+description = "DataLab v0.1.0b2 - Beta Pre-release: structured dirty data diagnosis, Polars + backend optimization, and enhanced data visualization."
 
 authors = [
     {name = "Kshitij Sharma"}
