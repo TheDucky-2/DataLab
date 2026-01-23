@@ -7,9 +7,7 @@ logger = datalab_logger(name = __name__.split('.')[-1])
 class DirtyDataDiagnosis:
 
     def __init__(self, df: pd.DataFrame, columns: list = None, array_type='auto', conversion_threshold = None):
-        '''
-        Initializing the Dirty Data Diagnosis
-        '''
+
         if not isinstance(df, pd.DataFrame):
             raise TypeError(f'df must be a pandas DataFrame, got {type(df).__name__}')
 
@@ -36,57 +34,53 @@ class DirtyDataDiagnosis:
 
     def diagnose_numbers(self, show_available_methods: bool=False)-> dict[str, dict[str, pd.DataFrame]]:
         '''
-            Detects patterns and common formatting issues in numbers in each column of the DataFrame.
-res
-            The following diagnostics are computed per column:
+        Detects patterns and common formatting issues in numbers in each column of the DataFrame.
 
-            - is_valid:                Values containing only valid integers or decimals (e.g: 1000, -10.048)
-            - is_text:                 Values containing alphabetic characters and spaces ('unknown', 'error', 'missing', what)
-            - is_dirty:                Values that are not strictly numeric (e.g: approx 1000, $100,00CD#44)
-            - is_missing:              Values that are null or missing values (pandas missing types- NA or NaN)
-            - is_scientific_notation:  Numbers expressed in scientific notation (e.g: 1.06E+1)
-            - has_commas:              Numbers that contain commas (e.g: 10,000 or 1,000,000)
-            - has_decimals:            Numbers that contain decimal points (e.g: -1.62, 1000.44)
-            - has_units:               Numbers that are suffixed with alphabetical units (e.g: '10kg', '100cm')
-            - has_symbols:             Numbers containing non-alphanumeric or special symbols (e.g: '?', '/' , '.')
-            - has_currency:            Numbers containing currency symbols (prefix or suffix) (e.g. $10 or 10$)
-            - has_spaces:              Numbers that contain leading or trailing spaces (e.g: '  missing', '1.066 ', '1.34    ')
-            - has_multiple_decimals:     Numbers that contain double decimals (e.g: 1.34.567, 1.4444.0000)
-            - has_multiple_commas:     Numbers that contain more than one commas (e.g: '9,628,62' or '1234,56')
+        The following diagnostics are computed per column:
 
-            Parameters:
-            -----------
-                self
+        - is_valid:                Values containing only valid integers or decimals (e.g: 1000, -10.048)
+        - is_text:                 Values containing alphabetic characters and spaces ('unknown', 'error', 'missing', what)
+        - is_dirty:                Values that are not strictly numeric (e.g: approx 1000, $100,00CD#44)
+        - is_missing:              Values that are null or missing values (pandas missing types- NA or NaN)
+        - is_scientific_notation:  Numbers expressed in scientific notation (e.g: 1.06E+1)
+        - has_commas:              Numbers that contain commas (e.g: 10,000 or 1,000,000)
+        - has_decimals:            Numbers that contain decimal points (e.g: -1.62, 1000.44)
+        - has_units:               Numbers that are suffixed with alphabetical units (e.g: '10kg', '100cm')
+        - has_symbols:             Numbers containing non-alphanumeric or special symbols (e.g: '?', '/' , '.')
+        - has_currency:            Numbers containing currency symbols (prefix or suffix) (e.g. $10 or 10$)
+        - has_spaces:              Numbers that contain leading or trailing spaces (e.g: '  missing', '1.066 ', '1.34    ')
+        - has_multiple_decimals:     Numbers that contain double decimals (e.g: 1.34.567, 1.4444.0000)
+        - has_multiple_commas:     Numbers that contain more than one commas (e.g: '9,628,62' or '1234,56')
 
-                Optional:
-                ---------
-                show_available_methods : bool (default is False)
-                    Shows diagnostic options that are available in diagnose_numbers() method.
+        Parameters
+        -----------
+        show_available_methods : bool (default is False)
+            Shows diagnostic options that are available in diagnose_numbers() method.
 
-            Returns:
-            --------
-                pd.DataFrame
-                    A pandas DataFrame
+        Returns
+        --------
+        dict[str, dict[str, pd.DataFrame]]
+            A nested dictionary of diagnostic results per column.
 
-            Usage Recommendation:
-            ---------------------
-                1. Use this function when you want to see what kind of issues exist in columns that contain numbers in your DataFrame
+        Usage Recommendation
+        ---------------------
+            1. Use this function when you want to see what kind of issues exist in columns that contain numbers in your DataFrame
 
-            Considerations:
-            ---------------
-                1. This method adds a default **index** column by resetting the DataFrame's index.
-                2. This is necessary to preserve original row IDs during conversion to Polars and back.
-                3. The index column DOES NOT AFFECT your transformations and are automatically restored in all returned DataFrames
-                4. This method also uses Polars regex under the hood for pattern matching
-                5. This method is intended for diagnostic purposes, not data mutation.
+        Considerations
+        ---------------
+            1. This method adds a default **index** column by resetting the DataFrame's index.
+            2. This is necessary to preserve original row IDs during conversion to Polars and back.
+            3. The index column DOES NOT AFFECT your transformations and are automatically restored in all returned DataFrames
+            4. This method also uses Polars regex under the hood for pattern matching
+            5. This method is intended for diagnostic purposes, not data mutation.
 
-            Example:
-            --------
-            >>>     diagnostics = DirtyDataDiagnosis(df).diagnose_numbers()
+        Example
+        --------
+        >>>     diagnostics = DirtyDataDiagnosis(df).diagnose_numbers()
 
-            >>>     diagnostics['price']['has_currency'].head()
-            
-            '''
+        >>>     diagnostics['price']['has_currency'].head()
+        
+        '''
         from ..utils.BackendConverter import BackendConverter
         
         # resetting index to ensure index is turned into a new column 'index' in pandas dataframe
@@ -170,16 +164,21 @@ res
         - has_numbers:  Values that contain numbers in text.
         - has_spaces:   Values that contain leading or trailing spaces 
 
-        Returns:
-        --------
-            pd.DataFrame
-                A pandas DataFrame
+        Parameters
+        -----------
+        show_available_methods : bool (default is False)
+            Shows diagnostic options that are available in diagnose_numbers() method.
 
-        Usage Recommendation:
+        Returns
+        --------
+        dict[str, dict[str, pd.DataFrame]]
+            A nested dictionary of diagnostic results per column.
+
+        Usage Recommendation
         ---------------------
             1. Use this function when you want to see what kind of issues exist in columns that contain text in your DataFrame
 
-        Considerations:
+        Considerations
         ---------------
             1. This method adds a default **index** column by resetting the DataFrame's index.
             2. This is necessary to preserve original row IDs during conversion to Polars and back.
@@ -187,7 +186,7 @@ res
             4. This method also uses Polars regex under the hood for pattern matching
             5. This method is intended for diagnostic purposes, not data mutation.
 
-        Example:
+        Example
         --------
         >>>     diagnostics = DirtyDataDiagnosis(df).diagnose_text()
 
@@ -258,18 +257,23 @@ res
             'is_number': Datetime values that are just plain numbers (like 01012024)
             'is_missing': Pandas built-in missing values
             'is_dirty': Values that are not correct date/time or dae
-            }
-            
-        Returns:
-        --------
-            pd.DataFrame
-                A pandas DataFrame
+        }
 
-        Usage Recommendation:
-        ---------------------
+        Parameters
+        -----------
+        show_available_methods : bool (default is False)
+            Shows diagnostic options that are available in diagnose_numbers() method.
+            
+        Returns
+        --------
+        dict[str, dict[str, pd.DataFrame]]
+            A nested dictionary of diagnostic results per column.
+
+        Usage Recommendation
+        --------------------
             1. Use this function when you want to see what kind of issues exist in columns that contain datetime data in your DataFrame
 
-        Considerations:
+        Considerations
         ---------------
             1. This method adds a default **index** column by resetting the DataFrame's index.
             2. This is necessary to preserve original row IDs during conversion to Polars and back.
@@ -277,7 +281,7 @@ res
             4. This method also uses Polars regex under the hood for pattern matching
             5. This method is intended for diagnostic purposes, not data mutation.
 
-        Example:
+        Example
         --------
         >>>     diagnostics = DirtyDataDiagnosis(df).diagnose_datetime()
 
