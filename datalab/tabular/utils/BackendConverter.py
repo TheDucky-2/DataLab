@@ -1,11 +1,25 @@
+"""Allows to convert Pandas DataFrame <-> Polars DataFrame."""
+from .Logger import datalab_logger
 import pandas as pd
 import polars as pl
 
+logger = datalab_logger(name = __name__.split('.')[-1])
 
 class BackendConverter:
 
     def __init__(self, df:pd.DataFrame|pl.DataFrame, columns:list=None):
-        
+        """
+        Initializing the Backend Converter.
+
+        Parameters
+        -----------
+        df: pd.DataFrame or pl.DataFrame
+            A pandas DataFrame or a polars DataFrame.
+
+        columns: list, optional
+            A list of columns you wish to convert, default is None.
+
+        """
         if not isinstance(df, (pd.DataFrame, pl.DataFrame)):
             raise TypeError(f'Backend Converter expects a pandas DataFrame or a polars DataFrame, got {type(df).__name__}')
 
@@ -18,7 +32,6 @@ class BackendConverter:
 
             if columns is None:
                 self.columns = self.df.columns.to_list()
-
             else:
                 self.columns = [column for column in columns if column in self.df.columns]
 
@@ -32,7 +45,42 @@ class BackendConverter:
             else:
                 self.columns = [column for column in columns if column in self.df.columns]
 
-    def polars_to_pandas(self, array_type='auto', conversion_threshold: int=None)-> pd.DataFrame:
+        logger.info('BackendConverter initialized.')
+
+    def polars_to_pandas(self, array_type: str='auto', conversion_threshold: int=None)-> pd.DataFrame:
+        """
+        Converts a polars DataFrame to a pandas DataFrame
+
+        Parameters
+        -----------
+        array_type: str
+    
+            Determines the array/backend type used in pandas operations, by default 'auto'.
+
+            Options are:
+
+            - 'numpy' -> usual NumPy backend (slower for very large datasets with object types)
+            - 'pyarrow' -> PyArrow backend for better performance on large datasets
+            - 'auto' -> automatically selects backend based on input and dataset size 
+
+        conversion_threshold: int
+            The number of rows at which the conversion from Polars to pandas switches to Arrow-backed pandas arrays for performance, default is 100000.
+            Users can increase or decrease this threshold depending on their dataset size and memory availability.
+        
+        Returns
+        -------
+        pd.DataFrame
+            A pandas DataFrame
+
+        Usage Recommendation
+        ---------------------
+            Use this function to convert datasets quickly without having to do manual conversions and remembering parameters.
+            Polars -> pandas conversion ensures efficient memory usage and stability, even on low-RAM systems.
+
+        Considerations
+        ---------------
+            Adjust array_type and conversion_threshold for very large datasets to optimize performance and memory usage.
+        """
 
         if not isinstance(self.df, pl.DataFrame):
             raise TypeError(f'Expected a polars DataFrame, got {type(self.df).__name__}')
@@ -66,7 +114,24 @@ class BackendConverter:
 
             return pandas_df 
 
-    def pandas_to_polars(self: pd.DataFrame, include_index=False)-> pl.DataFrame:
+    def pandas_to_polars(self, include_index:bool=False)-> pl.DataFrame:
+        """
+        Converts a pandas DataFrame to a polars DataFrame
+
+        Parameters
+        -----------
+        include_index: bool, optional
+            Whether you would like to include index during conversion from pandas to polars, by default False
+        
+        Returns
+        -------
+        pl.DataFrame
+            A polars DataFrame
+
+        Considerations
+        ---------------
+            Polars do not have the concept of index like pandas does, hence, you can adjust include_index depending on your requirement.
+        """
         
         if not isinstance(include_index, bool):
             raise TypeError(f'include_index must be either True or False, got {type(include_index).__name__}')
