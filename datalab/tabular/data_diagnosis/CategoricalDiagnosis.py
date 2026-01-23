@@ -1,4 +1,4 @@
-"""Diagnoses the Categorical columns in your DataFrame"""
+"""Diagnoses the Categorical columns in your DataFrame."""
 
 import pandas as pd
 from ..utils.BackendConverter import BackendConverter
@@ -29,8 +29,9 @@ class CategoricalDiagnosis(Diagnosis):
             self.columns = df.columns.tolist()
         
     def count_unique_categories(self):
-        """Shows count of unique categories in one or multiple columns of DataFrame.
-        
+        """Shows count of unique categories in one or multiple columns of
+        DataFrame.
+
         Returns
         --------
         dict
@@ -45,7 +46,8 @@ class CategoricalDiagnosis(Diagnosis):
         return unique_categories
 
     def show_frequency(self, method='count'):
-        """Shows frequency ('count' or 'percent') of categories in one or multiple columns of DataFrame.
+        """Shows frequency ('count' or 'percent') of categories in one or
+        multiple columns of DataFrame.
 
         Parameters
         -----------

@@ -1,3 +1,5 @@
+"""Diagnoses Dirty Data in a pandas DataFrame"""
+
 from ..utils.Logger import datalab_logger
 import pandas as pd
 import polars as pl
@@ -6,8 +8,24 @@ logger = datalab_logger(name = __name__.split('.')[-1])
 
 class DirtyDataDiagnosis:
 
-    def __init__(self, df: pd.DataFrame, columns: list = None, array_type='auto', conversion_threshold = None):
+    def __init__(self, df: pd.DataFrame, columns: list = None, array_type='auto', conversion_threshold: int= None):
+        """
+        Initialize the DirtyDataDiagnosis class.
 
+        Parameters
+        -----------
+        df: pd.DataFrame
+            A pandas dataframe you wish to diagnose.
+
+        columns: list, optional
+            A list of columns you wish to diagnose, by default None.
+
+        array_type: str, optional
+            The backend you wish to work with in pandas: 'numpy' or 'pyarrow', by default 'auto'.
+
+        conversion_threshold: int, optional
+            The number of rows upon which backend automatically switches to 'pyarrow' in pandas, by default 100000.
+        """
         if not isinstance(df, pd.DataFrame):
             raise TypeError(f'df must be a pandas DataFrame, got {type(df).__name__}')
 
@@ -30,11 +48,10 @@ class DirtyDataDiagnosis:
         self.array_type= array_type
         self.conversion_threshold = conversion_threshold
 
-        logger.info(f'Dirty Data Diagnosis initialized with {self.array_type} backend!')
+        logger.info(f'Dirty Data Diagnosis initialized with {self.array_type} backend.')
 
     def diagnose_numbers(self, show_available_methods: bool=False)-> dict[str, dict[str, pd.DataFrame]]:
-        '''
-        Detects patterns and common formatting issues in numbers in each column of the DataFrame.
+        """Detects patterns and common formatting issues in numbers in each column of the DataFrame.
 
         The following diagnostics are computed per column:
 
@@ -79,8 +96,7 @@ class DirtyDataDiagnosis:
         >>>     diagnostics = DirtyDataDiagnosis(df).diagnose_numbers()
 
         >>>     diagnostics['price']['has_currency'].head()
-        
-        '''
+        """
         from ..utils.BackendConverter import BackendConverter
         
         # resetting index to ensure index is turned into a new column 'index' in pandas dataframe
@@ -150,8 +166,7 @@ class DirtyDataDiagnosis:
         return numeric_diagnosis
 
     def diagnose_text(self, show_available_methods=False)-> dict[str, dict[str, pd.DataFrame]]:
-        '''
-        Detects patterns and common formatting issues in text in each column of the DataFrame.
+        """Detects patterns and common formatting issues in text in each column of the DataFrame.
 
         The following diagnostics are computed per column:
         
@@ -191,8 +206,7 @@ class DirtyDataDiagnosis:
         >>>     diagnostics = DirtyDataDiagnosis(df).diagnose_text()
 
         >>>     diagnostics['user_id']['is_dirty'].head()
-        
-        '''
+        """
         from ..utils.BackendConverter import BackendConverter
 
         self.df = self.df.reset_index()
@@ -245,8 +259,7 @@ class DirtyDataDiagnosis:
         return text_diagnosis
 
     def diagnose_datetime(self, show_available_methods=False)-> dict[str, dict[str, pd.DataFrame]]:
-        '''
-        Detects patterns and formatting issues in date-time in one or multiple columns of the DataFrame.
+        """Detects patterns and formatting issues in date-time in one or multiple columns of the DataFrame.
 
         The following diagnostics are computed per column:
         
@@ -286,8 +299,7 @@ class DirtyDataDiagnosis:
         >>>     diagnostics = DirtyDataDiagnosis(df).diagnose_datetime()
 
         >>>     diagnostics['signup_date']['is_dirty'].head()
-        
-        '''
+        """
         from ..utils.BackendConverter import BackendConverter
         
         self.df = self.df.reset_index()

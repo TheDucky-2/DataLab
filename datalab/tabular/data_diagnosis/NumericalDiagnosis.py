@@ -1,9 +1,12 @@
-from .Diagnosis import Diagnosis
+"""Diagnoses the Numerical Data in your dataset"""
+
 from ..computations import Distribution
+from ..utils.Logger import datalab_logger
 
 from pathlib import Path
-
 import pandas as pd
+
+logger = datalab_logger(name = __name__.split('.')[-1])
 
 def convert_numpy_scalars_to_python(number)-> dict[str, dict]:
     import numpy as np
@@ -17,36 +20,38 @@ def convert_numpy_scalars_to_python(number)-> dict[str, dict]:
     else:
         return number
 
-class NumericalDiagnosis(Diagnosis):
+class NumericalDiagnosis:
 
     def __init__(self, df: pd.DataFrame, columns:list = None):
-
-        '''
-        Initializing the Diagnosis
+        """Initializing the Numerical Diagnosis.
 
         Parameters
         -----------
 
         df: pd.DataFrame
-            A pandas dataframe you wish to diagnose
+            A pandas dataframe you wish to diagnose.
 
-        columns: list
-            A list of columns you wish to apply numerical cleaning on
-        '''
-        super().__init__(df, columns)
+        columns: list, optional
+            A list of columns you wish to apply numerical diagnosis on, by default None
+        """
+
+        if not isinstance(df, pd.DataFrame):
+            raise TypeError(f'df must be a pandas DataFrame, got {type(df).__name__}')
+
+        if not isinstance(columns, (list, type(None))):
+            raise TypeError(f'columns must be a list of column names, got {type(columns).__name__}')
 
         self.df = df.select_dtypes(include='number')
 
-        if columns is not None:
-
-            self.columns = [column for column in columns if column in df.columns]
-
+        if columns is None:
+            self.columns = df.columns.tolist()
         else:
-            self.columns = self.df.columns
+            self.columns = [column for column in columns if column in self.df.columns]
+
+        logger.info('Numerical Diagnosis initialized.')
             
     def check_sparsity(self, value: int|float = 0) -> pd.Series:
-        '''
-        Checks the ratio of a specific number (usually 0) present in the selected column of the DataFrame
+        """Checks the ratio of a specific number (usually 0) present in the selected column of the DataFrame.
 
         Parameters
         -----------
@@ -62,7 +67,7 @@ class NumericalDiagnosis(Diagnosis):
         Usage Recommendation
         --------------------
             1. Use this function only for Exploratory Data Analysis.  
-            2. Mostly used to check how many values are 0 in a certain column. However, you can also use integers like 3 or floats like 5.888
+            2. Mostly used to check how many values are 0 in a certain column. However, you can also use integers like 3 or floats like 5.888.
             3. This function is intended to help you get an overview of which column may and may not contribute meaningfully to the analysis or ML.
 
         Considerations
@@ -83,7 +88,7 @@ class NumericalDiagnosis(Diagnosis):
                     years_at_job         0.021907
                     risk_score           0.335651           <- 33.5% values in column 'risk_score' are 0 (or 0.00).
                     dtype: float64
-        '''
+        """
 
         # getting the ratio of value present in the column
         sparsity = self.df[self.columns].apply(lambda column: ((column == value).sum()/len(column))*100)
@@ -94,8 +99,7 @@ class NumericalDiagnosis(Diagnosis):
         return sparsity
 
     def detect_outliers(self, method: str ='IQR')-> dict[str, pd.Series]:
-        '''
-        Detects outliers in one or multiple Numerical columns of the DataFrame
+        """Detects outliers in one or multiple Numerical columns of the DataFrame.
 
         Parameters
         -----------
@@ -110,7 +114,7 @@ class NumericalDiagnosis(Diagnosis):
         Returns
         -------
         pd.Series
-            A pandas Series of columns with outliers
+            A pandas Series of columns with outliers.
             
         Usage Recommendation
         --------------------
@@ -120,8 +124,7 @@ class NumericalDiagnosis(Diagnosis):
         Example
         -------- 
         >>> NumericalDiagnosis(df).detect_outliers()
-            
-        '''
+        """
         outliers_dict  = {}
 
         for col in self.df[self.columns]:
@@ -163,8 +166,7 @@ class NumericalDiagnosis(Diagnosis):
             
         return outliers_dict
     def check_skewness(self)-> pd.Series:
-        '''
-        Checks the skewness in each column of the DataFrame
+        """Checks the skewness in each column of the DataFrame.
 
         Returns
         --------
@@ -174,13 +176,12 @@ class NumericalDiagnosis(Diagnosis):
         Usage Recommendation
         ---------------------
             1. Use this function when you want to check how unevenly data is distributed around the mean (skewness).
-            2. Use only for numerical columns
+            2. Use only for numerical columns.
 
         Example
         ------- 
         >>> Diagnosis(df).check_skewness()
-        
-        '''
+        """
         
         return self.df.skew()
 
@@ -193,8 +194,7 @@ class NumericalDiagnosis(Diagnosis):
             return f'No columns have zero variance'
     
     def check_distribution(self, skewness_threshold: int|float=1,kurtosis_threshold: int|float=2)-> pd.Series :
-        '''
-        Checks whether the distribution of data is Normal or Non-Normal, for each column of DataFrame
+        """Checks whether the distribution of data is Normal or Non-Normal, for each column of DataFrame.
 
         Parameters
         -----------
@@ -230,7 +230,7 @@ class NumericalDiagnosis(Diagnosis):
             years_at_job             Normal Distribution
             risk_score               Normal Distribution
             dtype: object
-        '''
+        """
         import numpy as np
         
         # getting Skewness from numerical diagnosis class and kurtosis calculation from Distribution class
@@ -252,19 +252,18 @@ class NumericalDiagnosis(Diagnosis):
         return distributions
 
     def show_minmax(self):
-        '''
-        Show minimum and maximum values prexentt in each Numerical column of the DataFrame
+        """Show minimum and maximum values prexentt in each Numerical column of the DataFrame.
 
         Returns
         --------
         dict
-            A dictionary of column names and min-max values present in that column
+            A dictionary of column names and min-max values present in that column.
 
         Example
         --------
 
         >>> NumericalDiagnosis(df).show_min_max()
-        '''
+        """
         range_dict = {}
     
         for column in self.df[self.columns]:
@@ -279,4 +278,3 @@ class NumericalDiagnosis(Diagnosis):
 
         return range_dict
 
-   

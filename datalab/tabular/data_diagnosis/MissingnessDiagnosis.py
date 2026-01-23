@@ -1,3 +1,5 @@
+"""Diagnoses missing data in tabular datasets."""
+
 from ..computations import Statistics
 from ..utils.Logger import datalab_logger
 
@@ -12,18 +14,20 @@ class MissingnessDiagnosis:
     def __init__(self, df: pd.DataFrame, columns:list = None, extra_placeholders:list|type(None)=None):
         import pandas as pd
         import numpy as np
-        '''
+        """
+        Initialize the MissingnessDiagnosis class.
+
         Parameters
         -----------
         df: pd.DataFrame
-            A pandas dataframe you wish to diagnose
+            A pandas dataframe you wish to diagnose.
 
-        columns: list
-            A list of columns you wish to apply numerical cleaning on
+        columns: list, optional
+            A list of columns you wish to apply numerical cleaning on, by default None
 
-        extra_placeholders: list
-            A list of extra placeholders considered as missing values depending on the domain
-        '''
+        extra_placeholders: list, optional
+            A list of extra placeholders considered as missing values depending on the domain, by default None
+        """
         # making sure that the passed df is a pandas DataFrame
         if not isinstance(df, pd.DataFrame):
             raise TypeError(f'df must be a pandas DataFrame, got {type(df).__name__}')
@@ -45,22 +49,20 @@ class MissingnessDiagnosis:
         else:
             self.extra_placeholders = extra_placeholders
 
-        logger.info(f'Missingness Diagnosis initialized with columns: {self.columns}')
+        logger.info(f'Missingness Diagnosis initialized.')
 
     def detect_missing_types(self)-> dict[str, dict[str, list]]:
-        '''
-        Detects the types of missing values in each column of the DataFrame.
-            
+        """Detects the types of missing values in each column of the DataFrame.
+
         Returns
         --------
         dict
             A dictionary of columns and the types of missing values in a Numerical DataFrame.
-            
+
         Usage Recommendation
         ---------------------
-            1. Use this function when you want to detect what kind of missing data exists in your data
-                        
-        '''
+            1. Use this function when you want to detect what kind of missing data exists in your data.
+        """
         # keeping a dictionary of missing values
         missing_values = {}
 
@@ -88,19 +90,17 @@ class MissingnessDiagnosis:
         return missing_values      
     
     def show_missing_rows_in_categorical_columns(self)-> dict[str, pd.DataFrame]:
-        '''
-        Shows the rows where data is missing in Categorical columns of the DataFrame
-                
+        """Shows the rows where data is missing in Categorical columns of the DataFrame.
+
         Returns
         --------
         dict
             A dictionary of Categorical columns with rows containing missing values (pandas or placeholder).
-        
+
         Usage Recommendation
-        ---------------------     
+        ---------------------
             Use this function to see missing values in categorical columns before deciding how to clean or handle them.
-            
-        '''
+        """
         # selecting only the categorical or text data 
         missing_categorical_data = {}
 
@@ -127,19 +127,17 @@ class MissingnessDiagnosis:
         return missing_categorical_data
 
     def show_missing_rows_in_numerical_columns(self)-> dict[str, pd.DataFrame]:
-        '''
-        Shows the rows where data is missing in Numerical columns of the DataFrame
+        """Shows the rows where data is missing in Numerical columns of the DataFrame.
 
         Returns
         --------
         dict
             A dictionary of Numerical columns with rows containing missing values (pandas or placeholder).
-        
+
         Usage Recommendation
-        ---------------------     
+        ---------------------
             Use this function to see missing values in numerical columns before deciding how to clean or handle them.
-            
-        '''
+        """
         missing_numerical_data = {}
         
         if self.columns is None:
@@ -166,19 +164,17 @@ class MissingnessDiagnosis:
         return missing_numerical_data
 
     def show_missing_rows_in_datetime_columns(self)-> dict[str, pd.DataFrame]:
-        '''
-        Shows the rows where data is missing in Date or Time columns of the DataFrame
-                
+        """Shows the rows where data is missing in Date or Time columns of the DataFrame.
+
         Returns
         --------
         dict
             A dictionary of DateTime columns with rows containing missing values (pandas or placeholder).
-        
+
         Usage Recommendation
-        ---------------------     
+        ---------------------
             Use this function to see missing values in date or time columns before deciding how to clean or handle them.
-            
-        '''
+        """
         missing_datetime_data = {}
         
         if self.columns is None:
@@ -203,9 +199,8 @@ class MissingnessDiagnosis:
                 
         return missing_datetime_data
 
-    def missing_data_summary(self, method='count'):
-        '''
-        Shows the number of rows with missing values present in each column, irrespective of column type (Categorical, Numerical or Datetime)
+    def missing_data_summary(self, method='count')-> dict[str, int]:
+        """Shows the number of rows with missing values present in each column, irrespective of column type (Categorical, Numerical or Datetime)
 
         Parameters
         -----------
@@ -215,17 +210,16 @@ class MissingnessDiagnosis:
 
                 - 'count'    : Shows a count of rows with missing values per column
                 - 'percent': Shows the percentage of rows with missing values per column
-        
+
         Returns
         --------
         dict
             A dictionary of counts or percentages of missing values per column
-        
+
         Usage Recommendation
         ---------------------
             Use this function when you want to see a count or percentage of missing values before deciding whether to drop or fill missing values.
-            
-        '''
+        """
         # a mask of pandas missing values to get pandas missing types
         pandas_mask = self.df.isna()
         
@@ -262,20 +256,18 @@ class MissingnessDiagnosis:
 
         return missing_data_summary
         
-    def rows_with_all_columns_missing(self):
-        '''
-        Detects and shows all the rows where all the columns are missing valeues together in a DataFrame
-        
+    def rows_with_all_columns_missing(self)-> pd.DataFrame:
+        """Detects and shows all the rows where all the columns are missing values together in a DataFrame.
+
         Returns
         --------
         pd.DataFrame
-            A pandas dataframe of all rows where data is missing together in all the columns. 
+            A pandas dataframe of all rows where data is missing together in all the columns.
 
         Usage Recommendation
         ---------------------
             Use this function when you want to see data where all columns have values missing.
-            
-        '''
+        """
         # creating a mask of pandas missing values
         pandas_mask = self.df.isna()
 
@@ -293,20 +285,18 @@ class MissingnessDiagnosis:
 
         return all_columns_missing_data
 
-    def rows_with_specific_columns_missing(self, extra_placeholders=None):
-        '''
-        Detects and shows all the rows where only specific columns are missing valeues together in a DataFrame
+    def rows_with_specific_columns_missing(self, extra_placeholders=None)-> pd.DataFrame:
+        """Detects and shows all the rows where only specific columns are missing valeues together in a DataFrame.
 
         Returns
         -------
         pd.DataFrame
-            A pandas dataframe of all rows where data is missing together in only the columns decided by user. 
+            A pandas dataframe of all rows where data is missing together in only the columns decided by user.
 
         Usage Recommendation
         ---------------------
             Use this function when you want to see data where only your decided columns have values missing.
-            
-        '''    
+        """    
         # creating a mask of pandas missing values
         pandas_mask = self.df[self.columns].isna()
         
