@@ -1,36 +1,44 @@
 """Diagnoses the Categorical columns in your DataFrame."""
 
 import pandas as pd
-from ..utils.BackendConverter import BackendConverter
+from ..utils.Logger import datalab_logger
 # importing parent class
 from .Diagnosis import Diagnosis
 
-class CategoricalDiagnosis(Diagnosis):
+logger = datalab_logger(name = __name__.split('.')[-1])
+
+class CategoricalDiagnosis():
 
     def __init__(self, df: pd.DataFrame, columns: list|type(None) = None):
         """
+        Initializing Categorical Diagnosis.
+
         Parameters
         -----------
 
         df: pd.DataFrame
-            A pandas DataFrame
+            A pandas DataFrame.
 
-        columns : list or type(None)
-            A list column names. 
-            Use column names when you want to apply diagnosis only on the desired columns
+        columns : list, optional
+            A list of column names you want to apply diagnosis on, by default None.
         """
-        super().__init__(df, columns)
+        if not isinstance(df, pd.DataFrame):
+            raise TypeError(f'df must be a pandas DataFrame, got {type(df).__name__}')
+
+        if not isinstance(columns, (list, type(None))):
+            raise TypeError(f'columns must be a list of column names, got {type(columns).__name__}')
 
         self.df = df.select_dtypes(include=['object', 'string', 'category'])
 
-        if columns is not None:
-            self.columns = [column for column in df.columns if column in self.df.columns]
+        if columns is None:
+            self.columns = self.df.columns.to_list()
         else:
-            self.columns = df.columns.tolist()
-        
+            self.columns = [column for column in columns if column in self.df.columns]
+
+        logger.info(f'Categorical Diagnosis initialized.')
+
     def count_unique_categories(self):
-        """Shows count of unique categories in one or multiple columns of
-        DataFrame.
+        """Shows count of unique categories in one or multiple columns of DataFrame.
 
         Returns
         --------
@@ -46,18 +54,17 @@ class CategoricalDiagnosis(Diagnosis):
         return unique_categories
 
     def show_frequency(self, method='count'):
-        """Shows frequency ('count' or 'percent') of categories in one or
-        multiple columns of DataFrame.
+        """Shows frequency ('count' or 'percent') of categories in one or multiple columns of DataFrame.
 
         Parameters
         -----------
-
-        method : str (default is 'count')
+        method : str 
+            Whether frequency should be a count or a percentage.
 
             Available methods:
 
-            - 'count': Counts the number of unique values in each category (default)
-            - 'percent': Calculates the percentage of values in each category
+            - 'count': Counts the number of unique values in each category (default).
+            - 'percent': Calculates the percentage of values in each category.
         """
         # using a dictionary for storing frequency of category values
         frequency_count = {}
