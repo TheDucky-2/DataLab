@@ -1,7 +1,12 @@
+"""Base cleaner class that is the parent of all other Cleaner classes"""
+
 import pandas as pd
 import polars as pl
 
 class DataCleaner:
+    """
+    Initializing Base Cleaner
+    """
     
     def __init__(self, df:pd.DataFrame, columns:list=None, inplace: bool=False):
 
@@ -29,20 +34,17 @@ class DataCleaner:
         self.inplace = inplace
         
     def validate_columns(self):
-        '''
-        This function just makes sure that the columns passed by the user actually exist in the dataframe
-        ''' 
+        """This function just makes sure that the columns passed by the user actually exist in the dataframe.""" 
         # if the column passed by the user is not in dataframe
         missing_columns = [column for column in self.columns if column not in self.df.columns] 
 
         if missing_columns:
             raise TypeError(f'Columns not found in dataframe: {missing_columns}')
-
-    def drop_duplicates(self, in_columns=None):
-
-        return self.df.drop_duplicates(subset=in_columns)
     
-    def track_not_cleaned(self, *, method:str, col:str, before: pd.Series|pl.Series, mask:pd.Series|pl.Series, after:pd.Series|pl.Series):
+    def track_not_cleaned(self, *, method:str, col:str, before: pd.Series|pl.Series, mask:pd.Series|pl.Series, after:pd.Series|pl.Series)-> set:
+        """
+        This is an internal function used for tracking values that remain dirty even after cleaning.
+        """
 
         if not isinstance(method, str):
             raise TypeError(f"'method' must be a str, got {type(method)}")
@@ -69,6 +71,7 @@ class DataCleaner:
             self.not_cleaned.setdefault(col, {})
             self.not_cleaned[col].setdefault(method, set())
 
+            # making sure values that originally failed cleaning will be added
             self.not_cleaned[col][method].update(before[cleaning_failed].tolist())
 
 
@@ -76,4 +79,3 @@ class DataCleaner:
 
 
 
-    
