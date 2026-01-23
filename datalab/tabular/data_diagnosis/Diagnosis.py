@@ -13,13 +13,14 @@ class Diagnosis:
         '''
         Initializing the Diagnosis
 
-        Parameters:
+        Parameters
         -----------
+
         df: pd.DataFrame
             A pandas dataframe you wish to diagnose
 
         columns: list
-            A list of columns you wish to apply numerical cleaning on
+            A list of columns you wish to diagnose
         '''
 
         # making sure that the passed df is a pandas DataFrame
@@ -42,41 +43,50 @@ class Diagnosis:
 
     def data_preview(self, number_of_rows=10):
         '''
-        Shows a preview of your DataFrame
+        Shows a preview of N rows of your DataFrame
 
-        Parameters:
+        Parameters
         ----------
+        number_of_rows : int (default is 10)
+            N numbers of rows you would like to see 
 
-        self: pd.DataFrame
-            A pandas DataFrame
-
-            Optional:
-
-                number_of_rows : int (default is 10)
-                    N numbers of rows you would like to see 
-
-        Returns:
+        Returns
         --------
             pd.DataFrame
                 A pandas DataFrame of N number of rows. 
         
-        Usage Recommendation:
+        Usage Recommendation
         ---------------------
             1. Use this function when you want a preview of your data during diagnosis 
 
-        Considerations:
+        Considerations
         ---------------
             1. This function uses df.head() under the hood.
 
-        Example:
+        Example
         --------
-                Diagnosis(df).data_preview(5)
+        >>>     Diagnosis(df).data_preview(5)
                 
         '''
         return self.df.head(number_of_rows)
 
     def data_summary(self):
+        '''
+        Shows a summary of your DataFrame
 
+        Returns
+        --------
+            dict
+                A dictionary of summary types
+        
+        Usage Recommendation
+        ---------------------
+            1. Use this function when you want to see shape, columns, dtypes and index of your DataFrame
+
+        Example
+        --------
+        >>>     Diagnosis(df).data_summary()    
+        '''
         summary = {
 
             'shape'        : self.df.shape,
@@ -102,26 +112,26 @@ class Diagnosis:
             return separate_usage
 
     def detect_column_types(self) -> dict [str, list[str]]:
-
         '''
-        Detect the column types (Categorical, Numerical, Datetime) for each column of a DataFrame
+        Detect the column types (Categorical, Numerical, Datetime) for one or multiple columns of a DataFrame
             
-        Returns:
+        Returns
         --------
-        Return a dictionary with list of column types.
+        dict
+            Return a dictionary with list of column types.
             
-            dict    
-                Numerical  : List of Numerical type columns
-                Datetime   : List of Datetime type columns
-                Categorical: List of Categorical or object type columns
+            Supported column datatypes:
 
-        Usage Recommendation:
+            - Numerical  : List of Numerical type columns
+            - Datetime   : List of Datetime type columns
+            - Categorical: List of Categorical or object type columns
+
+        Usage Recommendation
         ---------------------
             1. Use this function to check whether a column is categorized as 'Categorical or text', 'Numerical', or Datetime.
-            2. Use 'dl.ColumnConverter' to change column types if column type is not detected correctly.
+            2. Use 'ColumnConverter' to change column types if column type is not detected correctly.
 
         '''
-
         self.column_types = {'Numerical': [], 'Datetime' :[], 'Categorical':[]}
 
         for col in self.df.columns:
@@ -139,24 +149,20 @@ class Diagnosis:
     def show_unique_values(self) -> dict[list[str]]:
         '''
         Shows a list of unique values present in each column of the DataFrame
-         
-        Parameters:
-        -----------
-
-            self: pd.DataFrame
             
-        Returns:
+        Returns
         --------
             dict
                 A dictionary of key, value pairs of column and unique values present in that column
 
-        Usage Recommendation:
+        Usage Recommendation
         ----------------------
             Use this function when you want to see what unique values are present in a column.
 
-        Example: 
+        Example
+        --------
         
-        >>>>    Diagnosis(df).show_unique_values()
+        >>>   Diagnosis(df).show_unique_values()
 
             Output: 
 
@@ -180,23 +186,18 @@ class Diagnosis:
 
     def show_cardinality(self)-> dict:
         '''
-        Shows how many different values exist in each column of the DataFrame.
+        Shows the number of unique values that exist in one or multiple columns of the DataFrame.
 
-        Parameters:
-        -----------
-            self : pd.DataFrame
-                A pandas DataFrame
-
-        Returns:
+        Returns
         --------
-            dict
-                A python dictionary of column names and cardinality values
+        dict
+            A python dictionary of column names and cardinality values
         
-        Usage Recommendation:
+        Usage Recommendation
         ---------------------
             1. Use this function when you want to see how many unique values exist before using encoding your Categorical data.
 
-        Example:
+        Example
         --------
             Diagnosis(df).show_cardinality()
         '''
@@ -221,23 +222,19 @@ class Diagnosis:
         '''
         Separates Numerical (numbers) columns from rest of the DataFrame.
 
-        Parameters:
-        -----------
-            self: pd.DataFrame
-
-        Return:
+        Return
         -------
-            pd.DataFrame
-                A pandas DataFrame of Numerical columns.
+        pd.DataFrame
+            A pandas DataFrame of Numerical columns.
         
-        Usage Recommendation:
+        Usage Recommendation
         ---------------------
             1. Use this function when you want to work specifically on Numerical data, not overall DataFrame (including Categorical, Datetime).
             2. Use this function if you wish to follow DataLab guided workflow for diagnosis, cleaning and preprocessing of Numerical data.
 
-        Example: 
-        
-        >>>> Diagnosis(df).get_numerical_columns()
+        Example
+        --------
+        >>> Diagnosis(df).get_numerical_columns()
         '''
 
         return self.df.select_dtypes(include='number')
@@ -246,49 +243,42 @@ class Diagnosis:
         '''
         Separates Categorical (text or category) columns from rest of the DataFrame.
 
-        Parameters:
-        -----------
-            self: pd.DataFrame
-
-        Return:
+        Return
         -------
-            pd.DataFrame
-                A pandas DataFrame of Categorical columns.
+        pd.DataFrame
+            A pandas DataFrame of Categorical columns.
         
-        Usage Recommendation:
+        Usage Recommendation
         ---------------------
             1. Use this function when you want to work specifically on Categorical data, not overall DataFrame (including Numerical, Datetime).
             2. Use this function if you wish to follow DataLab guided workflow for diagnosis, cleaning and preprocessing of Categorical data.
 
-        Example: 
+        Example
+        --------
         
-        >>>> Diagnosis(df).get_categorical_columns()
+        >>> Diagnosis(df).get_categorical_columns()
     
         '''
         return self.df.select_dtypes(include=['object', 'string', 'category'])
 
     def get_datetime_columns(self):
-
         '''
         Separates Datetime (dates or timestamps) columns from rest of the DataFrame.
 
-        Parameters:
-        -----------
-            self: pd.DataFrame
-
-        Return:
+        Returns
         -------
-            pd.DataFrame
-                A pandas DataFrame of Datetime columns.
+        pd.DataFrame
+            A pandas DataFrame of Datetime columns.
         
-        Usage Recommendation:
+        Usage Recommendation
         ---------------------
             1. Use this function when you want to work specifically on Date and Time columns, not overall DataFrame (including Numerical, Datetime).
             2. Use this function if you wish to follow DataLab guided workflow for diagnosis, cleaning and preprocessing of Datetime data.
 
-        Example: 
+        Example
+        --------
         
-        >>>> Diagnosis(df).get_datetime_columns()
+        >>> Diagnosis(df).get_datetime_columns()
     
         '''
 

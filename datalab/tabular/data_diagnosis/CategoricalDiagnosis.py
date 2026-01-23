@@ -6,17 +6,15 @@ class CategoricalDiagnosis(Diagnosis):
 
     def __init__(self, df: pd.DataFrame, columns: list|type(None) = None):
         '''
-        Initializing the Categorical Diagnosis
-
-        Parameters:
+        Parameters
         -----------
-            df: pd.DataFrame
-                A pandas DataFrame
 
-            columns : list or type(None)
-                A list column names. 
+        df: pd.DataFrame
+            A pandas DataFrame
 
-                Use column names when you want to apply diagnosis only on the desired columns
+        columns : list or type(None)
+            A list column names. 
+            Use column names when you want to apply diagnosis only on the desired columns
 
         ''' 
         super().__init__(df, columns)
@@ -29,6 +27,9 @@ class CategoricalDiagnosis(Diagnosis):
             self.columns = df.columns
         
     def count_unique_categories(self):
+        '''
+        Shows count of unique categories in one or multiple columns of DataFrame
+        '''
         
         unique_categories = {}
 
@@ -39,20 +40,17 @@ class CategoricalDiagnosis(Diagnosis):
 
     def show_frequency(self, method='count'):
         '''
-        Shows frequency count ('count' or 'percent') for each column of Categorical DataFrame
+        Shows frequency ('count' or 'percent') of categories in one or multiple columns of DataFrame
 
-        Parameters:
+        Parameters
         -----------
 
-        Optional:
+        method : str (default is 'count')
 
-            method : str (default is 'count')
+            Available methods:
 
-                Available methods:
-
-                - 'count': Counts the number of unique values in each category (default)
-                - 'percent': Calculates the percentage of values in each category
-
+            - 'count': Counts the number of unique values in each category (default)
+            - 'percent': Calculates the percentage of values in each category
                     
         '''
         # using a dictionary for storing frequency of category values

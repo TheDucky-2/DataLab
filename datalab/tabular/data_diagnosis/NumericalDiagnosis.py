@@ -24,8 +24,9 @@ class NumericalDiagnosis(Diagnosis):
         '''
         Initializing the Diagnosis
 
-        Parameters:
+        Parameters
         -----------
+
         df: pd.DataFrame
             A pandas dataframe you wish to diagnose
 
@@ -47,38 +48,41 @@ class NumericalDiagnosis(Diagnosis):
         '''
         Checks the ratio of a specific number (usually 0) present in the selected column of the DataFrame
 
-        Parameters:
+        Parameters
         -----------
-            df: pd.DataFrame
-                A pandas DataFrame
 
-            value: int or float
-                An integer or a decimal number
+        value: int or float (default is 0)
+            An integer or a decimal number
 
-        Returns:
-            pd.Series
-                A pandas Series of the columns passed in, along with the ratio that value appears in the Dataframe. 
+        Returns
+        --------
+        pd.Series
+            A pandas Series of the columns passed in, along with the ratio that value appears in the Dataframe. 
             
-        Usage Recommendation:
+        Usage Recommendation
+        --------------------
             1. Use this function only for Exploratory Data Analysis.  
             2. Mostly used to check how many values are 0 in a certain column. However, you can also use integers like 3 or floats like 5.888
             3. This function is intended to help you get an overview of which column may and may not contribute meaningfully to the analysis or ML.
 
-        Considerations:
+        Considerations
+        --------------
             Pass numeric values after converting datatypes to int or float, instead of using strings.
             
-        >>> Example: 
-                    Input : NumericalCleaner(df).check_sparsity()
-                    Output: age                  0.000000
-                            income               0.000000
-                            expenses             0.000000
-                            savings              0.000000
-                            loan_amount          0.000000
-                            credit_score         0.000000
-                            num_of_dependents    0.147308
-                            years_at_job         0.021907
-                            risk_score           0.335651           <- 33.5% values in column 'risk_score' are 0 (or 0.00).
-                            dtype: float64
+        Example
+        --------
+        >>> NumericalCleaner(df).check_sparsity()
+
+            Output: age                  0.000000
+                    income               0.000000
+                    expenses             0.000000
+                    savings              0.000000
+                    loan_amount          0.000000
+                    credit_score         0.000000
+                    num_of_dependents    0.147308
+                    years_at_job         0.021907
+                    risk_score           0.335651           <- 33.5% values in column 'risk_score' are 0 (or 0.00).
+                    dtype: float64
         '''
 
         # getting the ratio of value present in the column
@@ -90,32 +94,32 @@ class NumericalDiagnosis(Diagnosis):
         return sparsity
 
     def detect_outliers(self, method: str ='IQR')-> dict[str, pd.Series]:
-
         '''
-        Detects outliers in each Numerical column of the DataFrame
+        Detects outliers in one or multiple Numerical columns of the DataFrame
 
-        Parameters:
+        Parameters
         -----------
-            self
+        method : str (default is 'IQR')
+            Method using which you wish to detecting outliers.
 
-            Optional:
+            Supports:
+            
+            - IQR
+            - z-score
 
-                method : str (default is 'IQR')
-
-                    Method using which you wish to detecting outliers. Supports:
-                    
-                    - IQR
-                    - z-score
-        Returns:
-            pd.Series
+        Returns
+        -------
+        pd.Series
             A pandas Series of columns with outliers
             
-        Usage Recommendation:
+        Usage Recommendation
+        --------------------
             1. Use this function when you want to check if there are any outliers in your data.
             2. Use this function only for Numerical data (numbers).
 
-        >>> Example: 
-                NumericalDiagnosis(df).detect_outliers()
+        Example
+        -------- 
+        >>> NumericalDiagnosis(df).detect_outliers()
             
         '''
         outliers_dict  = {}
@@ -162,16 +166,19 @@ class NumericalDiagnosis(Diagnosis):
         '''
         Checks the skewness in each column of the DataFrame
 
-            Returns:
-                pd.Series
-                A pandas Series of all columns of the DataFrame with skewness values.
-                
-            Usage Recommendation:
-                1. Use this function when you want to check how unevenly data is distributed around the mean (skewness).
-                2. Use only for numerical columns
-    
-            >>> Example: 
-                    Diagnosis(df).check_skewness()
+        Returns
+        --------
+        pd.Series
+            A pandas Series of all columns of the DataFrame with skewness values.
+            
+        Usage Recommendation
+        ---------------------
+            1. Use this function when you want to check how unevenly data is distributed around the mean (skewness).
+            2. Use only for numerical columns
+
+        Example
+        ------- 
+        >>> Diagnosis(df).check_skewness()
         
         '''
         
@@ -189,40 +196,40 @@ class NumericalDiagnosis(Diagnosis):
         '''
         Checks whether the distribution of data is Normal or Non-Normal, for each column of DataFrame
 
-        Parameters:
-        
-            Optional:
+        Parameters
+        -----------
+        skewness_threshold: int or float (default is 1)
 
-                skewness_threshold: int or float (default is 1)
-        
-                    The absolute value for skewness(|skewness|) below which the data distribution is considered to be a Normal Distribution.
-                    
-                kurtosis_threshold: int or float( default is 2)
+            The absolute value for skewness(|skewness|) below which the data distribution is considered to be a Normal Distribution.
+            
+        kurtosis_threshold: int or float( default is 2)
 
-                    The absolute value for kurtosis(|kurtosis|) below which the data distribution is considered to be a Normal Distribution.
+            The absolute value for kurtosis(|kurtosis|) below which the data distribution is considered to be a Normal Distribution.
 
-        Returns:
-            pd.Series
+        Returns
+        --------
+        pd.Series
             A pandas Series of column names and their classification as 'Normal' vs 'Non-Normal'. 
             
-        Usage Recommendation:
+        Usage Recommendation
+        ---------------------
             1. Use this function only for Exploratory Data Analysis.  
             2. Use this function before exploring strategies for handling missing data and data preprocessing.
             
-        >>> Example: 
-
-                Diagnosis(df).check_distribution()
+        Example
+        -------
+        >>> Diagnosis(df).check_distribution()
                 
-                    age                      Normal Distribution
-                    income               Non-Normal Distribution
-                    expenses             Non-Normal Distribution
-                    savings              Non-Normal Distribution
-                    loan_amount          Non-Normal Distribution
-                    credit_score             Normal Distribution
-                    num_of_dependents        Normal Distribution
-                    years_at_job             Normal Distribution
-                    risk_score               Normal Distribution
-                    dtype: object
+            age                      Normal Distribution
+            income               Non-Normal Distribution
+            expenses             Non-Normal Distribution
+            savings              Non-Normal Distribution
+            loan_amount          Non-Normal Distribution
+            credit_score             Normal Distribution
+            num_of_dependents        Normal Distribution
+            years_at_job             Normal Distribution
+            risk_score               Normal Distribution
+            dtype: object
         '''
         import numpy as np
         
@@ -248,15 +255,12 @@ class NumericalDiagnosis(Diagnosis):
         '''
         Show minimum and maximum values prexentt in each Numerical column of the DataFrame
 
-        Parameters:
-        -----------
-            self
-
-        Returns:
+        Returns
         --------
+        dict
             A dictionary of column names and min-max values present in that column
 
-        Example:
+        Example
         --------
 
         >>> NumericalDiagnosis(df).show_min_max()
