@@ -103,7 +103,7 @@ class DirtyDataDiagnosis:
         self.df = self.df.reset_index()   
 
         # passing dataframe including the new column 'index'
-        polars_df = BackendConverter(self.df).pandas_to_polars()
+        polars_df = BackendConverter(self.df).pandas_to_polars_as_string(array_type = self.array_type, conversion_threshold = self.conversion_threshold)
 
         numeric_diagnosis = {}
 
@@ -211,7 +211,7 @@ class DirtyDataDiagnosis:
 
         self.df = self.df.reset_index()
         
-        polars_df = BackendConverter(self.df).pandas_to_polars()
+        polars_df = BackendConverter(self.df).pandas_to_polars_as_string(array_type = self.array_type, conversion_threshold = self.conversion_threshold)
 
         columns_to_diagnose = [column for column in polars_df.columns if column!= 'index']
 
@@ -304,7 +304,7 @@ class DirtyDataDiagnosis:
         
         self.df = self.df.reset_index()
 
-        pol_df = BackendConverter(self.df).pandas_to_polars()
+        pol_df = BackendConverter(self.df).pandas_to_polars_as_string(array_type = self.array_type, conversion_threshold = self.conversion_threshold)
         
         datetime_diagnosis = {}
 
