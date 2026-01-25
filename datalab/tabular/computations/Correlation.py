@@ -1,38 +1,97 @@
+"""Computes Correlation between two columns of a DataFrame."""
+
 import pandas as pd
+
 from .Computation import Computation
+from ..utils.Logger import datalab_logger
+
+logger = datalab_logger(name = __name__.split('.')[-1])
 
 class Correlation(Computation):
 
     def __init__(self, df:pd.DataFrame, columns:list=None):
+        """
+        Initializing the Correlation Computation .
 
-        '''
-        Initializing the Statistics Computation
-
-        Parameters:
+        Parameters
         -----------
         df: pd.DataFrame
-            A pandas dataframe you wish to diagnose
+            A pandas dataframe you wish to diagnose.
 
-        columns: list
-            A list of columns you wish to apply numerical cleaning on
-        '''
-
-        import pandas as pd
-
+        columns: list, optional
+            A list of columns you wish to check correlation for, by default None.
+        """
         super().__init__(df, columns)
 
-        self.df = df.copy()
-        self.columns = [column for column in self.columns if column in self.df.columns]
+        self.df = df
+        
+        if columns is None:
+            self.columns = self.df.columns.tolist()
+        else:
+            self.columns = [column for column in columns if column in self.df.columns]
+
+        logger.info(f'Correlation initialized.')
 
     def covariance(self):
+        """
+        Computes the covariance matrix of a pandas DataFrame.
+
+        Covariance shows how two columns (variables) change together:
+
+        - Positive -> both increase together
+        - Negative -> one increases while the other decreases
+        - Zero -> mostly independent
+
+        Returns
+        -------
+        pd.DataFrame
+            A pandas DataFrame
+
+        Example
+        -------
+        >>> Correlation(df).covariance()
+        """
+        return self.df.cov()
         
-        n = len(self.df)
-        centered_df = self.df - self.df.mean()
+    def correlation(self, method:str = 'pearson'):
+        """
+        Computes the correlation matrix of a pandas DataFrame.
 
-        covar_matrix = (centered_df.T @ centered_df) / (n-1)
+        Pearson correlation measures how strongly two variables are linearly related:
 
-        return covar_matrix
-        
-    def pearson_corr(self):
+        - +1 -> perfectly positively correlated
+        - -1 -> perfectly negatively correlated
+        - 0  -> no linear correlation
 
-        return self.df.corr()
+        Parameters
+        -----------
+            method: str, optional
+                Method using which you would like to calculate correlation, default is 'pearson'.
+
+                Available methods:
+
+                - 'pearson': measures how much two columns go up or down together in a straight-line.
+                - 'spearman': measures how much two columns move together based on their ranking order.
+                - 'kendall': measures how often two columns move in the same direction when comparing all pairs.
+
+        Returns
+        -------
+        pd.DataFrame
+            A pandas DataFrame
+
+        Example
+        -------
+        >>> Correlation(df).correlation()
+        >>> Correlation(df).correlation('spearman')
+        >>> Correlation(df).correlation('kendall')
+        """
+
+        if not isinstance(method, str):
+            raise TypeError(f'method must be a string, got {type(method).__name__}')
+
+        if method not in ['pearson', 'spearman', 'kendall']:
+            raise ValueError(f"Available methods are: 'pearson', 'spearman', 'kendall'")
+
+        logger.info(f'Computing corrrelation using {method} method.')
+
+        return self.df.corr(method = method)
