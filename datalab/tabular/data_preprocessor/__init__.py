@@ -1,5 +1,5 @@
-from .DataPreprocessor import DataPreprocessor
 from .Normalization import Normalization
 from .Standardization import Standardization
+from .CategoricalPreprocessor import CategoricalPreprocessor
 
-__all__ = ['DataPreprocessor', 'Normalization', 'Standardization']
+__all__ = ['CategoricalPreprocessor', 'Normalization', 'Standardization']
