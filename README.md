@@ -1,6 +1,7 @@
 ![DataLab logo](DataLab_logo_images/DataLab_logo.png)
 
 # 📊 DataLab (v0.1 Pre-Release)
+[![API Docs](https://img.shields.io/badge/API-Documentation-blue)](https://theducky-2.github.io/DataLab)
 
 A Python library for understanding, diagnosing, and preparing real-world data.
 
