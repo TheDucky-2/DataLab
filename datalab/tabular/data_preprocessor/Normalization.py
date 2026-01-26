@@ -1,99 +1,64 @@
+"""Normalization is adjusting numbers so they're on the same scale."""
+
 import pandas as pd
 import numpy as np
 from .DataPreprocessor import DataPreprocessor
-
-'''
-Normalization:
---------------
-
-Normalizing your data means rescaling numerical values to a defined, smaller range — 
-typically [0, 1] or sometimes [-1, 1].
-
-This ensures that all features contribute equally to model training and prevents features with large numeric ranges from dominating.
-Like a feature with range between [1, 100] would not be dominated in model training by a feature with range between [-infinity, infinity]
-
-Normalization is applied separately to each feature (numerical column) of the dataframe.
-
-Example:
-
-    data = [10, 20, 30, 60, 100]
-
-    Suppose we want to normalize all values between 0 and 1. 
-
-    One simple approach is to divide each value by the maximum value (100 in this case):
-
-        [10, 20, 30, 60, 100] / 100 = [0.1, 0.2, 0.3, 0.6, 1.0]
-
-    Now the data has been normalized within range [0, 1].
-
-Note:
-    - This simple dividing-by-maximum method works when the data is strictly positive.
-      It does not work for data with neagtive values.
-
-    - A more general approach is Min-Max normalization, using the formula:
-
-        For each feature X,
-
-        X' = (each value of X - minimum value of X) / (maximum value of X - mimumum value of X)
-
-        or simply, 
-
-        X' = (X - min) / (max - min)
-
-      Min-Max normalization can handle data with arbitrary minimum and maximum values.
-'''
 
 class Normalization(DataPreprocessor):
 
     def __init__(self, df: pd.DataFrame, columns: list = None):
         super().__init__(df, columns)
-        '''
-        Initializing Normalization
+        """
+        Initializing Normalization.
 
-        Parameters:
+        Parameters
         -----------
         df: pd.DataFrame
             A pandas dataframe you wish to normalize
 
-        columns: list
-            A list of numerical columns you want to apply normalization on
-        '''
+        columns: list, optional
+            A list of numerical columns you want to apply normalization on, default is None.
+        """
         self.df = self.df.select_dtypes(include='number')
         
         if columns is None:
-            self.columns = self.df.columns
+            self.columns = self.df.columns.tolist()
         else:
             self.columns = [column for column in columns if column in self.df.columns]
 
-    def MaxNormalization(self) -> pd.DataFrame:
-        '''
-        Normalizes your data by dividing each value with the maximum value of that column for each column of the DataFrame
+    def max_normalization(self) -> pd.DataFrame:
+        """
+        Normalizes your data by dividing each value with the maximum value of that column.
 
-        Formula:
+        Formula
+        --------
                     X
             X' =  -----
                    max
 
-        Return:
-            pd.DataFrame
-            A pandas DataFrame of normalized values 
-        
-        Usage Recommendation:
+        Returns
+        --------
+        pd.DataFrame
+            A pandas DataFrame
+
+        Usage Recommendation
         ---------------------
             1. Use this function when you do not have negative values in your data.
-            2. Use this function when your models are sensitive to feature scaling. 
+            2. Use this function when your models are sensitive to feature scaling.
                Examples: KNN, Neural Networks, k-means, DBSCAN, or Gradient based (Adam, SGD)
 
             3. DO NOT USE this function if your maximum value is an outlier. It will distort scaling.
 
-        Considerations:
+        Considerations
+        ---------------
             1. This function scales your data by squeezing it between 0 and 1 without changing the shape of your data.
             2. It does not mean that the mean of your data will be 0, or 1 standard deviation away from the mean.
-            3. For making your data zero-centered (mean = 0, std=1), use Standardization()
+            3. For making your data zero-centered (mean = 0, std=1), use ``Standardization()``
 
-        Example: 
-            Normalization(df).MaxNormalization()
-        '''
+        Example
+        -------
+        >>>    Normalization(df).max_normalization()
+        """
         normalized_data = {}
 
         for column in self.df[self.columns]:
@@ -108,36 +73,38 @@ class Normalization(DataPreprocessor):
 
         return normalized_df
         
-    def MinMaxNormalization(self) -> pd.DataFrame:
-        '''
-        Normalizes your data to a range [0, 1] based on the minimum and maximum values of each column of the DataFrame.
+    def minmax_normalization(self) -> pd.DataFrame:
+        """
+        Normalizes your data to a range [0, 1] based on the minimum and maximum values.
 
-        Formula:
+        Formula
+        -------
                   (X - min)
-            X' =  ---------  
+            X' =  ---------
                  (max - min)
 
-        Return:
-            pd.DataFrame
-            A pandas DataFrame of normalized values 
-        
-        Usage Recommendation:
+        Returns
+        --------
+        pd.DataFrame
+            A pandas DataFrame
+
+        Usage Recommendation
         ---------------------
-            1. Use this function when your models are sensitive to feature scaling. 
+            1. Use this function when your models are sensitive to feature scaling.
                Examples: KNN, Neural Networks, k-means, DBSCAN, or Gradient based (Adam, SGD)
 
             2. DO NOT USE this function if your maximum value is an outlier. It will distort scaling.
 
-        Considerations:
+        Considerations
+        ---------------
             1. This function scales your data by squeezing it between 0 and 1 without changing the shape of your data.
             2. It does not mean that the mean of your data will be 0, or 1 standard deviation away from the mean.
             3. For making your data zero-centered (mean = 0, std=1), use Standardization()
 
-        Example: 
-            Normalization(df).MinMaxNormalization()
-            
-        '''
-
+        Example
+        --------
+        >>>    Normalization(df).minmax_normalization()
+        """
         minmax_normalized_data ={}
 
         for column in self.df[self.columns]:
@@ -150,40 +117,44 @@ class Normalization(DataPreprocessor):
             
         return minmax_normalized_df
 
-    def FeatureRangeNormalization(self, range:tuple = (0, 1)) -> pd.DataFrame:
-        '''
-        Normalizes your data to a specified range based on the minimum and maximum values of each column of the DataFrame.
+    def feature_range_normalization(self, range:tuple = (0, 1)) -> pd.DataFrame:
+        """
+        Normalizes your data to a specified range based on the minimum and maximum values.
 
-        Formula:
+        Formula
+        --------
                    (X - min)
-            X' =  ----------- 
+            X' =  -----------
                   (max - min)
 
-        Parameters:
+        Parameters
+        -----------
+        range: tuple, optional
+            A tuple of minimum and maximum value you wish to scale your data between, default is (0,1).
 
-            range: tuple
-            A tuple of minimum and maximum value you wish to scale your data between
+        Returns
+        --------
+        pd.DataFrame
+            A pandas DataFrame
 
-        Return:
-            pd.DataFrame
-            A pandas DataFrame of normalized values 
-        
-        Usage Recommendation:
+        Usage Recommendation
         ---------------------
-            1. Use this function when your models are sensitive to feature scaling. 
+            1. Use this function when your models are sensitive to feature scaling.
                Examples: KNN, Neural Networks, k-means, DBSCAN, or Gradient based (Adam, SGD)
 
             2. DO NOT USE this function if your maximum value is an outlier. It will distort scaling.
 
-        Considerations:
+        Considerations
+        ---------------
             1. This function scales your data by squeezing it between 0 and 1 without changing the shape of your data.
             2. It does not mean that the mean of your data will be 0, or 1 standard deviation away from the mean.
             3. For making your data zero-centered (mean = 0, std=1), use Standardization()
 
-        Example: 
-            Normalization(df).FeatureRangeNormalization()
-        '''
-        minmax_normalized_data = Normalization(self.df).MinMaxNormalization()
+        Example
+        --------
+        >>>    Normalization(df).feature_range_normalization()
+        """
+        minmax_normalized_data = Normalization(self.df).minmax_normalization()
 
         r_min, r_max = range
 
@@ -191,36 +162,38 @@ class Normalization(DataPreprocessor):
 
         return featurerange_normalized_df
 
-    def MeanNormalization(self) -> pd.DataFrame:
-        '''
-        Normalizes your data by subtracting the mean and dividing by the range (max-min) of each feature (column) of the dataframe
-        
+    def mean_normalization(self) -> pd.DataFrame:
+        """
+        Normalizes your data by subtracting the mean and dividing by the range (max-min)..
+
         Formula:
 
                   (X - mean)
             X' =  ----------
                   (max - min)
 
-        Return:
-            pd.DataFrame
-            A pandas DataFrame of normalized values 
-        
-        Usage Recommendation:
+        Returns
+        --------
+        pd.DataFrame
+            A pandas DataFrame
+
+        Usage Recommendation
         ---------------------
-            1. Use this function when your models are sensitive to feature scaling. 
+            1. Use this function when your models are sensitive to feature scaling.
                Examples: KNN, Neural Networks, k-means, DBSCAN, or Gradient based (Adam, SGD)
 
             2. DO NOT USE this function if your maximum value is an outlier. It will distort scaling.
 
-        Considerations:
+        Considerations
+        ---------------
             1. This function scales your data within a limited range, usually [-1, 1]
-            2. It also centers your data around 0 (the mean). 
+            2. It also centers your data around 0 (the mean).
             3. If you want unit variance, use z_score standardization
 
-        Example: 
-            Normalization(df).MeanNormalization()
-
-        '''
+        Example
+        -------
+        >>>    Normalization(df).mean_normalization()
+        """
         normalized_data ={}
 
         for column in self.df[self.columns]:
@@ -233,34 +206,37 @@ class Normalization(DataPreprocessor):
 
         return pd.DataFrame(normalized_data)
 
-    def L1Normalization(self) -> pd.DataFrame:
-        '''
-        Normalizes your data by dividing each value with the sum of absolute values for each column of the DataFrame.
+    def l1_normalization(self) -> pd.DataFrame:
+        """
+        Normalizes your data by dividing each value with the sum of absolute values.
 
-        Formula:
+        Formula
+        --------
                       X
-            X' =  --------- 
+            X' =  ---------
                     ∑| X |
 
-        Return:
-            pd.DataFrame
-            A pandas DataFrame of L1 normalized values 
-        
-        Usage Recommendation:
+        Returns
+        --------
+        pd.DataFrame
+            A pandas DataFrame
+
+        Usage Recommendation
         ---------------------
             1. Use this function when ratio (proportions) of values matter more than than the size (magnitude) of value.
             2. Use this function if your data is sparse (have a lot of zeroes)
 
             3. DO NOT USE this function if your data is negative since L1 Normalization uses absolute values.
 
-        Considerations:
+        Considerations
+        ---------------
             1. This function scales your data to proportions that sum up to a value of 1
-            2. It does not affect the shape of your data. 
+            2. It does not affect the shape of your data.
 
-        Example: 
-            Normalization(df).L1Normalization()
-
-        '''
+        Example
+        -------
+            Normalization(df).l1_normalization()
+        """
         l1_norm = {}
 
         for column in self.df[self.columns]:
@@ -272,20 +248,22 @@ class Normalization(DataPreprocessor):
 
         return l1_df
 
-    def L2Normalization(self) -> pd.DataFrame:
-        '''
-        Normalizes your data by dividing each value with the square root of the sum of squared values for each column of the DataFrame.
+    def l2_normalization(self) -> pd.DataFrame:
+        """
+        Normalizes your data by dividing each value with the square root of the sum of squared values.
 
-        Formula:
+        Formula
+        --------
                              X
             X' =     ------------------
                     square root of (∑ (X^2))
 
-        Return:
-            pd.DataFrame
-            A pandas DataFrame of L2 normalized values 
-        
-        Usage Recommendation:
+        Returns
+        --------
+        pd.DataFrame
+            A pandas DataFrame
+
+        Usage Recommendation
         ---------------------
             1. Use this function when direction (pattern) or shape of data matter more than how big the numbers are.
             2. Use this function if your data is sparse (have a lot of zeroes)
@@ -294,13 +272,14 @@ class Normalization(DataPreprocessor):
             4. DO NOT USE if you want to keep a lot of zeroes in your data since this function spreads values around.
             5. DO NOT USE if your features have a lot of outliers.
 
-        Considerations:
-            1. This function does not affect the shape or direction of your data. 
+        Considerations
+        ---------------
+            1. This function does not affect the shape or direction of your data.
 
-        Example: 
-            Normalization(df).L2Normalization()
-
-        '''
+        Example
+        --------
+            Normalization(df).l2_normalization()
+        """
         l2_norm = {}
 
         for column in self.df[self.columns]:
@@ -312,20 +291,22 @@ class Normalization(DataPreprocessor):
 
         return l2_df
 
-    def LMaxNormalization(self) -> pd.DataFrame:
-        '''
-        Normalizes your data by dividing each value with the maximum absolute value for each column of the DataFrame
+    def lmax_normalization(self) -> pd.DataFrame:
+        """
+        Normalizes your data by dividing each value with the maximum absolute value.
 
-        Formula:
+        Formula
+        --------
                         X
             X' =    ----------
                     max(| X |)
 
-        Return:
-            pd.DataFrame
-            A pandas DataFrame of LMax normalized values 
-        
-        Usage Recommendation:
+        Returns
+        --------
+        pd.DataFrame
+            A pandas DataFrame
+
+        Usage Recommendation
         ---------------------
             1. Use this function when direction (pattern) or shape of data matter more than how big the numbers are.
             2. Use this function if your data is sparse (have a lot of zeroes)
@@ -334,14 +315,14 @@ class Normalization(DataPreprocessor):
             4. DO NOT USE if you want to keep a lot of zeroes in your data since this function spreads values around.
             5. DO NOT USE if your features have a lot of outliers.
 
-        Considerations:
-            1. This function does not affect the shape or direction of your data. 
+        Considerations
+        ---------------
+            1. This function does not affect the shape or direction of your data.
 
-        Example: 
-            Normalization(df).LMaxNormalization()
-
-        '''
-        
+        Example
+        --------
+        >>>    Normalization(df).lmax_normalization()
+        """
         l_max_normalization = {}
 
         for column in self.df[self.columns]:
@@ -352,4 +333,3 @@ class Normalization(DataPreprocessor):
         l_max_df = pd.DataFrame(l_max_normalization)
 
         return l_max_df
-        
