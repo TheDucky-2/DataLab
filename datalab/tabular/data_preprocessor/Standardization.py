@@ -7,20 +7,21 @@ from ..utils.Logger import datalab_logger
 logger = datalab_logger(name = __name__.split('.')[-1])
 
 class Standardization(DataPreprocessor):
+    """
+    Initializing Standardization.
+
+    Parameters:
+    -----------
+    df: pd.DataFrame
+        A pandas dataframe you wish to standardize.
+
+    columns: list, optional
+        A list of numerical columns you want to apply standardization on, default is None.
+    """
 
     def __init__(self, df: pd.DataFrame, columns: list = None):
         super().__init__(df, columns)
-        """
-        Initializing Standardization.
 
-        Parameters:
-        -----------
-        df: pd.DataFrame
-            A pandas dataframe you wish to standardize.
-
-        columns: list, optional
-            A list of numerical columns you want to apply standardization on, default is None.
-        """
         self.df = self.df.select_dtypes(include='number')
         
         if columns is None:

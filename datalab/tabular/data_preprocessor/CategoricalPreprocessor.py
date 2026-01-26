@@ -7,19 +7,20 @@ from ..utils.Logger import datalab_logger
 logger = datalab_logger(name = __name__.split('.')[-1])
 
 class CategoricalPreprocessor(DataPreprocessor):
+    """
+    Initializing the Categorical Preprocessor.
+
+    Parameters
+    -----------
+    df: pd.DataFrame
+        A pandas Dataframe you wish to diagnose.
+
+    columns: list, optional
+        A list of columns you wish to preprocess, by default None.
+    """
 
     def __init__(self, df:pd.DataFrame, columns: list|type(None) = None):
-        """
-        Initializing the Numerical Diagnosis.
 
-        Parameters
-        -----------
-        df: pd.DataFrame
-            A pandas Dataframe you wish to diagnose.
-
-        columns: list, optional
-            A list of columns you wish to preprocess, by default None.
-        """
         super().__init__(df, columns)
 
         self.df = df.select_dtypes(include= ['object', 'string', 'category'])

@@ -5,20 +5,21 @@ import numpy as np
 from .DataPreprocessor import DataPreprocessor
 
 class Normalization(DataPreprocessor):
+    """
+    Initializing Normalization.
+
+    Parameters
+    -----------
+    df: pd.DataFrame
+        A pandas dataframe you wish to normalize
+
+    columns: list, optional
+        A list of numerical columns you want to apply normalization on, default is None.
+    """
 
     def __init__(self, df: pd.DataFrame, columns: list = None):
         super().__init__(df, columns)
-        """
-        Initializing Normalization.
-
-        Parameters
-        -----------
-        df: pd.DataFrame
-            A pandas dataframe you wish to normalize
-
-        columns: list, optional
-            A list of numerical columns you want to apply normalization on, default is None.
-        """
+      
         self.df = self.df.select_dtypes(include='number')
         
         if columns is None:
