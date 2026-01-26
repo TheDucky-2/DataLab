@@ -20,10 +20,10 @@ class NumericalVisualizer():
         """Initializing Numerical Visualizer."""
         # getting the elements of parent DataVisualizer class
 
-        self.df = self.df.select_dtypes(include = 'number')
+        self.df = df.select_dtypes(include = 'number')
         
         if columns is None:
-            self.columns = df.columns.tolist()
+            self.columns = self.df.columns.tolist()
         else: 
             self.columns = [column for column in columns if column in df.columns]
 
@@ -237,11 +237,11 @@ class NumericalVisualizer():
         import matplotlib.pyplot as plt
 
         # compute_KDE() returns a DataFrame
-        kde_df= Distribution(self.df).compute_KDE(bandwidth_method=bandwidth_method)
+        kde_df= Distribution(self.df).compute_kde(bandwidth_method=bandwidth_method)
 
         for column in self.df[self.columns]:
             # using bin_centers from histogram computation as values for x-axis.
-            x= Distribution(self.df).compute_histogram()[column]['bin_centers']
+            x= Distribution(self.df).compute_histogram()['bin_centers'][column].dropna()
 
             # using KDE values for y-axis.
             y = kde_df[column]
