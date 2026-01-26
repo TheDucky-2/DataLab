@@ -5,10 +5,20 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 class CategoricalVisualizer():
+    """
+    Initializing Categorical Visualizer.
+    
+    Parameters
+    -----------
+    df : pd.DataFrame
+        A pandas DataFrame.
+
+    columns : list, optional
+        List of columns you wish to visualize, by default None.
+    """
 
     def __init__(self, df: pd.DataFrame, columns: list|type(None) = None):
-        """Initializing Categorical Visualizer."""
-
+    
         self.df.select_dtypes(include = ['string', 'object', 'category'])
         
         if columns is None:

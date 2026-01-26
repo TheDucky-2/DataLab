@@ -17,7 +17,17 @@ def remove_underscores(column):
 class NumericalVisualizer():
 
     def __init__(self, df: pd.DataFrame, columns: list|type(None) = None):
-        """Initializing Numerical Visualizer."""
+        """Initializing Numerical Visualizer.
+        
+        Parameters
+        -----------
+        df : pd.DataFrame
+            A pandas DataFrame.
+
+        columns : list, optional
+            List of columns you wish to visualize, by default None.
+        
+        """
         # getting the elements of parent DataVisualizer class
 
         self.df = df.select_dtypes(include = 'number')

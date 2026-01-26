@@ -6,9 +6,19 @@ import numpy as np
 import missingno as msno
 
 class MissingnessVisualizer():
+    """
+    Initializing Missingness Visualizer.
+    
+    Parameters
+    -----------
+    df : pd.DataFrame
+        A pandas DataFrame.
+
+    columns : list, optional
+        List of columns you wish to visualize, by default None.
+    """
 
     def __init__(self, df: pd.DataFrame, columns:list = None):
-        """Initializing Missingness Visualizer"""
 
         self.df = df
 
