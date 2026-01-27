@@ -11,17 +11,17 @@ A Python library for understanding, diagnosing, and preparing real-world data.
 
 ## What is DataLab?
 
-DataLab is a **Python** library designed to make data understanding, diagnosis, cleaning, and preprocessing **intentional, explainable, and beginner-safe** - without sacrificing correctness or performance.
+DataLab is a **Python** library designed for **serious, real-world data analysis**.
+
+It handles extremely messy datasets **(≈77–90% dirty)** and can scale to millions of rows, yet its API is **intuitive**, **well-documented**, and **beginner-friendly**.
+
+It's been built to give **clarity and control over data**, not just automation.
 
 It is built for:
 
-- Beginners learning data science
+- Analysts and data scientists working with messy, real-world datasets
 
-- Students from non-technical backgrounds
-
-- Analysts and researchers
-
-- Data scientists who want a structured, unified workflow
+- Researchers and engineers needing structured data diagnostics
 
 - Anyone who wants well-understood data before analysis or modeling
 
@@ -39,17 +39,23 @@ Provide a single, guided ecosystem for understanding and preparing data - with s
 
 ## What makes DataLab different?
 
-Real-world data is messy - often very messy.
+Real-world data is messy. 
 
-Numbers may not be numeric, text can hide symbols or replacements, and missing data itself can appear in many different forms.
+Numbers may not be numeric, text can hide symbols or replacements, and missing data often comes in many forms.
 
-``DataLab assumes your data is dirty by default``.
+``DataLab assumes your data is dirty by default.``
 
-Because of this, it performs full, type-aware detection of numerical, categorical, and datetime data, using regex-based checks to surface hidden issues before any cleaning.
+It allows:
 
-DataLab was built on extremely dirty datasets (≈77–90% dirty) and tested on datasets with up to ~5 million rows for diagnosis and cleaning.
+- Full, type-aware detection of numerical, categorical, and datetime columns
 
-By showing what your data is actually doing first, DataLab makes diagnosis and cleaning simpler, safer, and intentional, helping you build a reliable foundation for analysis or modeling.
+- Regex-based diagnostics for hidden issues
+
+DataLab has been designed and tested on extremely dirty datasets **(~5-10 million rows)**.
+
+This allows safe, intentional, and reproducible workflows.
+
+DataLab combines power for advanced users with accessibility for beginners, ensuring workflows are safe, structured, and explainable.
 
 ## How DataLab Works
 
@@ -89,13 +95,11 @@ This early release focuses on **Tabular Data**, including:
 
 - Beginner-friendly documentation, API guides, and workflow notebooks
 
-DataLab currently supports **Pandas** and partially **Polars** (used internally for performance in few methods).
+DataLab currently supports **Pandas** and partially **Polars** (used internally for performance in Dirty Data Diagnosis and Cleaning).
 
 ## Installation (v0.1 Pre-Release)
 
 DataLab is available on **TestPyPI** for early testing and feedback.
-
-This allows you to try DataLab without cloning the repository.
 
 You can now Install DataLab pre-release using **pip**:
 
@@ -107,13 +111,11 @@ That is because DataLab itself is downloaded from TestPyPI, while required depen
 
 ### Importing DataLab
 
-You can simply import datalab after installing it like this:
-
         import datalab
 
-### Installation Video:
+### Installation Video
 
-A short **Installation & Getting Started** video is available below:
+**Installation and Getting Started Video**
 
 👉 https://youtu.be/RC4SzXxRSHk 
 
@@ -160,113 +162,33 @@ datalab/
 
 ## Features in v0.1:
 
-**✔️ 1. Data Loading**
+**✔️ 1. Data Loading** : CSV, Excel, JSON and Parquet, Automatic file type detection.
 
-- CSV, Excel, JSON and Parquet support
+**✔️ 2. Data Diagnosis** : shape, columns, dtypes, memory usage, duplicates, cardinality, Numerical & Categorical diagnosis, Dirty data diagnosis.
 
-- Automatic file type detection
+**✔️ 3. Missingness Diagnosis and Visualization** : Missing data stats, Pattern analysis, Missing data plots (via **missingno**).
 
-**✔️ 2. Data Diagnosis**
+**✔️ 4. Cleaning & Preprocessing** : Numerical and Categorical workflows, Missing data handling.
 
-- Dataset overview (shape, columns, dtypes, memory usage)
+**✔️ 5. Computation** : Descriptive stats, distribution, outliers detection, correlation.
 
-- Column type detection
+**✔️ 6. Visualization** : Histograms, Boxplots, KDE, QQ plots, categorical plots, missingness plots(using **missingno**).
 
-- Cardinality and duplicate detection
-
-- Numerical & categorical diagnosis
-
-- Dirty data diagnosis
-
-**✔️ 3. Missingness Diagnosis and Visualization**
-
-- Missing value statistics
-
-- Pattern analysis
-
-- Missing Data Plots (via **missingno**)
-
-**✔️ 4. Cleaning & Preprocessing**
-
-- Numerical, categorical, and basic text workflows
-
-- Missing data handling (guided)
-
-- Pandas <-> Polars utilities
-
-**✔️ 5. Computation**
-
-- Descriptive statistics
-
-- Distribution analysis
-
-- Outlier detection
-
-- Correlation
-
-- Performance-optimized helpers
-
-**✔️ 6. Visualization**
-
-- Histograms
-
-- Boxplots
-
-- KDE plots
-
-- QQ Plots
-
-- Categorical visualizations (bar charts, line plots etc.)
-
-- Missingness visualizations (bar charts, matrix, heatmaps and dendrograms)
-
-**✔️ 7. Documentation & Workflow Guides**
-
-- Friendly documentation
-
-- Beginner-first explanations
-
-- Visual examples
-
-- Step-by-step workflows
-
-- Conceptual guides explaining **why, not just how**
+**✔️ 7. Documentation & Workflow Guides** : Friendly documentation, visual examples, workflow guides explaining **why, not just how**.
 
 ## 🧭 Roadmap:
 
-**v0.1**
+**v0.1**: Tabular base, diagnosis, cleaning, preprocessing, computation, visualizations, workflow guides.
 
-- Tabular base
-- Diagnosis
-- Cleaning
-- Preprocessing
-- Computation
-- Viz + Docs
-- Usage Notebooks
-- Workflow Notebooks
-  
-**v0.2**
+**v0.2**: Text workflows, improved analysis & visualization, advanced cleaning.
 
-- Text workflows
-- More computation tools
-- Included analysis
-- Improved tabular viz
-- More diagnosis tools
-- Improved cleaning & preprocessing
-  
-**v0.3**
+**v0.3**: Graph Data Package (igraph, NetworkX).
 
-- Graph Data Package
-- Using igraph (fast) with optional NetworkX converters
+**v0.4**: Machine Learning workflows (sklearn).
 
-**v0.4**
+**v0.5**: Full library review & stability
 
-- Machine Learning (sklearn workflows)
-  
-**v0.5**
 
-- Full library review + stability
-  
 ## Why would I even use DataLab?
 
 Because most data problems don’t come from bad models - **they come from poor data understanding**.
@@ -287,9 +209,9 @@ DataLab is built with:
 
 - Performance without complexity
 
-If you’re new to data… OR switching careers… OR want to understand data deeply…
+If you’re new to data... OR an expert... OR... just want well understood data
 
-**DataLab is built for you.**
+**DataLab is built for you**.
 
 ## 🤝 Contributions
 
@@ -309,7 +231,7 @@ Even though it is a pre-release, we still aim to respond within 72 hours.
 
 AI tools were used selectively during the development of DataLab to:
 
-- Learn and clarify data concepts.
+- Clarify data concepts.
 - Explore alternative implementation approaches and edge cases.
 - Generate realistic, messy datasets to simulate real-world data scenarios for testing, research, and validation.
 
