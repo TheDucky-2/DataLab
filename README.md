@@ -110,8 +110,9 @@ You can now Install DataLab pre-release using **pip**:
 That is because DataLab itself is downloaded from TestPyPI, while required dependencies (such as pandas) are downloaded from **PyPI**.
 
 ### Importing DataLab
-
-        import datalab
+```python
+import datalab
+```
 
 ### Installation Video
 
