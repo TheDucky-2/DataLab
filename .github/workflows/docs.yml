@@ -35,7 +35,8 @@ jobs:
       - name: Build docs
         run: |
           pdoc datalab --output-dir site
-          cp -r assets site/
+          mkdir -p site/assets
+          cp assets/DataLab_logo.png site/assets
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
