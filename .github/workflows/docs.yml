@@ -34,7 +34,7 @@ jobs:
 
       - name: Build docs
         run: |
-          pdoc datalab --output-dir site
+          pdoc datalab --output-dir site --no-name
           mkdir -p site/assets
           cp assets/DataLab_logo.png site/assets
 

@@ -1,5 +1,5 @@
 """
-<img src="assets/DataLab_logo.png" alt="DataLab" style="height: 24px;">
+<img src="assets/DataLab_logo.png" alt="DataLab logo" height: "80" style="display:block; margin: 20px auto;">
 
 "DataLab v0.1.0b4 - Beta Pre-release
 
