@@ -1,4 +1,4 @@
-![DataLab logo](DataLab_logo_images/DataLab_logo.png)
+![DataLab logo](assets/DataLab_logo.png)
 
 # DataLab Change-Log
 

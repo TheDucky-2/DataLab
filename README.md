@@ -1,4 +1,4 @@
-![DataLab logo](DataLab_logo_images/DataLab_logo.png)
+![DataLab logo](assets/DataLab_logo.png)
 
 # 📊 DataLab - Pre-Release
 [![API Docs](https://img.shields.io/badge/API-Documentation-blue)](https://theducky-2.github.io/DataLab)
