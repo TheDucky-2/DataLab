@@ -80,34 +80,37 @@ class ColumnConverter:
         if not isinstance(kwargs, dict):
             raise TypeError(f'keyword arguments must be a dict, got {type(kwargs).__name__}')
 
-        for column in self.df[self.columns]:
+        df = self.df if inplace else self.df.copy()
 
-            self.df[column] = self.df[column].astype('object')
+        for column in df[self.columns]:
+
+            df[column] = df[column].astype('object')
             
             if dayfirst:
                 # apply datetime conversion to all columns passed
-                converted_to_datetime = pd.to_datetime(self.df[column], dayfirst=True, errors = 'coerce', **kwargs)
+                converted_to_datetime = pd.to_datetime(df[column], dayfirst=True, errors = 'coerce', **kwargs)
             
             else:
-                converted_to_datetime = pd.to_datetime(self.df[column], dayfirst=False,errors='coerce', **kwargs)
+                converted_to_datetime = pd.to_datetime(df[column], dayfirst=False,errors='coerce', **kwargs)
             
             # values where conversion can be done will stay True
             conversion_successful = converted_to_datetime.notna()
 
             # we want values where failed conversion resulted into NA, however, those values were not NA in original dataframe
-            conversion_failed = converted_to_datetime.isna() & self.df[column].notna()
+            conversion_failed = converted_to_datetime.isna() & df[column].notna()
 
             # if conversion to datetime does not fail
             if not conversion_failed.any():
 
                 # assign converted values to the whole columns of the DataFrame
-                self.df[column] = converted_to_datetime
+                df[column] = converted_to_datetime
             else:
                 if conversion_successful.any():
                     # if conversion fails, only convert correct datetime values and leave others as they are
-                    self.df.loc[converted_to_datetime.notna(), column] = converted_to_datetime[converted_to_datetime.notna()]
+                    df.loc[converted_to_datetime.notna(), column] = converted_to_datetime[converted_to_datetime.notna()]
 
         if inplace:
+            self.df = df
             return None
             
         else:
@@ -165,19 +168,19 @@ class ColumnConverter:
         categories = kwargs.get('categories', None)
         ordered = kwargs.get('ordered', False)
 
-        for column in self.df[self.columns]:
-
-            if categories is not None:
-                self.df[column] = pd.Categorical(self.df[column], categories=categories, ordered = ordered)
-
-            else:
-                self.df[column] = self.df[column].astype('category')
-
         if inplace:
+            if categories is not None:
+                self.df[self.columns] = pd.Categorical(self.df[self.columns], categories=categories, ordered = ordered)
+            else:
+                self.df[self.columns] = self.df[self.columns].astype('category')
             return None
             
         else:
-            return self.df
+            if categories is not None:
+                df_copy = pd.Categorical(self.df[self.columns], categories=categories, ordered = ordered)
+            else:
+                df_copy = self.df[self.columns].astype('category')
+            return df_copy
         
     def to_numerical(self, inplace:bool=False, **kwargs) -> pd.DataFrame:
         """
@@ -217,17 +220,21 @@ class ColumnConverter:
             raise TypeError(f'keyword arguments must be a dict, got {type(kwargs).__name__}')
 
         original_columns = self.df[self.columns].copy()
-            
-        # first converting all data to numerical, and non-numerical get converted to NaN
-        self.df[self.columns] = self.df[self.columns].apply(pd.to_numeric, errors = 'coerce', **kwargs)
-
-        #  reverting NaN values back to original missing values
-        self.df[self.columns] = self.df[self.columns].combine_first(original_columns)
 
         if inplace:
+            # first converting all data to numerical, and non-numerical get converted to NaN
+            self.df[self.columns] = self.df[self.columns].apply(pd.to_numeric, errors = 'coerce', **kwargs)
+
+            #  reverting NaN values back to original missing values
+            self.df[self.columns] = self.df[self.columns].combine_first(original_columns)
             return None
         else:
-            return self.df
+            # first converting all data to numerical, and non-numerical get converted to NaN
+            df_copy = self.df[self.columns].apply(pd.to_numeric, errors = 'coerce', **kwargs)
+
+            #  reverting NaN values back to original missing values
+            df_copy = self.df[self.columns].combine_first(original_columns)
+            return df_copy
 
     def to_numerical_forced(self, inplace:bool=False, **kwargs)-> pd.DataFrame:
         """
@@ -275,9 +282,59 @@ class ColumnConverter:
         self.df[self.columns] = self.df[self.columns].apply(pd.to_numeric, errors = 'coerce', **kwargs)
 
         if inplace:
+            self.df[self.columns] = self.df[self.columns].apply(pd.to_numeric, errors = 'coerce', **kwargs)
             return None
         else:
-            return self.df
+            df_copy = self.df[self.columns].apply(pd.to_numeric, errors = 'coerce', **kwargs)
+            return df_copy
 
+    def to_datetime_forced(self, inplace:bool=False, **kwargs)-> pd.DataFrame:
+        """
+        Convert one or more columns column into datetime columns forcibly as it turns non-convertible values to NaN.
+
+        Parameters
+        -----------
+        inplace  : bool, optional
+            Making changes to the original dataframe, by default False.
+
+        kwargs: dict, optional
+            A dictionary of keyword arguments you wish to pass in ``pd.to_datetime()`` method.
+
+        Returns
+        --------
+        pd.DataFrame
+            A pandas DataFrame 
+
+                1. Makes changes to the original dataframe in place, but returns None, if inplace=True
+                2. Returns the dataframe of converted datetime columns with rest of the non-datetime columns, if inplace = False.
+
+        Usage Recommendation
+        ---------------------
+            1. Use this function to convert columns into datetime for later calculations.
+        
+        Considerations
+        ---------------
+            This function converts non-convertible values to NaN, and forces conversion to datetime type.
+
+        Example
+        --------
+
+        >>> ColumnConverter(df).to_datetime_forced(inplace=True) 
+
+        >>> ColumnConverter(df).to_datetime_forced()
+
+        """ 
+        if not isinstance(inplace, bool):
+            raise TypeError(f'inplace must be True or False, got {type(inplace).__name__}')
+            
+        if not isinstance(kwargs, dict):
+            raise TypeError(f'keyword arguments must be a dict, got {type(kwargs).__name__}')
+
+        if inplace:
+            self.df[self.columns] = self.df[self.columns].apply(pd.to_datetime, errors = 'coerce', **kwargs)
+            return None
+        else:
+            df_copy = self.df[self.columns].apply(pd.to_datetime, errors = 'coerce', **kwargs)
+            return df_copy
 
 
