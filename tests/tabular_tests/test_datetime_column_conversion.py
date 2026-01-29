@@ -34,10 +34,21 @@ def test_datetime_column_conversion():
 
     test_df = ColumnConverter(test_df, ['account_created_at', 'event_time']).to_datetime()
 
-    assert isinstance (test_df['account_created_at'][0], pd.Timestamp)
-    assert isinstance (test_df['account_created_at'][1], pd.Timestamp)
-    assert isinstance (test_df['event_time'][0], pd.Timestamp)
+    assert isinstance (test_df['account_created_at'][0], str)
+    assert isinstance (test_df['account_created_at'][1], str)
+    assert isinstance (test_df['event_time'][0], str)
 
     assert test_df['account_created_at'][6] == 'UNKNOWN_DATE'
 
     assert pd.isna(test_df['event_time'][1])
+
+    test_df_forced = ColumnConverter(test_df,['account_created_at', 'event_time']).to_datetime_forced()
+
+    assert isinstance (test_df_forced['account_created_at'][0], pd.Timestamp)
+    assert isinstance (test_df_forced['account_created_at'][1], pd.Timestamp)
+    assert isinstance (test_df_forced['event_time'][0], pd.Timestamp)
+
+    assert pd.isna(test_df_forced['account_created_at'][6])
+
+    assert pd.isna(test_df_forced['event_time'][1])
+
