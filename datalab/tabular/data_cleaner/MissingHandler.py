@@ -163,7 +163,7 @@ class MissingHandler():
         """
         return self.df[self.columns].fillna(self.df[self.columns].mean())
 
-    def fill_with_median(self):
+    def fill_with_median(self)-> pd.DataFrame:
         """
         Replaces missing values with median (middle) value of that particular column, in one or multiple columns of a DataFrame.
 
