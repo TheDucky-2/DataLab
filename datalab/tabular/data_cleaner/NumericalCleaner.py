@@ -111,7 +111,7 @@ class NumericalCleaner(DataCleaner):
             logger.info(f'Rounded off to {decimals} decimals')
             return df
     
-    def remove_spaces(self):
+    def remove_spaces(self)-> pd.DataFrame:
         """
         Removes leading or trailing spaces in numerical data.
 
@@ -264,7 +264,7 @@ class NumericalCleaner(DataCleaner):
             logger.info(f'Removed currency symbols.')
             return df
 
-    def replace_commas(self, replacement: str=None):
+    def replace_commas(self, replacement: str=None)-> pd.DataFrame:
         """
         Replaces commas (,) that are used as decimal replacements, with decimals (.) or any other value.
 
