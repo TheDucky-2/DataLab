@@ -33,7 +33,7 @@ class Correlation(Computation):
 
         logger.info(f'Correlation initialized.')
 
-    def covariance(self):
+    def covariance(self)-> pd.DataFrame:
         """
         Computes the covariance matrix of a pandas DataFrame.
 
@@ -54,7 +54,7 @@ class Correlation(Computation):
         """
         return self.df.cov()
         
-    def correlation(self, method:str = 'pearson'):
+    def correlation(self, method:str = 'pearson')-> pd.DataFrame:
         """
         Computes the correlation matrix of a pandas DataFrame.
 
@@ -93,6 +93,6 @@ class Correlation(Computation):
         if method not in ['pearson', 'spearman', 'kendall']:
             raise ValueError(f"Available methods are: 'pearson', 'spearman', 'kendall'")
 
-        logger.info(f'Computing corrrelation using {method} method.')
+        logger.info(f'Computing correlation using {method} method.')
 
         return self.df.corr(method = method)
