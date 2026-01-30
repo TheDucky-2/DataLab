@@ -144,7 +144,7 @@ class TextCleaner(DataCleaner):
 
         return self.df
 
-    def replace_splitters(self, splitters_and_replacements: dict[str, str]=None):
+    def replace_splitters(self, splitters_and_replacements: dict[str, str]=None)-> pd.DataFrame:
         """
         Replaces different kinds of splitters present in data with the desired value, in one or multiple columns of the DataFrame.
 
@@ -196,7 +196,7 @@ class TextCleaner(DataCleaner):
 
         return self.df
 
-    def replace_symbols(self, symbols_and_replacements: dict[str, str]=None):
+    def replace_symbols(self, symbols_and_replacements: dict[str, str]=None)-> pd.DataFrame:
         """
         Replaces different kinds of symbols present in data, with the desired value in one or multiple columns of the DataFrame.
 
