@@ -45,7 +45,7 @@ class NumericalVisualizer():
                   xlabel: str=None,
                   ylabel: str=None,
                   figsize: tuple =(6, 4),
-                  **kwargs):
+                  **kwargs)-> None:
         """
         Visualize histogram for one or multiple columns of Numerical DataFrame.
 
@@ -113,7 +113,7 @@ class NumericalVisualizer():
                 ylabel:str|type(None) = None,
                 title:str|type(None) = None,
                 figsize:tuple = (6, 4),
-                **kwargs):
+                **kwargs)-> None:
 
         import matplotlib.pyplot as plt
         """
@@ -204,7 +204,7 @@ class NumericalVisualizer():
                   xlabel: str=None,
                   ylabel: str=None,
                   figsize: tuple =(6, 4),
-                  **kwargs):
+                  **kwargs)-> None:
         """
         Visualize Kernel Density Estimation plot (curves, including bell curve) for one or multiple columns of DataFrame.
 
@@ -291,7 +291,7 @@ class NumericalVisualizer():
 
             plt.show()
 
-    def plot_qq(self, distribution_type: str = 'norm', title: str =None, points_color: str = 'green'):
+    def plot_qq(self, distribution_type: str = 'norm', title: str =None, points_color: str = 'green')-> None:
         """
         Visualize Quantile-Quantile plot (QQ plot) for one or multiple columns of Numerical DataFrame.
 
