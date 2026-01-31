@@ -144,7 +144,7 @@ class NumericalDiagnosis:
 
         skewness = Distribution(self.df).skewness()
 
-        skewness_dict = {col: round(float(skewness[col]), 4)for col in self.df[self.columns]}
+        skewness_dict = {col: round(float(skewness[col].iloc[0]), 4)for col in self.df[self.columns]}
 
         return skewness_dict
 
@@ -176,6 +176,7 @@ class NumericalDiagnosis:
         ------- 
         >>> Diagnosis(df).check_skewness()
         """ 
+        
         if not isinstance(kurtosis_type, str):
             raise TypeError(f'kurtosis type must be a string, got {type(kurtosis_type).__name__}')
 
@@ -188,14 +189,14 @@ class NumericalDiagnosis:
         excess_kurtosis = Distribution(self.df).excess_kurtosis()
 
         if kurtosis_type == 'raw':
-            kurtosis_dict = {col: round(float(raw_kurtosis[col]), 4)for col in self.df[self.columns]}
+            kurtosis_dict = {col: round(float(raw_kurtosis[col].iloc[0]), 4)for col in self.df[self.columns]}
 
         if kurtosis_type == 'excess':
-            kurtosis_dict = {col: round(float(excess_kurtosis[col]), 4)for col in self.df[self.columns]}
+            kurtosis_dict = {col: round(float(excess_kurtosis[col].iloc[0]), 4)for col in self.df[self.columns]}
 
         return kurtosis_dict
 
-    def check_zero_variance(self)-> dict[str, float]:
+    def check_variance(self)-> dict[str, float]:
         """
         Checks if the variance of a column is 0.
 
@@ -212,22 +213,22 @@ class NumericalDiagnosis:
 
         Example
         ------- 
-        >>> Diagnosis(df).check_zero_variance()
+        >>> Diagnosis(df).check_variance()
         """
         from ..computations.Statistics import Statistics
         
-        zero_variance_dict = {}
+        variance_dict = {}
 
         for col in self.df[self.columns]:
 
             variance = Statistics(self.df).variance()[col]
 
             if (variance == 0):
-                zero_variance_dict[col] = variance
+                variance_dict[col] = variance
             else:
-                zero_variance_dict[col] = round(float(variance), 3)
+                variance_dict[col] = round(float(variance), 3)
 
-        return zero_variance_dict
+        return variance_dict
 
     def check_distribution(self, skewness_threshold:int|float=1, kurtosis_threshold: int|float=2)-> dict[str, str]:
         """
