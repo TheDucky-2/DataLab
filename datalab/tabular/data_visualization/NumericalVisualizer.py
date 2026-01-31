@@ -197,6 +197,8 @@ class NumericalVisualizer():
                 if ylabel:
                     ax.set_ylabel(ylabel)
 
+                
+
             plt.show()
 
     def plot_kde(self, bandwidth_method: str ='robust',

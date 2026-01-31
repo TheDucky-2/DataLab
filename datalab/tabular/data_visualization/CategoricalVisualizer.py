@@ -4,6 +4,10 @@ from ..data_diagnosis import CategoricalDiagnosis
 import pandas as pd
 import matplotlib.pyplot as plt
 
+from ..utils.Logger import datalab_logger
+
+logger = datalab_logger(name = __name__.split('.')[-1])
+
 class CategoricalVisualizer():
     """
     Initializing Categorical Visualizer.
@@ -33,7 +37,7 @@ class CategoricalVisualizer():
                             title: str=None,
                             xlabel: str=None,
                             ylabel: str=None,
-                            figsize: tuple =(6, 4))-> type(None):
+                            figsize: tuple =(6, 4))->None:
         """
         Visualize frequency for each column of Categorical DataFrame.
 
@@ -106,5 +110,7 @@ class CategoricalVisualizer():
                 plt.ylabel(ylabel)
             else:
                 plt.ylabel(f'{method} of {column}')
+
+            logger.info('Visualizing frequency...')
 
             plt.show()
