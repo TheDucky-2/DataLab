@@ -1,103 +1,159 @@
 ![DataLab logo](assets/DataLab_logo.png)
 
-# 📊 DataLab - Pre-Release
+# 📊 DataLab
 [![API Docs](https://img.shields.io/badge/API-Documentation-blue)](https://theducky-2.github.io/DataLab)
 ![TestPyPI version](https://img.shields.io/badge/TestPyPI-0.1.0b4-orange)
 ![Status](https://img.shields.io/badge/Status-Beta-yellow)
 ![Python](https://img.shields.io/badge/python-3.12+-blue)
 ![License](https://img.shields.io/github/license/TheDucky-2/DataLab)
 
-A diagnosis-first **data quality and preparation framework**, implemented as a Python library.
+**A diagnosis-first data quality and preparation framework for real-world data.**
 
-It is designed for working with messy, **real-world datasets**where most failures occur before modeling - during data understanding, cleaning, and unsafe transformations.
+DataLab is a Python library designed to help you understand, diagnose, and safely prepare messy datasets - before analysis or modeling.
+
+Most data failures don’t happen during modeling.
+They happen earlier: **during data understanding, cleaning, and unsafe transformations.**
+
+DataLab exists to fix that.
 
 ## What is DataLab?
 
-DataLab is a **Python framework** exposed as a library designed for **serious, real-world data analysis**.
+**DataLab is a structured framework for working with messy, real-world data.**
 
-It is designed for extremely messy datasets **(≈77–90% invalid or inconsistent values)** and scales to millions of rows, while providing a **structured, well-documented, and beginner-safe API**.
+It is designed for datasets where:
 
-The focus is on **clarity and control over data behavior**, not blind automation.
+- Values are inconsistent, invalid, or misleading
 
-It is built for:
+- Missing data appears in many hidden forms
 
-- Analysts and data scientists working with messy, real-world datasets
+- Column types are unclear or mixed
 
-- Researchers and engineers needing structured data diagnostics
+- Blind automation is risky
 
-- Anyone who wants well-understood data before analysis or modeling
+Instead of guessing or silently coercing data, DataLab focuses on:
 
-DataLab focuses on building strong data foundations:
+- **Clarity**
 
-- **Tabular Data** (v0.1 -> v0.2)
+- **Control**
 
-- **Graph Data** (coming v0.3)
+- **Explainability**
 
-- **Machine Learning** (coming v0.4+)
+DataLab helps you understand what your data is doing before deciding what to do with it.
 
-**Goal:**
+## Who is DataLab for?
 
-Provide a single, guided ecosystem for understanding and preparing data - with simple APIs, strong defaults, and human-friendly documentation.
+DataLab is built for:
+
+- Analysts & Data Scientists working with messy, real-world datasets
+
+- Researchers & Engineers needing structured data diagnostics
+
+- Beginners who want safe, guided workflows
+
+- Advanced users who want transparency instead of black boxes
+
+**If you care about well-understood data, DataLab is for you.**
+
+## Core Philosophy
+
+**Diagnosis-first, not automation-first.**
+
+``DataLab assumes that your data is dirty by default.``
+
+Instead of hiding problems, it:
+
+- detects them
+
+- explains them
+
+- lets you decide what to do
+
+DataLab is built around a simple idea: 
+
+> Different data types need different thinking
+
+DataLab separates workflows by data type:
+
+- Numerical
+
+- Categorical
+
+- Text
+
+- Datetime
+
+- (Graph data coming soon)
+
+This keeps workflows:
+
+- **clear**
+
+- **safe**
+
+- **reproducible**
 
 ## What makes DataLab different?
 
-Real-world data is messy. 
+- Designed for extremely messy datasets **(≈77–90% invalid or inconsistent values)**
 
-Numbers may not be numeric, text can hide symbols or replacements, and missing data often comes in many forms.
+- Tested on datasets with **5-10 million rows**
 
-``DataLab assumes your data is dirty by default.``
+- **Type-aware** diagnosis and cleaning
 
-It allows:
+- **Regex-based detection** of hidden issues
 
-- Full, type-aware detection of numerical, categorical, and datetime columns
+- Structured, **beginner-safe APIs**
 
-- Regex-based diagnostics for hidden issues
+- Human-friendly documentation
 
-DataLab has been designed and tested on extremely dirty datasets **(~5-10 million rows)**.
+DataLab combines:
 
-This allows safe, intentional, and reproducible workflows.
+- **power for advanced users**
 
-DataLab combines power for advanced users with accessibility for beginners, ensuring workflows are safe, structured, and explainable.
+- **safety and clarity for beginners**
 
 ## How DataLab Works
 
-DataLab is built around a simple idea:
+With DataLab, you typically:
 
-``Different types of data need different ways of thinking.``
+- Load data
 
-With DataLab, you can:
+- Diagnose structure, types, and issues
 
-- Automatically detect column types (numerical, categorical, datetime)
+- Analyze missingness and inconsistencies
 
-- Run type-specific workflows instead of one-size-fits-all functions
+- Apply type-specific cleaning & preprocessing
 
-- Diagnose, clean, preprocess, and visualize data independently
+- Compute statistics and distributions
 
-- Focus on understanding data behavior before taking action
+- Visualize behavior and patterns
 
-By separating workflows by data type, DataLab keeps **analysis clear, structured, and beginner-safe - while remaining powerful for advanced users**.
+**Each step is explicit, modular, and explainable.**
 
 ## Current Version: v0.1 (Pre-Release)
 
-This early release focuses on **Tabular Data**, including:
+#### Focus in v0.1
 
-- Data loading
+Tabular data workflows, including:
 
-- Data diagnosis
+- Data loading (CSV, Excel, JSON, Parquet)
 
-- Missingness analysis
+- Data diagnosis & dirty data detection
+
+- Missingness analysis & visualization
 
 - Numerical & categorical workflows
 
-- Cleaning and preprocessing
+- Cleaning & preprocessing
 
-- Computation
+- Statistical computations
 
-- **Matplotlib**-based visualizations (including missingness plots)
+- Matplotlib-based visualizations
 
-- Beginner-friendly documentation, API guides, and workflow notebooks
+- Beginner-friendly documentation & workflow guides
 
-DataLab currently supports **Pandas** and partially **Polars** (used internally for performance in Dirty Data Diagnosis and Cleaning).
+**Pandas** is fully supported.
+**Polars** is used internally for performance in selected components.
 
 ## Installation (v0.1 Pre-Release)
 
@@ -181,46 +237,28 @@ datalab/
 
 ## 🧭 Roadmap:
 
-**v0.1**: Tabular base, diagnosis, cleaning, preprocessing, computation, visualizations, workflow guides.
+**v0.1** - Tabular data foundations
 
-**v0.2**: Text workflows, improved analysis & visualization, advanced cleaning.
+**v0.2** - Text workflows & advanced analysis
 
-**v0.3**: Graph Data Package (igraph, NetworkX).
+**v0.3** - Graph data workflows
 
-**v0.4**: Machine Learning workflows (sklearn).
+**v0.4** - Machine learning workflows
 
-**v0.5**: Full library review & stability
-
+**v0.5** - API review & stabilization
 
 ## Why would I even use DataLab?
 
-Because most data problems don’t come from bad models - **they come from poor data understanding**.
+**Because most data problems don’t come from bad models - they come from poor data understanding.**
 
 DataLab is built to feel like:
 
-> Someone sitting next to you, explaining what your data is doing and why.
-
-DataLab is built with:
-
-- Conceptual understanding before automation
-
-- Real-world messy data
-
-- Clear explanations and safe defaults
-
-- Modular, reusable workflows
-
-- Performance without complexity
-
-If you’re new to data... OR an expert... OR... just want well understood data
-
-**DataLab is built for you**.
+> Someone sitting next to you, explaining what your data is doing — and why.
 
 ## 🤝 Contributions
 
-DataLab is currently in early development stage.
-
-Suggestions, ideas, feedbacks and contributions are absolutely welcome!
+DataLab is in early development.
+Ideas, feedback, and contributions are absolutely welcome!
 
 ## ✉️ Contact & Support
 
@@ -228,17 +266,19 @@ For questions, suggestions, feedbacks or issues related to **DataLab**, you can 
 
 **Email:** [datalab.project@protonmail.com](mailto:datalab.project@protonmail.com)
 
-Even though it is a pre-release, we still aim to respond within 72 hours.
+We aim to respond within 72 hours.
 
 ## ⚠️ AI Usage Disclosure
 
-AI tools were used selectively during the development of DataLab to:
+AI tools were used selectively to:
 
-- Clarify data concepts.
-- Explore alternative implementation approaches and edge cases.
-- Generate realistic, messy datasets to simulate real-world data scenarios for testing, research, and validation.
+- clarify concepts
 
-All core design decisions, code implementation, documentation, visualizations, and examples were written, reviewed, and integrated by the author.
+- explore edge cases
+
+- generate realistic messy datasets for testing
+
+All core design, implementation, documentation, and decisions were made by the author.
 
 AI was used as a **support and learning tool** - **not as a replacement for thinking, understanding, authorship, or ownership.**
 
