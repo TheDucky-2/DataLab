@@ -8,11 +8,11 @@ The first stable public release on PyPI will be **0.1.0**.
 
 ---
 
-## v0.1.0b5 - Feb 01, 2026
+## v0.1.0b6 - Feb 01, 2026
 
 **Status:** Beta (pre-release - TestPyPI only)
 
-DataLab **v0.1.0b5** is a **stabilization and correctness release** that fixes issues introduced in v0.1.0b4, with a strong focus on **API reliability, type-safety, testing, and documentation clarity**.
+DataLab **v0.1.0b6** is a **stabilization and correctness release** that fixes issues introduced in v0.1.0b4, with a strong focus on **API reliability, type-safety, testing, and documentation clarity**.
 
 **⚠️ Pre-release note:** This release primarily fixes bugs and documentation inconsistencies; no major new features are introduced.
 
@@ -56,7 +56,7 @@ DataLab **v0.1.0b5** is a **stabilization and correctness release** that fixes i
 
 ### 💡 Key Notes for Users
 
-- **Recommended upgrade:** v0.1.0b5 supersedes v0.1.0b4.
+- **Recommended upgrade:** v0.1.0b6 supersedes v0.1.0b4.
 
 - **API clarity:** Users can now rely on a single, authoritative return-type reference.
 
