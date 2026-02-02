@@ -1,3 +1,5 @@
+"""A test ensuring that Correlation module returns a pandas DataFrame"""
+
 def test_correlation_output_type():
 
     import pandas as pd
