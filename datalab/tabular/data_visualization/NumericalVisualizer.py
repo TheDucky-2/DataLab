@@ -35,7 +35,7 @@ class NumericalVisualizer():
         if columns is None:
             self.columns = self.df.columns.tolist()
         else: 
-            self.columns = [column for column in columns if column in df.columns]
+            self.columns = [column for column in columns if column in self.df.columns]
 
         logger.info(f'Numerical Visualizer initialized.')
         
