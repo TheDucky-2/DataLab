@@ -113,11 +113,13 @@ class NumericalDiagnosis:
             
             if method == 'IQR':
                 
-                outliers_dict[col] = Outliers(self.df).iqr_outliers()[col]
+                outliers_dict[col] = Outliers(self.df).iqr_outliers()[col].dropna()
 
             elif method == 'z_score':
 
-                outliers_dict[col] = Outliers(self.df).zscore_outliers()[col]
+                outliers_dict[col] = Outliers(self.df).zscore_outliers()[col].dropna()
+
+        outliers_dict = {col: series for col, series in outliers_dict.items() if not series.empty}
             
         return outliers_dict
 
