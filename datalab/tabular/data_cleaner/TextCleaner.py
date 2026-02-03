@@ -179,6 +179,9 @@ class TextCleaner(DataCleaner):
         if splitters_and_replacements is None:
             splitters_and_replacements={'':''}
 
+        if not isinstance(splitters_and_replacements, dict):
+            raise TypeError(f'splitters and replacements must be a dict, got {type(splitters_and_replacements).__name__}')
+
         polars_df = BackendConverter(self.df[self.columns]).pandas_to_polars()
 
         for column in polars_df.columns:
@@ -230,6 +233,9 @@ class TextCleaner(DataCleaner):
         # if symbols and replacements are not passed, they default to empty strings 
         if symbols_and_replacements is None:
             symbols_and_replacements = {"":""} 
+
+        if not isinstance(symbols_and_replacements, dict):
+            raise TypeError(f'symbols and replacements must be a dict, got {type(symbols_and_replacements).__name__}')
 
         polars_df = BackendConverter(self.df[self.columns]).pandas_to_polars()
 
