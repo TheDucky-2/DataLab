@@ -71,7 +71,7 @@ DataLab is intentionally modular and **type-aware**.
 
 | Sub-Package | Responsibility | Data Mutation Rules |
 |------------|----------------|---------------------|
-| `data_loader` | Load data without premature type assumptions and preserve dirty values | Normalizes data representation **(Loads all data with string datatype)** to avoid silent coercion |
+| `data_loader` | Load data without premature type assumptions and preserve dirty values | Loads all values **as strings by default** to prevent silent data type coercion. |
 | `data_diagnosis` | Diagnose structure, dirtiness, missingness, and distributions | **Must not modify data** (observational only) |
 | `data_cleaning` | Apply explicit, documented cleaning steps | **May transform DataFrames**, but changes must be visible, explainable, and non-silent |
 | `data_preprocessing` | Transform data for downstream analysis | **May change datatypes or structure**, but must be intentional, auditable, and reproducible |
@@ -215,7 +215,7 @@ When writing code:
 - Assume the input data is extremely dirty  
 - Make transformations explicit and inspectable  
 
-If behavior could surprise a user, it likely needs warnings, documentation, or redesign.
+If behavior could surprise a user, it likely **needs warnings, documentation, or redesign**.
 
 ---
 
@@ -228,7 +228,7 @@ Every contribution should include tests that:
 - Explicitly test failure modes and warnings  
 - Enforce documented return types  
 
-A feature that only works on clean data is not ready for DataLab.
+A feature that only works on clean data is **not ready** for DataLab.
 
 ---
 
@@ -270,7 +270,9 @@ DataLab is in **pre-release** and prioritizes:
 - safety over convenience  
 - understanding over automation  
 
-Not all contributions will be accepted - even well-written ones - if they conflict with the project’s philosophy.
+Not all contributions will be accepted - even well-written ones - **if they conflict with the project’s philosophy.**
+
+Rejections are purely about alignment, not contributor value.
 
 ---
 
