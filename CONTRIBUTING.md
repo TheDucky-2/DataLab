@@ -1,6 +1,6 @@
 # Contributing to DataLab
 
-First of all: **thank you so much for even considering contributing to DataLab.**
+First of all: **Thank you so much for considering contributing to DataLab.**
 
 That already means you care about **data quality, correctness, and understanding** - which is exactly why this project exists.
 
