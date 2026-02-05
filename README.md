@@ -195,7 +195,7 @@ This is a pre-release version and is not yet intended for production use.
 ```
 datalab/
 │
-├── datalab/                    # Main Python package
+├── datalab/                # Main Python package
 │   ├── tabular/
 │   │   ├── data_loader/
 │   │   ├── data_diagnosis/
@@ -203,19 +203,22 @@ datalab/
 │   │   ├── data_preprocessing/
 │   │   ├── computations/
 │   │   ├── data_visualization/
-│   │   ├── data_analysis/      # (To be added in v0.2)
-│   │   ├── machine_learning/   # (To be added in v0.4)
+│   │   ├── data_analysis/         # (To be added in v0.2)
 │   │   └── utils/
 │   │
-│   └── graph/                  # (To be added in v0.3)
+│   └── graph/              # (To be added in v0.3)
 │
-├── docs/                       # Beginner-friendly documentation (includes Interpretation Guides)
-│
+├── docs/                 # Beginner-friendly documentation (includes API & Conceptual docs)
 ├── guides/               # API Usage & Workflow Guide notebooks for each step
-│
+├── assets/               # Images, logos, diagrams
+│   └── DataLab_logo.png
+├── DataLab_API_RETURN_TYPES.md    # Public API Return Types Reference
+├── CHANGELOG.md                     
+├── CONTRIBUTING.md
+├── LICENSE
 ├── pyproject.toml
 ├── requirements.txt
-├── LICENSE
+├── MANIFEST.in
 └── README.md
 ```
 
