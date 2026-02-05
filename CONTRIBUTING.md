@@ -53,6 +53,8 @@ Before contributing, ask yourself:
 
 If the answer to these questions is unclear, the contribution likely needs rethinking.
 
+💡 Questions or partial ideas are welcome - issues are a space for discussion, not just polished proposals.
+
 ---
 
 ## 🧱 Project Structure & Boundaries
@@ -220,7 +222,7 @@ Any change that affects:
 - return types  
 - workflows  
 
-must be reflected in relevant docstrings and documentation guides.
+Must be reflected in relevant docstrings and documentation guides.
 
 If documentation and code disagree, documentation is treated as authoritative until fixed.
 
