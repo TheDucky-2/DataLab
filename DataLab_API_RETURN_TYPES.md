@@ -1,6 +1,8 @@
-# DataLab API Return Types Reference
+![DataLab logo](assets/DataLab_logo.png)
 
-This file lists all public modules and methods in DataLab and their expected return types.
+# API Return Types Reference
+
+This file lists all public modules and methods in **DataLab** and their expected return types.
 
 This helps users know what to expect when calling functions and methods.
 

@@ -1,6 +1,6 @@
 ![DataLab logo](assets/DataLab_logo.png)
 
-# DataLab Change-Log
+# Change-Log
 
 All versions listed below `0.1.0` are **pre-releases published to TestPyPI only**.
 
