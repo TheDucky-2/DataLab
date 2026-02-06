@@ -215,6 +215,7 @@ datalab/
 ├── DataLab_API_RETURN_TYPES.md    # Public API Return Types Reference
 ├── CHANGELOG.md                     
 ├── CONTRIBUTING.md
+├── CODE_OF_CONDUCT.md
 ├── LICENSE
 ├── pyproject.toml
 ├── requirements.txt
