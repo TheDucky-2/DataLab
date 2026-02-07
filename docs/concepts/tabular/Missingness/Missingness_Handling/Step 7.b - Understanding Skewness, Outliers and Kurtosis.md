@@ -48,7 +48,7 @@ We will be exploring how the data behaves, before deciding how to change it.
 
 Let us go back to our candy example.
 
-<img src = "example_images/Annotated_distribution.png" alt = "Annotated Distribution" width = "700">
+<img src = "/assets/docs/tabular/Missingness/Missingness_Handling/Annotated_distribution.png" alt = "Annotated Distribution" width = "700">
 
 We can see:
 
@@ -59,7 +59,7 @@ Let us look at another visual example by drawing a **Curve** through these bars:
 
 **Example Curve:**
 
-<img src="example_images/Example_curve.png" alt="Distribution curve" width="700">
+<img src="/assets/docs/tabular/Missingness/Missingness_Handling/Annotated_distribution.png" alt="Distribution curve" width="700">
 <br>
 <br>
 
@@ -119,7 +119,7 @@ Our little brother took 15 candies out of the bag for himself.
 
 Let us see what that would look like visually:
 
-<img src = "example_images/Example_Outliers.png" alt = "Outliers Example" width = "600">
+<img src = "/assets/docs/tabular/Missingness/Missingness_Handling/Example_Outliers.png" alt = "Outliers Example" width = "600">
 
 While looking at this distribution, we can notice that **15 candies is very different and very far from the rest (1 - 6)**.
 
@@ -127,7 +127,7 @@ While looking at this distribution, we can notice that **15 candies is very diff
 
 Let us look at another visual example by drawing a **Curve** through these bars:
 
-<img src = "example_images/Outlier_curve.png" width = "700">
+<img src = "/assets/docs/tabular/Missingness/Missingness_Handling/Example_Outliers.png" width = "700">
 
 Outliers are not incorrect or wrong values. They can be values that are:
 
@@ -165,7 +165,7 @@ Let's say that after taking 15 candies, our little brother shared the remaining 
 
 Let us see what that would look like visually:
 
-<img src = "example_images/Example_kurtosis.png" width = "800">
+<img src = "/assets/docs/tabular/Missingness/Missingness_Handling/Example_kurtosis.png" width = "800">
 
 We can see:
 
