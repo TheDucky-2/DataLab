@@ -208,7 +208,8 @@ datalab/
 │   │
 │   └── graph/              # (To be added in v0.3)
 │
-├── docs/                 # Beginner-friendly documentation (includes API & Conceptual docs)
+├── docs/                 API documentation
+├── foundations/          # Beginner-friendly documentation (Foundational concepts)
 ├── guides/               # API Usage & Workflow Guide notebooks for each step
 ├── assets/               # Images, logos, diagrams
 │   └── DataLab_logo.png
