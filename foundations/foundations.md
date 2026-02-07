@@ -188,8 +188,8 @@ Foundations will grow too - without rewriting how existing data concepts work.
 
 If you are new to DataLab:
 
-- Start with **Foundations -> Tabular -> Overview**
-- Then move into diagnosis and missingness
+- Start with **Foundations -> Tabular -> Tabular Foundations** (see [Tabular Foundations](tabular/tabular_foundations.md))
+- Then move into data loading, diagnosis and missingness
 
 If you already use DataLab:
 
