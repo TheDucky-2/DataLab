@@ -20,9 +20,12 @@ class MissingnessVisualizer():
 
     columns : list, optional
         List of columns you wish to visualize, by default None.
+
+    extra_placeholders: list | None, optional
+        List of extra placeholder values considered as missing data, depending on your domain
     """
 
-    def __init__(self, df: pd.DataFrame, columns:list = None):
+    def __init__(self, df: pd.DataFrame, columns:list|None = None, extra_placeholders:list|None = None):
 
         self.df = df
 
@@ -32,11 +35,16 @@ class MissingnessVisualizer():
         else:
             self.columns = [column for column in columns if column in self.df.columns]
 
+        if extra_placeholders is None:
+            logger.info('No extra placeholders received, hence, considering only pandas-built in missing types as missing data.')
+            self.extra_placeholders = []
+        else:
+            self.extra_placeholders = extra_placeholders
+
         logger.info('Missingness Visualizer initialized.')
 
     def plot_missing(self,
                 viz_type: str = 'bar',
-                extra_placeholders: list | None =None,
                 title: str = None,
                 xlabel: str = None,
                 ylabel: str = None,
@@ -109,14 +117,11 @@ class MissingnessVisualizer():
 
         visualization_df = self.df.copy()
         
-        if extra_placeholders is None:
-            extra_placeholders = []
-
         # getting pandas truly missing values
         pandas_mask = visualization_df.isna()
 
         # getting placeholder missing values
-        placeholder_mask = visualization_df.isin(extra_placeholders)
+        placeholder_mask = visualization_df.isin(self.extra_placeholders)
 
         # getting both the missing types
         mask = pandas_mask | placeholder_mask
