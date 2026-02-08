@@ -8,6 +8,89 @@ The first stable public release on PyPI will be **0.1.0**.
 
 ---
 
+##  v0.1.0b7 - Feb 08, 2026
+
+**Status:** Beta (pre-release - TestPyPI only)
+
+DataLab **v0.1.0b7** focuses on **critical bug fixes, improved documentation, contributions workflow, and stability**.
+
+#### ⚠️ Major fix:
+
+This release **resolves a blocking import issue** that prevented DataLab from running in environments without ipykernel, making the library usable in both **Jupyter Notebooks** and **Non-Jupyter** setups.
+
+### 🚀 Major Changes
+
+- **Fixed critical Import bug affecting Non-Jupyter Notebook environments (no ipykernel required).**
+
+- Consolidated and polished foundations content, moving concepts to foundations markdown files.
+
+- Added DataLab contribution guides and templates: 
+
+  - ``CONTRIBUTING.md`` (see [Contributing to DataLab](CONTRIBUTING.md))
+
+  - GitHub issue template for ``Bug Reports`` (see [Bug Report](.github/ISSUE_TEMPLATE/bug_report.md)) 
+  
+  - Github issue template for ``Feature Requests`` (see [Feature Request](.github/ISSUE_TEMPLATE/feature_request.md))
+
+- Added ``CODE_OF_CONDUCT.md`` (see [Code of Conduct](CODE_OF_CONDUCT.md))
+
+- Maintainer review notes for contributions workflow.
+
+- Added ``DataLab Foundations`` (see [DataLab Foundations](foundations/foundations.md))
+
+### ✨ Added
+
+- ``get_element_from_split_text()`` method in ``TextCleaner``.
+
+- **Exploring Dirty Numerical Data Guide**.
+
+- Return type tests for **visualizations, computations, and statistics**.
+
+- Centralized example images and assets for missingness visualizations.
+
+- **Code of Conduct** file.
+
+- **CONTRIBUTING** file
+ 
+- **bug report** and **feature requests** template
+
+
+### 💡 Improved
+
+- README updated for clarity, foundational concepts, and contributions workflow.
+
+- Documentation restructured with improved formatting, paths, and image references.
+
+- Refactored ``MissingnessDiagnosis`` and other classes for logging consistency and placeholder handling.
+
+- Markdown fixes in notebooks and docstrings for better pdoc rendering.
+
+- Separate ``API`` and ``Foundational`` docs.
+
+- Removed ``concepts`` from ``docs`` and renamed to ``foundations``, which are the thinking layer of DataLab.
+
+### 🐛 Fixed
+
+- Fixed plotting bugs in ``NumericalVisualizer.plot_kde()`` and ``NumericalVisualizer.plot_box()`` methods.
+
+- Corrected ``NumericalDiagnosis.detect_outliers()`` to keep only valid outliers.
+
+- **Resolved import errors for environments without Jupyter (ipykernel).**
+
+- Fixed minor formatting and path issues in documentation and example images.
+
+### 💡 Key Notes for Users
+
+- **Critical upgrade**: This release resolves the blocking bug in non-Jupyter environments.
+
+- **Documentation & contributions**: Guides and templates now included for easier community contributions.
+
+- **Stability:** Bug fixes and logging improvements increase confidence in core API behavior.
+
+- **Pre-release reminder:** APIs remain mostly stable; feedback is welcome ahead of the first official stable release.
+
+---
+
 ## v0.1.0b6 - Feb 01, 2026
 
 **Status:** Beta (pre-release - TestPyPI only)
@@ -63,6 +146,8 @@ DataLab **v0.1.0b6** is a **stabilization and correctness release** that fixes i
 - **Stability:** Improved testing and bug fixes increase confidence in API behavior.
 
 - **Pre-release reminder:** APIs are nearing stability ahead of ``v0.1.0.``
+
+---
 
 ## v0.1.0b4 - Jan 27, 2026
 
