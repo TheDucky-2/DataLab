@@ -42,7 +42,7 @@ This release **resolves a blocking import issue** that prevented DataLab from ru
 
 - ``get_element_from_split_text()`` method in ``TextCleaner``.
 
-- **Exploring Dirty Numerical Data Guide**.
+- **Exploring Dirty Numerical Data Guide** (see [Exploring Dirty Numerical Data Workflow Guide](guides/DataLab_Workflow_Guides/Dirty_Data_Diagnosis/Exploring_Dirty_Numerical_Data.ipynb))
 
 - Return type tests for **visualizations, computations, and statistics**.
 
