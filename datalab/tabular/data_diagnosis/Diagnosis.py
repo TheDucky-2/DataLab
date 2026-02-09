@@ -23,7 +23,7 @@ class Diagnosis:
         A list of columns you wish to diagnose, by default None.
     """
 
-    def __init__(self, df: pd.DataFrame, columns:list = None):
+    def __init__(self, df: pd.DataFrame, columns:list|None = None):
 
         # making sure that the passed df is a pandas DataFrame
         if not isinstance(df, pd.DataFrame):
@@ -35,7 +35,7 @@ class Diagnosis:
         self.df = df
 
         if columns is None:
-            self.columns = df.columns.to_list()
+            self.columns = self.df.columns.to_list()
         else:
             self.columns = [column for column in columns if column in self.df.columns]
 
@@ -138,19 +138,19 @@ class Diagnosis:
             1. Use this function to check whether a column is categorized as 'Categorical or text', 'Numerical', or Datetime.
             2. Use 'ColumnConverter' to change column types if column type is not detected correctly.
         """
-        self.column_types = {'Numerical': [], 'Datetime' :[], 'Categorical':[]}
+        column_types = {'Numerical': [], 'Datetime' :[], 'Categorical':[]}
 
         for col in self.df.columns:
             if pd.api.types.is_numeric_dtype(self.df[col]):
-                self.column_types['Numerical'].append(col)
+                column_types['Numerical'].append(col)
 
             elif pd.api.types.is_datetime64_any_dtype(self.df[col]):
-                self.column_types['Datetime'].append(col)
+                column_types['Datetime'].append(col)
 
-            elif pd.api.types.is_object_dtype(self.df[col]) or pd.api.types.is_categorical_dtype(self.df[col]):
-                self.column_types['Categorical'].append(col)
+            elif pd.api.types.is_string_dtype(self.df[col]) or pd.api.types.is_object_dtype(self.df[col]) or pd.api.types.is_categorical_dtype(self.df[col]):
+                column_types['Categorical'].append(col)
 
-        return self.column_types 
+        return column_types 
 
     def show_unique_values(self) -> dict[list[str]]:
         """Shows a list of unique values present in each column of the
