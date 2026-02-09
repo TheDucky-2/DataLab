@@ -1,11 +1,8 @@
 """Diagnoses the Categorical columns in your DataFrame."""
 
 import pandas as pd
-from ..utils.Logger import datalab_logger
 # importing parent class
 from .Diagnosis import Diagnosis
-
-logger = datalab_logger(name = __name__.split('.')[-1])
 
 class CategoricalDiagnosis():
     """
@@ -34,8 +31,6 @@ class CategoricalDiagnosis():
             self.columns = self.df.columns.to_list()
         else:
             self.columns = [column for column in columns if column in self.df.columns]
-
-        logger.info(f'Categorical Diagnosis initialized.')
 
     def count_unique_categories(self):
         """Shows count of unique categories in one or multiple columns of DataFrame.
