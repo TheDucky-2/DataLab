@@ -21,23 +21,22 @@ class CategoricalVisualizer():
         List of columns you wish to visualize, by default None.
     """
 
-    def __init__(self, df: pd.DataFrame, columns: list|type(None) = None):
+    def __init__(self, df: pd.DataFrame, columns: list|None = None):
     
         self.df = df.select_dtypes(include = ['string', 'object', 'category'])
-        
-        if columns is None:
-            self.columns = df.columns
 
+        if columns is None:
+            self.columns = self.df.columns.tolist()
         else: 
             self.columns = [column for column in columns if column in self.df.columns]
 
     def visualize_frequency(self,
                             method:str ='count',
                             viz_type: str = 'bar',
-                            title: str=None,
-                            xlabel: str=None,
-                            ylabel: str=None,
-                            figsize: tuple =(6, 4))->None:
+                            title: str | None =None,
+                            xlabel: str | None =None,
+                            ylabel: str | None =None,
+                            figsize: tuple| None =(6, 4))->None:
         """
         Visualize frequency for each column of Categorical DataFrame.
 
@@ -65,22 +64,22 @@ class CategoricalVisualizer():
             - 'area'  : Area plot
             - 'pie"   : Pie chart
 
-        xlabel : str, optional
+        xlabel : str or None, optional
             Label for x-axis, default is None.
 
-        ylabel : str, optional
+        ylabel : str or None, optional
             Label for y-axis, default is None.
 
-        title : str, optional
+        title : str or None, optional
             Title of the plot, default is None.
 
-        figsize : tuple, optional
+        figsize : tuple or None, optional
             Size of the figure (width, height) in inches, default is (6, 4)
 
         Returns
         --------
         None
-                This function is intended for visualization only and does not return anything.
+            This function is intended for visualization only and does not return anything.
 
         Usage Recommendation
         ----------------------
@@ -110,7 +109,5 @@ class CategoricalVisualizer():
                 plt.ylabel(ylabel)
             else:
                 plt.ylabel(f'{method} of {column}')
-
-            logger.info('Visualizing frequency...')
-
+                
             plt.show()
