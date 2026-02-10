@@ -4,7 +4,7 @@ import pandas as pd
 from pathlib import Path
 import polars as pl
 
-def load_tabular(file_path: str, file_type: str = None, array_type: str='auto', conversion_threshold:int=None, **kwargs:dict) -> pd.DataFrame:
+def load_tabular(file_path: str, file_type: str|None = None, array_type: str ='auto', conversion_threshold:int|None = None, **kwargs:dict) -> pd.DataFrame:
     """
     Use this function for loading your tabular data as a pandas DataFrame.
 
@@ -15,6 +15,7 @@ def load_tabular(file_path: str, file_type: str = None, array_type: str='auto', 
         Path of your data file or just file name
   
     file_type: str, optional
+
         Supported File Types:
         
         - 'csv' (default)
@@ -23,6 +24,7 @@ def load_tabular(file_path: str, file_type: str = None, array_type: str='auto', 
         - 'JSON'
 
     array_type: str 
+
         Determines the array/backend type used in pandas operations, by default 'auto'.
 
         Options are:
@@ -32,28 +34,34 @@ def load_tabular(file_path: str, file_type: str = None, array_type: str='auto', 
         - 'auto' -> automatically selects backend based on input and dataset size 
             
     conversion_threshold: int
+
         The number of rows at which the conversion from Polars to pandas switches to Arrow-backed pandas arrays for performance, default is 100000.
         Users can increase or decrease this threshold depending on their dataset size and memory availability.
        
     kwargs: dict
+
         Extra arguments you want to pass into pandas file readers (for excel files only).
      
     Returns
     ---------
     pd.DataFrame
+
         A pandas DataFrame
     
     Usage Recommendation
     ---------------------
+
         Use this function to load datasets quickly without memorizing multiple read functions.
         Polars -> pandas conversion ensures efficient memory usage and stability, even on low-RAM systems.
 
     Considerations
     ---------------
+
         Adjust array_type and conversion_threshold for very large datasets to optimize performance and memory usage.
 
     Example
     --------
+    
     >>> # Load a CSV file (default parameters)
         df1 = load_tabular('example.csv')
 
@@ -70,7 +78,7 @@ def load_tabular(file_path: str, file_type: str = None, array_type: str='auto', 
         df5 = load_tabular('some/path/to/data.json')
     """
     if not isinstance(file_path, (str, Path)):
-        raise TypeError('file path must be a string or a file path')
+        raise TypeError(f'file path must be a string or a file path, got {type(file_path).__name__}')
 
     if not isinstance(file_type, (str, type(None))):
         raise TypeError(f'file type must be a string, got {type(file_type).__name__}')     
