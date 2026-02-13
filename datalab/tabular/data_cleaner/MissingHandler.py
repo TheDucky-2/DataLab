@@ -2,6 +2,9 @@
 
 import pandas as pd
 import numpy as np
+from ..utils.Logger import datalab_logger
+
+logger = datalab_logger(__name__.split('.')[-1])
 
 class MissingHandler():
     """
@@ -15,7 +18,7 @@ class MissingHandler():
     columns : list, optional
         List of columns you wish to convert, by default None.
     """
-    def __init__(self, df, columns: list=None, extra_placeholders: list = None):
+    def __init__(self, df, columns: list|None =None, extra_placeholders: list|None = None):
 
         self.df = df
         
@@ -26,7 +29,11 @@ class MissingHandler():
 
         if extra_placeholders is None:
             self.extra_placeholders = []
-    
+        else:
+            self.extra_placeholders = extra_placeholders
+
+        logger.info('Missing Handler Initialized...')
+
     def replace_missing(self, to_replace: list[str| float| type(np.nan)], replace_with: str|float|int, **kwargs: dict) -> pd.DataFrame:
 
         """Replace missing values like 'ERROR','MISSING', 'UNKNOWN' etc. with any value of choice.
@@ -106,14 +113,19 @@ class MissingHandler():
         """
         return self.df[self.columns].dropna(axis=1, **kwargs)
 
-    def drop_missing_rows(self, **kwargs)-> pd.DataFrame:
+    def drop_missing_rows(self, how: str='any')-> pd.DataFrame:
         """
-        Drops rows that have missing data in a DataFrame
+        Drops rows that have missing data(including custom placeholders) in a DataFrame 
 
         Parameters
         -----------
-        kwargs: dict, optional
-            A dictionary of extra keyword arguments you wish to pass in pandas ``df.drop_na()`` method
+        how : str, optional
+            How you would like to drop missing rows.
+
+            Available Options:
+
+            - 'any' : Drop rows with missing data in any column
+            - 'all': Drop rows with missing data in all columns
 
         Returns
         --------
@@ -133,7 +145,39 @@ class MissingHandler():
         --------
         >>> MissingHandler(df, columns=['credit_score']).drop_missing_rows()
         """
-        return self.df[self.columns].dropna(**kwargs)
+
+        if not isinstance(how, str):
+            raise TypeError(f'how must be a string, got {type(how).__name__}')
+
+        # checking for built-in missing values
+        pandas_missing = self.df[self.columns].isna()
+
+        # checking for placeholder mising values
+        placeholder_missing = self.df[self.columns].isin(self.extra_placeholders)
+
+        # if either pandas or placeholder values exist
+        total_missing =  pandas_missing | placeholder_missing
+
+        if how == 'any':
+            rows_with_missing_data = total_missing.any(axis=1)
+
+            # if any row does not have missing data in any column
+            if not rows_with_missing_data.any():
+                logger.info('No rows with missing data in any column.')
+                return self.df
+
+        elif how == 'all':
+            rows_with_missing_data = total_missing.all(axis=1)
+
+            # if any row does not have missing data in all columns
+            if not rows_with_missing_data.any():
+                logger.info('No rows with missing data in all columns.')
+                return self.df
+
+        else:
+            raise ValueError(f"how must be 'any' or 'all', got {how}")
+
+        return self.df.loc[~rows_with_missing_data]
 
     def fill_with_mean(self)-> pd.DataFrame:
         """
