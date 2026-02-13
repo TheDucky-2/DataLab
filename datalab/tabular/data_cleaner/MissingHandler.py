@@ -29,10 +29,15 @@ class MissingHandler():
 
         if extra_placeholders is None:
             self.extra_placeholders = []
+            logger.info('Considering only pandas built-in missing values as no extra placeholders received from the user')
+
         else:
             self.extra_placeholders = extra_placeholders
+            logger.info((f'Extra Placeholders received for missing data: {self.extra_placeholders}'))
 
         logger.info('Missing Handler Initialized...')
+
+    
 
     def replace_missing(self, to_replace: list[str| float| type(np.nan)], replace_with: str|float|int, **kwargs: dict) -> pd.DataFrame:
 
@@ -81,15 +86,20 @@ class MissingHandler():
 
         return self.df
 
-    def drop_missing_columns(self, **kwargs)-> pd.DataFrame:
+    def drop_missing_columns(self, how:str='any')-> pd.DataFrame:
+        
         """
         Drops columns that have missing data in a DataFrame
 
         Parameters
         ----------
+        how : str, optional
+            How you would like to drop missing rows.
 
-        kwargs: dict, optional
-            A dictionary of extra keyword arguments you wish to pass in pandas ``df.drop_na()`` method
+            Available Options:
+
+            - 'any' : Drop rows with missing data in any column
+            - 'all': Drop rows with missing data in all columns
 
         Returns
         --------
@@ -111,7 +121,32 @@ class MissingHandler():
         >>> MissingHandler(df, columns=['credit_score']).drop_missing_columns()
 
         """
-        return self.df[self.columns].dropna(axis=1, **kwargs)
+        if not isinstance(how, str):
+            raise TypeError(f'how must be a string, got {type(how).__name__}')
+
+        # checking for built-in missing values
+        pandas_missing = self.df[self.columns].isna()
+
+        # checking for placeholder mising values
+        placeholder_missing = self.df[self.columns].isin(self.extra_placeholders)
+
+        # if either pandas or placeholder values exist
+        total_missing =  pandas_missing | placeholder_missing
+
+        if how == 'any':
+            # ensuring to filter only values that are true.
+            columns_to_drop = total_missing.any(axis=0)[total_missing.any(axis=0)].index.tolist()
+
+        if how == 'all':
+            columns_to_drop = total_missing.any(axis=0)[total_missing.any(axis=0)].index.tolist()
+
+        if columns_to_drop:
+            logger.info(f'Dropping columns: {columns_to_drop}')
+
+            return self.df.drop(columns = columns_to_drop)
+
+        else:
+            return self.df
 
     def drop_missing_rows(self, how: str='any')-> pd.DataFrame:
         """
