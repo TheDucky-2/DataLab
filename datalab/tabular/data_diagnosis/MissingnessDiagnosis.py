@@ -47,8 +47,10 @@ class MissingnessDiagnosis:
         # keeping extra placeholders to be an empty list if None, otherwise creating a mask of placeholders would not be able to find something to iterate over.
         if extra_placeholders is None:
             self.extra_placeholders = []
+
         else:
             self.extra_placeholders = extra_placeholders
+            logger.info(f'Received {self.extra_placeholders} as placeholders for missing data!')
 
         logger.info(f'Missingness Diagnosis initialized.')
 
