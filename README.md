@@ -3,7 +3,7 @@
 [![API Docs](https://img.shields.io/badge/API-Documentation-blue)](https://theducky-2.github.io/DataLab)
 ![TestPyPI version](https://img.shields.io/badge/TestPyPI-0.1.0b7-orange)
 ![Status](https://img.shields.io/badge/Status-Beta-yellow)
-![Python](https://img.shields.io/badge/python-3.12+-blue)
+![Python](https://img.shields.io/badge/python-3.10+-blue)
 ![License](https://img.shields.io/github/license/TheDucky-2/DataLab)
 
 **A diagnosis-first data quality and preparation framework for real-world data.**
@@ -212,7 +212,9 @@ datalab/
 ├── guides/               # API Usage & Workflow Guide notebooks for each step
 ├── assets/               # Images, logos, diagrams
 │   └── DataLab_logo.png
-├── DataLab_API_RETURN_TYPES.md    # Public API Return Types Reference
+├── DataLab_API_RETURN_TYPES.md     # Public API Return Types Reference
+├── DataLab_DATA_HANDLING_POLICY.md # DataLab's policy on data handling
+├── DataLab_DATA_HANDLING_REPORT.md # DataLab's current report on data handling
 ├── CHANGELOG.md                     
 ├── CONTRIBUTING.md
 ├── CODE_OF_CONDUCT.md
