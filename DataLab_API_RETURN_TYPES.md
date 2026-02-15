@@ -52,9 +52,9 @@ This helps users know what to expect when calling functions and methods.
 
 | Module / Method | Return Type | Notes | Import |
 |-----------------|------------|-------|----------|
-| CategoricalVisualizer | `None` | Visualization only (plots categories) | ``from datalab import CategoricalVisualizer``
-| MissingnessVisualizer | `None` | Visualization only (missing data plots) | ``from datalab import MissingnessVisualizer``
-| NumericalVisualizer | `None` | Visualization only (numeric plots: histogram, boxplot, KDE) | ``from datalab import NumericalVisualizer``
+| CategoricalVisualizer | `tuple[Figure, Axes]` | Returns Matplotlib figure and axes for further customization | ``from datalab import CategoricalVisualizer``
+| MissingnessVisualizer | `tuple[Figure, Axes]` | Returns Matplotlib figure and axes for missing data visualization | ``from datalab import MissingnessVisualizer``
+| NumericalVisualizer | `tuple[Figure, Axes]` | Returns Matplotlib figure and axes (histogram, boxplot, KDE, etc.) | ``from datalab import NumericalVisualizer``
 
 ---
 
