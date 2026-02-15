@@ -160,8 +160,8 @@ class NumericalVisualizer():
         """
         import matplotlib.pyplot as plt
 
-        if orientation not in ['horizontal', 'vertical', 'h', 'v']:
-            raise ValueError(f"orientation must be horizontal or 'h' OR vertical or 'v', got {orientation}")
+        if orientation not in ['horizontal', 'vertical']:
+            raise ValueError(f"orientation must be 'horizontal' or 'vertical', got {orientation}")
 
         # making sure that the orientation starts with vertical or 'v' by default.
         # if it will be anything other than vertical, it will default to horizontal
@@ -172,7 +172,7 @@ class NumericalVisualizer():
             fig, ax = plt.subplots(figsize=figsize) # defauls to figsize of (6, 4) inches. (6 X 4)
         
             # keeping it simple by 
-            ax.boxplot(self.df[column], vert=vert, **kwargs)
+            ax.boxplot(self.df[column], orientation=orientation, **kwargs)
 
             if title:
                 ax.set_title(f'{title}: {column}')
