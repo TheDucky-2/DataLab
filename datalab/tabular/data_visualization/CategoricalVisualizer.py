@@ -1,10 +1,12 @@
 """Class and methods for visualizing Categorical data."""
 
 from ..data_diagnosis import CategoricalDiagnosis
-import pandas as pd
-import matplotlib.pyplot as plt
-
 from ..utils.Logger import datalab_logger
+
+import pandas as pd
+
+import matplotlib.figure as Figure
+import matplotlib.axes as Axes
 
 logger = datalab_logger(name = __name__.split('.')[-1])
 
@@ -30,13 +32,13 @@ class CategoricalVisualizer():
         else: 
             self.columns = [column for column in columns if column in self.df.columns]
 
-    def visualize_frequency(self,
+    def plot_frequency(self,
                             method:str ='count',
                             viz_type: str = 'bar',
                             title: str | None =None,
                             xlabel: str | None =None,
                             ylabel: str | None =None,
-                            figsize: tuple| None =(6, 4))->None:
+                            figsize: tuple| None =(6, 4))-> tuple[Figure, Axes]:
         """
         Visualize frequency for each column of Categorical DataFrame.
 
@@ -91,23 +93,27 @@ class CategoricalVisualizer():
 
             2. Use viz_type as 'hist' if you have many-many unique categories, otherwise processing may be slower.
         """
+        import matplotlib.pyplot as plt
+
+        fig, ax = plt.subplots(figsize=figsize)
+
         for column in self.df[self.columns]:
 
             (CategoricalDiagnosis(self.df).show_frequency(method=method)[column]).plot(kind=viz_type)
 
             if title:
-                plt.title(f'{title}: {column}')
+                ax.set_title(f'{title}: {column}')
             else:
-                plt.title(f'{viz_type} of {column}')
+                ax.set_title(f'{viz_type} of {column}')
 
             if xlabel:
-                plt.xlabel(xlabel)
+                ax.set_xlabel(xlabel)
             else:
-                plt.xlabel(column)
+                ax.set_xlabel(column)
 
             if ylabel:
-                plt.ylabel(ylabel)
+                ax.set_ylabel(ylabel)
             else:
-                plt.ylabel(f'{method} of {column}')
+                ax.set_ylabel(f'{method} of {column}')
                 
-            plt.show()
+            return fig, ax
