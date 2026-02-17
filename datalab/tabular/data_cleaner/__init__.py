@@ -1,9 +1,9 @@
 from .NumericalCleaner import NumericalCleaner
-from .MissingHandler import MissingHandler
+from .MissingnessHandler import MissingnessHandler
 from .ColumnConverter import ColumnConverter
 from .TextCleaner import TextCleaner
 
 
-__all__ = [ 'ColumnConverter', 'NumericalCleaner', 'MissingHandler', 'TextCleaner']
+__all__ = [ 'ColumnConverter', 'NumericalCleaner', 'MissingnessHandler', 'TextCleaner']
 
 
