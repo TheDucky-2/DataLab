@@ -75,6 +75,8 @@ class MissingHandler():
 
         total_missing = pandas_missing | placeholder_missing
 
+        logger.info(f"Replacing missing data with {replacement}")
+
         return self.df.mask(total_missing, replacement)
 
     def drop_missing_columns(self, how:str='any')-> pd.DataFrame:
@@ -233,7 +235,15 @@ class MissingHandler():
 
         >>> df['credit_score'] = [734.97, 734.78, 717.02, 712.21, 686.13]
         """
-        return self.df[self.columns].fillna(self.df[self.columns].mean())
+
+        pandas_missing = self.df.isna()
+        placeholder_missing = self.df.isin(self.extra_placeholders)
+
+        total_missing = pandas_missing | placeholder_missing
+
+        logger.info("Filled missing data with mean value.")
+
+        return self.df.mask(total_missing, self.df.mean(), axis=1)
 
     def fill_with_median(self)-> pd.DataFrame:
         """
@@ -263,6 +273,14 @@ class MissingHandler():
 
         >>> df['savings'] = [14173.3, 37970.2, 24008.95, 20536.30, 17063.67, 57161.76, 20536.30, 5927.63, 28954.98, 5553.7]
         """
-        return self.df[self.columns].fillna(self.df[self.columns].median())
-
         
+        pandas_missing = self.df.isna()
+        placeholder_missing = self.df.isin(self.extra_placeholders)
+
+        total_missing = pandas_missing | placeholder_missing
+
+        logger.info("Filled missing data with median value.")
+
+        return self.df.mask(total_missing, self.df.median(), axis=1)
+
+                
