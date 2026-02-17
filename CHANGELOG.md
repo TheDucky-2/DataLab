@@ -8,6 +8,114 @@ The first stable public release on PyPI will be **0.1.0**.
 
 ---
 
+##  v0.1.0b8 - Feb 17, 2026
+
+**Status:** Beta (pre-release - TestPyPI only)
+
+DataLab **v0.1.0b8** enhances **missing data handling**, finalizes the **visualization API refactor**, and continues to **improve documentation**, **type hints**, and **stability**.
+
+#### ⚠️ Important Updates
+
+- Data loading module ``loader``renamed to ``data_loader`` for clarity.
+
+- Visualization methods now consistently return ``(Figure, Axes)`` tuples, instead of ``None``.
+
+- ``MissingHandler`` methods fully support extra placeholder values.
+
+- **Python 3.10+** is now the minimum supported version.
+
+- Removed ``get_element_from_split_text()`` from ``TextCleaner`` **(previously added in b7)**.
+
+### 🚀 Major Changes
+
+1. **Visualization API Refactor (Behavior Change)** 
+    - Instead of returning ``None``, all Visualization methods (Missingness, Numerical and Categorical) now return:
+
+        ```python
+        (matplotlib.figure.Figure, matplotlib.axes.Axes)
+        ```
+    - ``plot_box()`` now supports both **vertical and horizontal orientations**.
+
+    - ``plot_missing()`` behavior updated for improved flexibility.
+
+    - **API Return Types Reference** updated to reflect these changes. (see [DataLab API Return Types Reference](DataLab_API_RETURN_TYPES.md))
+
+    - Visualization return-type tests rewritten to match the new tuple outputs.
+<br>
+2. **Missing Data Handling Improvements**
+
+    - ``MissingHandler`` class updated so **all methods accept extra placeholder values**.
+    - All missing handling methods refactored for **better consistency and logging.**
+    - Logging added for extra placeholders in ``MissingnessDiagnosis``.
+    - Enhanced error handling for the how parameter in ``drop_missing_columns()`` and ``drop_missing_rows()`` methods.
+<br>
+3. **Python Compatibility**
+
+    - Minimum supported Python version updated to **3.10+**``(previously >=3.12)``.
+    - **README** and **pyproject.toml** updated accordingly.
+
+### ✨ Added
+
+- **DataLab Data Handling Policy** explaining how DataLab perceives and manages data mutations (see [DataLab Data Handling Policy](DataLab_DATA_HANDLING_POLICY.md)).
+
+- **DataLab Data Handling Report** explaining how DataLab currently handles data in modules and functions (see [DataLab Data Handling Report](DataLab_DATA_HANDLING_REPORT.md)).
+
+- Type hints and logger added/refined across diagnosis and visualization classes.
+
+
+### 💡 Improved
+
+- Refactored ``Diagnosis`` classes for formatting, type hints, and consistency.
+
+- ``Diagnosis.detect_column_types()`` fixed to detect **PyArrow string types** correctly.
+
+- Directory formatting improved with underscores for consistency.
+
+- **Documentation** and **example images** restructured for clarity and usability.
+
+### 🐛 Fixed
+
+- Bug in ``detect_outliers()`` resolved.
+
+- Removed unnecessary logging from ``CategoricalDiagnosis``.
+
+- Minor fixes in visualization methods, outlier detection, and missing data handling.
+
+### ⚠️ Removed
+
+- ``get_element_from_split_text()`` method in ``TextCleaner`` **(introduced in v0.1.0b7)** removed temporarily for stability.
+
+### 🔄 Renamed
+
+- ``loader`` module renamed to ``data_loader`` for clarity and consistency during imports, to ensure users can still do:
+
+    ```python
+    from datalab import load_tabular
+    ```
+
+### 💡 Key Notes for Users
+
+- **Breaking Change:** Visualization methods now return **(Figure, Axes)**. 
+    
+    Update your code accordingly:
+
+    ```python
+    fig, ax = NumericalVisualizer.plot_histogram(...)
+    ```
+
+- **MissingHandler improvements:** Extra placeholders are now fully supported.
+
+- **Python 3.10+** is now required; earlier versions are not supported.
+
+- **get_element_from_split_text()** removed temporarily; adjust any dependent code.
+
+- ``loader`` module renamed to ``data_loader``, update any import statements.
+
+This release stabilizes visualization, diagnosis, and missing data workflows ahead of the first official stable release **(v0.1.0)**.
+
+---
+
+
 ##  v0.1.0b7 - Feb 08, 2026
 
 **Status:** Beta (pre-release - TestPyPI only)
