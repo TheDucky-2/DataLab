@@ -6,8 +6,8 @@ build-backend = "setuptools.build_meta"
 [project] 
 
 name = "datalab_pre_release"             
-version = "0.1.0b7"
-description = "DataLab v0.1.0b7 - Beta release with critical bug fixes for non-Jupyter environments, improved documentation, contributions workflow, and enhanced stability for data diagnosis and preprocessing workflows."
+version = "0.1.0b8"
+description = "DataLab v0.1.0b8 - Enhanced Visualization API, Full MissingHandler Support, Python 3.10 Compatibility."
 
 authors = [
     {name = "Kshitij Sharma"}

@@ -1,12 +1,10 @@
 """
 <img src="assets/DataLab_logo.png" alt="DataLab logo" height: "80" style="display:block; margin: 20px auto;">
 
-"DataLab v0.1.0b7
-
-Beta release with critical bug fixes for non-Jupyter environments, improved documentation, contributions workflow, and enhanced stability for data diagnosis and visualization workflows."
+"DataLab v0.1.0b8 : Enhanced Visualization API, Full MissingHandler Support, Python 3.10 Compatibility"
 
 """
-__version__ = '0.1.0b7'
+__version__ = '0.1.0b8'
 
 import importlib
 
