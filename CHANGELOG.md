@@ -8,6 +8,63 @@ The first stable public release on PyPI will be **0.1.0**.
 
 ---
 
+##  v0.1.0b9 - Feb 17, 2026
+
+**Status:** Beta (pre-release - TestPyPI only)
+
+DataLab **v0.1.0b9** introduces **optional string-only data loading** and a **refined missing data handler API**, providing more flexibility and consistency for users.
+
+#### ⚠️ Important Updates
+
+- CSV files are **no longer forced to load all columns as strings**; loading as strings is now **completely optional**.
+
+- ``MissingHandler`` class renamed to ``MissingnessHandler`` for consistency with other Missingness modules.
+
+### 🚀 Major Changes
+
+**1.** **Optional String Loading**
+
+- In previous versions **(starting v0.1.0b4)**, all data was loaded as strings by default in ``CSV`` files.
+
+- In **v0.1.0b9**, the ``load_as_string`` parameter allows users to:
+
+    - Keep the default type inference behavior, or 
+
+    - Explicitly load all columns as strings when needed.
+
+**Example:**
+
+```python
+from datalab import load_tabular
+
+df = load_tabular('example.csv', load_as_string = False)  # keeps original datatypes
+df = load_tabular('example.csv', load_as_string = True)   # loads all data with string datatype
+```
+
+- CSV loading tests for forced string conversion **have been removed**, reflecting the new optional behavior.
+
+- Enhances flexibility for workflows with mixed-type datasets, avoiding **unnecessary type coercion**.
+
+**2. Missing Data Handler Refinement**
+
+- Renamed ``MissingHandler`` **-->** ``MissingnessHandler`` **(module & class)** for consistency with other missingness-related modules.
+
+- Added ``MissingnessHandler`` to ``__init__.py`` for direct imports:
+
+```python
+from datalab import MissingnessHandler
+```
+
+### 💡 Key Notes for Users
+
+- 🔄 **Breaking Change:** Any existing code or imports using ``MissingHandler`` must be updated to ``MissingnessHandler``.
+
+- ✅ Optional string loading gives **full control over column datatypes at load time**, replacing the previous forced behavior.
+
+- This release focuses on **flexibility, clarity**, and **API consistency**.
+
+---
+
 ##  v0.1.0b8 - Feb 17, 2026
 
 **Status:** Beta (pre-release - TestPyPI only)

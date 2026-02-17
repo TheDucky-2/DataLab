@@ -1,7 +1,7 @@
 ![DataLab logo](assets/DataLab_logo.png)
 
 [![API Docs](https://img.shields.io/badge/API-Documentation-blue)](https://theducky-2.github.io/DataLab)
-![TestPyPI version](https://img.shields.io/badge/TestPyPI-0.1.0b8-orange)
+![TestPyPI version](https://img.shields.io/badge/TestPyPI-0.1.0b9-orange)
 ![Status](https://img.shields.io/badge/Status-Beta-yellow)
 ![Python](https://img.shields.io/badge/python-3.10+-blue)
 ![License](https://img.shields.io/github/license/TheDucky-2/DataLab)
@@ -160,7 +160,7 @@ DataLab is available on **TestPyPI** for early testing and feedback.
 
 You can now Install DataLab pre-release using **pip**:
 
-``pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple datalab-pre-release==0.1.0b8``
+``pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple datalab-pre-release==0.1.0b9``
 
 ### Why this long command? 
 
