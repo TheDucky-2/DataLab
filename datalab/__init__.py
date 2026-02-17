@@ -1,10 +1,10 @@
 """
 <img src="assets/DataLab_logo.png" alt="DataLab logo" height: "80" style="display:block; margin: 20px auto;">
 
-"DataLab v0.1.0b8 : Enhanced Visualization API, Full MissingHandler Support, Python 3.10 Compatibility"
+"DataLab v0.1.0b9 : Flexible Data Loading & Refined Missing Data Handling"
 
 """
-__version__ = '0.1.0b8'
+__version__ = '0.1.0b9'
 
 import importlib
 
