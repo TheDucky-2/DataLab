@@ -49,7 +49,7 @@ DataLab **v0.1.0b9** introduces **optional string-only data loading** and a **re
 ```python
 from datalab import load_tabular
 
-df = load_tabular('example.csv', load_as_string = False)  # keeps original datatypes
+df = load_tabular('example.csv')  # keeps original datatypes
 df = load_tabular('example.csv', load_as_string = True)   # loads all data with string datatype
 ```
 
