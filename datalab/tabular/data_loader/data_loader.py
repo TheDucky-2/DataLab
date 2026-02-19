@@ -6,11 +6,10 @@ import polars as pl
 
 def load_tabular(file_path: str, 
                  file_type: str|None = None,
+                 load_as_string:bool = False,
                  array_type: str ='auto',
                  conversion_threshold:int|None = None,
-                 load_as_string:bool = False,
                  **kwargs:dict) -> pd.DataFrame:
-
     """
     Use this function for loading your tabular data as a pandas DataFrame.
 
@@ -29,7 +28,7 @@ def load_tabular(file_path: str,
         - 'parquet'
         - 'JSON'
 
-    load_as_strings: bool, optional 
+    load_as_string: bool, optional 
     
         Whether you would like to load your data as strings, instead of original datatypes, default is False
 
@@ -61,33 +60,34 @@ def load_tabular(file_path: str,
     Usage Recommendation
     ---------------------
 
-        Use this function to load datasets quickly without memorizing multiple read functions.
-        Polars -> pandas conversion ensures efficient memory usage and stability, even on low-RAM systems.
+        - Use this function to load datasets quickly without memorizing multiple read functions.
+        - Polars -> pandas conversion ensures efficient memory usage and stability, even on low-RAM systems.
 
     Considerations
     ---------------
 
-        Adjust array_type and conversion_threshold for very large datasets to optimize performance and memory usage.
+        - Adjust array_type and conversion_threshold for very large datasets to optimize performance and memory usage.
 
     Example
     --------
-    
     >>> # Load a CSV file (default parameters)
         df1 = load_tabular('example.csv')
 
+    >>> # Load a CSV file with string datatype
+        df2 = load_tabular('example.csv', load_as_string=True)
+
     >>> # Load an Excel file
-        df2 = load_tabular('example.xlsx', file_type='excel')             
+        df3 = load_tabular('example.xlsx', file_type='excel')             
 
     >>> # Load a Parquet file using PyArrow backend
-        df3 = load_tabular('example.parquet', array_type='pyarrow')
+        df4 = load_tabular('example.parquet', array_type='pyarrow')
 
     >>> # Load a large CSV file with custom conversion threshold
-        df4 = load_tabular('large_dataset.csv', conversion_threshold=2000000)
+        df5 = load_tabular('large_dataset.csv', conversion_threshold=2000000)
 
     >>> # Load a JSON file from a subdirectory with auto array backend
-        df5 = load_tabular('some/path/to/data.json')
+        df6 = load_tabular('some/path/to/data.json')
     """
-
     if not isinstance(file_path, (str, Path)):
         raise TypeError(f'file path must be a string or a file path, got {type(file_path).__name__}')
 
@@ -99,6 +99,9 @@ def load_tabular(file_path: str,
     
     if not isinstance(conversion_threshold,(int, type(None))):
         raise TypeError(f'conversion threshold must be an integer, got {type(conversion_threshold).__name__} ')
+
+    if not isinstance(load_as_string, bool):
+        raise TypeError(f'load_as_string must be a boolean, got {type(load_as_string).__name__}')
 
     if file_type is None:
         file_type = file_path.split('.')[-1].lower()
