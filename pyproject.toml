@@ -45,7 +45,7 @@ classifiers = [
 # extra dependencies 
 [project.optional-dependencies]
 excel = ["fastexcel"]
-test = ['pytest', 'openpyxl']
+test = ["pytest", "openpyxl", "fastexcel"]
 
 [tool.setuptools]
 include-package-data = true
