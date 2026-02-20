@@ -1,3 +1,3 @@
-from .data_loader import load_tabular
+from .DataLoader import DataLoader
 
-__all__ = ['load_tabular']
+__all__ = ['DataLoader']
