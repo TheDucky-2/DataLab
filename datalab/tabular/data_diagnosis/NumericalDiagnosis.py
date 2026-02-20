@@ -119,7 +119,12 @@ class NumericalDiagnosis:
 
                 outliers_dict[col] = Outliers(self.df).zscore_outliers()[col].dropna()
 
+            else:
+                raise ValueError(f"method must either be 'IQR' or 'z_score', got {method}")
+
         outliers_dict = {col: series for col, series in outliers_dict.items() if not series.empty}
+
+        logger.info(f'Detecting outliers using {method} method')
             
         return outliers_dict
 
