@@ -158,15 +158,15 @@ class DataLoader:
             df6 = DataLoader('some/path/to/data.json').load_tabular()
         """    
         if not isinstance(array_type, str):
-                raise TypeError(f'array type must be a string, got {type(array_type).__name__}')
+            raise TypeError(f'array type must be a string, got {type(array_type).__name__}')
         
         if not isinstance(conversion_threshold,(int, type(None))):
-            raise TypeError(f'conversion threshold must be an integer, got {type(conversion_threshold).__name__} ')
+            raise TypeError(f'conversion threshold must be an integer, got {type(conversion_threshold).__name__} =')
 
         if not isinstance(load_csv_as_string, bool):
             raise TypeError(f'load_as_string must be a boolean, got {type(load_csv_as_string).__name__}')
 
-        # If conversion threshold is None, it defaults to 100k rows
+        # If conversion threshold is None, it defaults to 100k rows for converting to pyarrow datatype
 
         if conversion_threshold is None:
             conversion_threshold = 100_000 
@@ -176,7 +176,6 @@ class DataLoader:
         if self.file_type == 'csv':
 
             if load_csv_as_string:
-
                 logger.info('Loading csv with string datatype.')
                 polars_df = pl.read_csv(self.file_path, infer_schema_length=0, **kwargs)
 
@@ -210,7 +209,7 @@ class DataLoader:
             except:
                 raise ImportError(
                     "Excel file support requires 'fastexcel'. " 
-                    "You can install 'fastexcel' with: pip install datalab[excel]"
+                    "You can install 'fastexcel' with: pip install datalab_pre_release[excel]"
                     )
 
             polars_df = pl.read_excel(self.file_path, **kwargs)
@@ -222,7 +221,7 @@ class DataLoader:
 
         # ------ RETURNING ARRAY TYPE DEPENDING ON USER'S CHOICE
         if array_type == 'auto':
-            if df_size > conversion_threshold:
+            if df_size >= conversion_threshold:
                 return polars_df.to_pandas(use_pyarrow_extension_array=True)
             else:
                 return polars_df.to_pandas()
