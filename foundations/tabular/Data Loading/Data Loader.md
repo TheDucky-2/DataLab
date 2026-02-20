@@ -47,7 +47,7 @@ df = DataLoader('example.csv').load_tabular()
 #### --- Without Any Extra Parameters ---
 
 ```python
-from DataLab import DataLoader
+from datalab import DataLoader
 
 # Loading a CSV file
 df = DataLoader('some_random_file.csv').load_tabular()
