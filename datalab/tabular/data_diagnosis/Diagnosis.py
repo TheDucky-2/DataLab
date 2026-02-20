@@ -262,8 +262,13 @@ class Diagnosis:
         >>>   Diagnosis(df).show_duplicates(in_columns = ['age', 'income', 'debt'])
 
         """
-        if not isinstance(in_columns, list):
+        if not isinstance(in_columns, (list, type(None))):
             raise TypeError(f'in_columns must be a list of strings or None, got {type(in_columns).__name__}')
+
+        if in_columns is None:
+            in_columns = self.columns
+        else:
+            in_columns = in_columns
 
         return self.df[self.df[self.columns].duplicated(subset=in_columns)]
 
