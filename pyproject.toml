@@ -33,11 +33,19 @@ license = {text = "MIT"}
 keywords = ["data", "machine-learning", "missing-data", "data-science", "data-cleaning", "tabular", "graph"]
 
 classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Development Status :: 4 - Beta",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent"
 ]
+
+# extra dependencies 
+[project.optional-dependencies]
+excel = ["fastexcel"]
+test = ['pytest', 'openpyxl']
 
 [tool.setuptools]
 include-package-data = true
