@@ -34,7 +34,7 @@ jobs:
 
       - name: Build docs
         run: |
-          pdoc datalabx --output-dir site
+          pdoc datalabx --output-dir site --logo assets/datalabx_logo.png
           mkdir -p site/assets
           cp assets/datalabx_logo.png site/assets
 
