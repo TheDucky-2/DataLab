@@ -1,14 +1,14 @@
 ![datalabx logo](assets/datalabx_logo.png)
 
-# Contributing to datalabx
+# Contributing to DataLabX
 
-First of all: **Thank you so much for considering contributing to datalabx.**
+First of all: **Thank you so much for considering contributing to DataLabX.**
 
 That already means you care about **data quality, correctness, and understanding** - which is exactly why this project exists.
 
 This document is intentionally **opinionated**.
 
-datalabx is a **diagnosis-first framework** built to handle **extremely messy, real-world data** safely and transparently.
+DataLabX is a **diagnosis-first framework** built to handle **extremely messy, real-world data** safely and transparently.
 
 Contributions are absolutely welcome, but they must respect that philosophy.
 
@@ -22,11 +22,11 @@ This project may not be a good fit - and that is completely okay.
 
 ---
 
-## 📊 What datalabx Is (and Isn't)
+## 📊 What DataLabX Is (and Isn't)
 
-Before writing any code, it’s important to understand the core intent of datalabx.
+Before writing any code, it’s important to understand the core intent of DataLabX.
 
-### datalabx **is**:
+### DataLabX **is**:
 
 - Diagnosis-first, not automation-first  
 - Explicit over implicit  
@@ -35,7 +35,7 @@ Before writing any code, it’s important to understand the core intent of datal
 - Built to *explain* what data is doing before changing it  
 - Opinionated about **safety, clarity, and reproducibility**
 
-### datalabx **is not**:
+### DataLabX **is not**:
 
 - An auto-cleaning black box  
 - A one-liner convenience wrapper that “just works”  
@@ -49,7 +49,7 @@ If a proposed contribution conflicts with these principles, it will likely be re
 
 ## 🧠 Contributor Mindset (This Matters More Than Code)
 
-datalabx treats **data understanding as a first-class problem**. Contributions should reflect that.
+DataLabX treats **data understanding as a first-class problem**. Contributions should reflect that.
 
 Before contributing, ask yourself:
 
@@ -67,7 +67,7 @@ If the answer to these questions is unclear, the contribution likely needs rethi
 
 ## 🧱 Project Structure & Boundaries
 
-datalabx is intentionally modular and **type-aware**.
+DataLabX is intentionally modular and **type-aware**.
 
 ### High-level structure
 
@@ -108,7 +108,7 @@ Breaking these boundaries is considered a **design issue**, not just a bug.
 
 ## 📐 API Stability & Return Types
 
-datalabx maintains a **public API return-type contract** (see the [datalabx API Return Types reference](datalabx_API_RETURN_TYPES.md)).
+DataLabX maintains a **public API return-type contract** (see the [DataLabX API Return Types reference](DataLabX_API_RETURN_TYPES.md)).
 
 Before submitting a PR:
 
@@ -122,7 +122,7 @@ Breaking return types without strong justification will block a merge.
 
 ## 🧪 Testing Philosophy
 
-Testing in datalabx focuses on **correctness, edge cases, and safety** - not just coverage.
+Testing in DataLabX focuses on **correctness, edge cases, and safety** - not just coverage.
 
 Contributions should:
 
@@ -131,7 +131,7 @@ Contributions should:
 - Explicitly test failure modes and warnings  
 - Prefer clarity over clever test setups  
 
-If a feature only works on clean datasets, it is **not ready** for datalabx.
+If a feature only works on clean datasets, it is **not ready** for DataLabX.
 
 ---
 
@@ -158,7 +158,7 @@ If documentation and code disagree, **documentation wins** until fixed.
 
 ## 🧩 What Makes a Good First Contribution
 
-If you’re new to the datalabx codebase, **start small**.
+If you’re new to the DataLabX codebase, **start small**.
 
 The best first contributions improve **clarity, safety, or understanding** without changing core behavior.
 
@@ -174,11 +174,11 @@ If you’re considering a larger feature or architectural change, please open an
 
 ---
 
-## 🔄 How to Contribute to datalabx
+## 🔄 How to Contribute to DataLabX
 
-Contributing to datalabx is less about adding features quickly and more about making data behavior **clearer, safer, and more understandable**.
+Contributing to DataLabX is less about adding features quickly and more about making data behavior **clearer, safer, and more understandable**.
 
-Before writing code, contributors are expected to understand **why** a change is needed and how it aligns with datalabx’s diagnosis-first philosophy.
+Before writing code, contributors are expected to understand **why** a change is needed and how it aligns with DataLabX’s diagnosis-first philosophy.
 
 ### 1. Start With an Issue
 
@@ -266,7 +266,7 @@ PRs without context or rationale are unlikely to be merged.
 
 ## Maintainer Review Notes
 
-datalabx is in **pre-release** and prioritizes:
+DataLabX is in **pre-release** and prioritizes:
 
 - correctness over velocity  
 - safety over convenience  
@@ -288,7 +288,7 @@ datalabx values thoughtful discussion, careful disagreement, and shared learning
 
 ## 🚦Final Note
 
-datalabx exists because messy data silently breaks real systems.
+DataLabX exists because messy data silently breaks real systems.
 
 If you’re contributing because you care about **understanding before fixing**, you’re in the right place.
 

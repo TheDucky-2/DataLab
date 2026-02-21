@@ -1,4 +1,4 @@
-![datalabx logo](assets/DataLabx_logo.png)
+![datalabx logo](assets/datalabx_logo.png)
 
 [![API Docs](https://img.shields.io/badge/API-Documentation-blue)](https://theducky-2.github.io/datalabx)
 ![TestPyPI version](https://img.shields.io/badge/TestPyPI-0.1.0b9-orange)
