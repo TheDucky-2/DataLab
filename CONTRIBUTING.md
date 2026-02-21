@@ -1,4 +1,4 @@
-![datalabx logo](assets/datalabx_logo.png)
+![DataLabX logo](assets/DataLabX_logo.png)
 
 # Contributing to DataLabX
 
@@ -14,7 +14,7 @@ Contributions are absolutely welcome, but they must respect that philosophy.
 
 If you are looking to:
 
-- Quickly add features without understanding the core intent of datalabx
+- Quickly add features without understanding the core intent of DataLabX
 - Automate every existing process
 - Silently coerce data “to just make it work”
 
@@ -230,7 +230,7 @@ Every contribution should include tests that:
 - Explicitly test failure modes and warnings  
 - Enforce documented return types  
 
-A feature that only works on clean data is **not ready** for datalabx.
+A feature that only works on clean data is **not ready** for DataLabX.
 
 ---
 
@@ -282,7 +282,7 @@ Rejections are purely about alignment, not contributor value.
 
 Be respectful. Be curious. Assume good intent.
 
-datalabx values thoughtful discussion, careful disagreement, and shared learning.
+DataLabX values thoughtful discussion, careful disagreement, and shared learning.
 
 ---
 

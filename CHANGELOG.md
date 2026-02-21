@@ -1,4 +1,4 @@
-![datalabx logo](assets/DataLabx_logo.png)
+![DataLabX logo](assets/datalabx_logo.png)
 
 # Change-Log
 
@@ -81,7 +81,7 @@ from datalabx import MissingnessHandler
 
 **Status:** Beta (pre-release - TestPyPI only)
 
-datalabx **v0.1.0b8** enhances **missing data handling**, finalizes the **visualization API refactor**, and continues to **improve documentation**, **type hints**, and **stability**.
+DataLabX **v0.1.0b8** enhances **missing data handling**, finalizes the **visualization API refactor**, and continues to **improve documentation**, **type hints**, and **stability**.
 
 #### ⚠️ Important Updates
 
@@ -107,7 +107,7 @@ datalabx **v0.1.0b8** enhances **missing data handling**, finalizes the **visual
 
     - ``plot_missing()`` behavior updated for improved flexibility.
 
-    - **API Return Types Reference** updated to reflect these changes. (see [datalabx API Return Types Reference](datalabx_API_RETURN_TYPES.md))
+    - **API Return Types Reference** updated to reflect these changes. (see [DataLabX API Return Types Reference](DataLabX_API_RETURN_TYPES.md))
 
     - Visualization return-type tests rewritten to match the new tuple outputs.
 
@@ -124,9 +124,9 @@ datalabx **v0.1.0b8** enhances **missing data handling**, finalizes the **visual
 
 ### ✨ Added
 
-- **datalabx Data Handling Policy** explaining how datalabx perceives and manages data mutations (see [datalabx Data Handling Policy](datalabx_DATA_HANDLING_POLICY.md)).
+- **DataLabX Data Handling Policy** explaining how DataLabX perceives and manages data mutations (see [DataLabX Data Handling Policy](DataLabX_DATA_HANDLING_POLICY.md)).
 
-- **datalabx Data Handling Report** explaining how datalabx currently handles data in modules and functions (see [datalabx Data Handling Report](datalabx_DATA_HANDLING_REPORT.md)).
+- **DataLabX Data Handling Report** explaining how DataLabX currently handles data in modules and functions (see [DataLabX Data Handling Report](DataLabX_DATA_HANDLING_REPORT.md)).
 
 - Type hints and logger added/refined across diagnosis and visualization classes.
 
@@ -188,11 +188,11 @@ This release stabilizes visualization, diagnosis, and missing data workflows ahe
 
 **Status:** Beta (pre-release - TestPyPI only)
 
-datalabx **v0.1.0b7** focuses on **critical bug fixes, improved documentation, contributions workflow, and stability**.
+DataLabX **v0.1.0b7** focuses on **critical bug fixes, improved documentation, contributions workflow, and stability**.
 
 #### ⚠️ Major fix:
 
-This release **resolves a blocking import issue** that prevented datalabx from running in environments without ipykernel, making the library usable in both **Jupyter Notebooks** and **Non-Jupyter** setups.
+This release **resolves a blocking import issue** that prevented DataLabX from running in environments without ipykernel, making the library usable in both **Jupyter Notebooks** and **Non-Jupyter** setups.
 
 ### 🚀 Major Changes
 
@@ -200,9 +200,9 @@ This release **resolves a blocking import issue** that prevented datalabx from r
 
 - Consolidated and polished foundations content, moving concepts to foundations markdown files.
 
-- Added datalabx contribution guides and templates: 
+- Added DataLabX contribution guides and templates: 
 
-  - ``CONTRIBUTING.md`` (see [Contributing to datalabx](CONTRIBUTING.md))
+  - ``CONTRIBUTING.md`` (see [Contributing to DataLabX](CONTRIBUTING.md))
 
   - GitHub issue template for ``Bug Reports`` (see [Bug Report](.github/ISSUE_TEMPLATE/bug_report.md)) 
   
@@ -212,13 +212,13 @@ This release **resolves a blocking import issue** that prevented datalabx from r
 
 - Maintainer review notes for contributions workflow.
 
-- Added ``datalabx Foundations`` (see [datalabx Foundations](foundations/foundations.md))
+- Added ``DataLabX Foundations`` (see [DataLabX Foundations](foundations/foundations.md))
 
 ### ✨ Added
 
 - ``get_element_from_split_text()`` method in ``TextCleaner``.
 
-- **Exploring Dirty Numerical Data Guide** (see [Exploring Dirty Numerical Data Workflow Guide](guides/datalabx_Workflow_Guides/Dirty_Data_Diagnosis/Exploring_Dirty_Numerical_Data.ipynb))
+- **Exploring Dirty Numerical Data Guide** (see [Exploring Dirty Numerical Data Workflow Guide](guides/DataLabX_Workflow_Guides/Dirty_Data_Diagnosis/Exploring_Dirty_Numerical_Data.ipynb))
 
 - Return type tests for **visualizations, computations, and statistics**.
 
@@ -243,7 +243,7 @@ This release **resolves a blocking import issue** that prevented datalabx from r
 
 - Separate ``API`` and ``Foundational`` docs.
 
-- Removed ``concepts`` from ``docs`` and renamed to ``foundations``, which are the thinking layer of datalabx.
+- Removed ``concepts`` from ``docs`` and renamed to ``foundations``, which are the thinking layer of DataLabX.
 
 ### 🐛 Fixed
 
@@ -271,7 +271,7 @@ This release **resolves a blocking import issue** that prevented datalabx from r
 
 **Status:** Beta (pre-release - TestPyPI only)
 
-datalabx **v0.1.0b6** is a **stabilization and correctness release** that fixes issues introduced in v0.1.0b4, with a strong focus on **API reliability, type-safety, testing, and documentation clarity**.
+DataLabX **v0.1.0b6** is a **stabilization and correctness release** that fixes issues introduced in v0.1.0b4, with a strong focus on **API reliability, type-safety, testing, and documentation clarity**.
 
 **⚠️ Pre-release note:** This release primarily fixes bugs and documentation inconsistencies; no major new features are introduced.
 
@@ -279,7 +279,7 @@ datalabx **v0.1.0b6** is a **stabilization and correctness release** that fixes 
 
 - Stabilized APIs and behaviors affected in v0.1.0b4.
 
-- Introduced a dedicated **datalabx API Return Types Reference (datalabx_API_RETURN_TYPES.md)** documenting expected return types for all public APIs.
+- Introduced a dedicated **DataLabX API Return Types Reference (DataLabX_API_RETURN_TYPES.md)** documenting expected return types for all public APIs.
 
 ### ✨ Added
 
@@ -329,7 +329,7 @@ datalabx **v0.1.0b6** is a **stabilization and correctness release** that fixes 
 
 **Status:** Beta (pre-release - TestPyPI only)
 
-datalabx **v0.1.0b4** is a pre-release version with improvements in **documentation**, **CI/CD**, **badges**, and **preprocessing workflows**, focusing on **better usability**, **consistency**, and **API clarity**.
+DataLabX **v0.1.0b4** is a pre-release version with improvements in **documentation**, **CI/CD**, **badges**, and **preprocessing workflows**, focusing on **better usability**, **consistency**, and **API clarity**.
 
 ⚠️ **Pre-release note:** APIs may change as the library evolves, especially around backend handling.
 
@@ -339,7 +339,7 @@ datalabx **v0.1.0b4** is a pre-release version with improvements in **documentat
 
 **``load_tabular()``** method now loads all columns of a **CSV** file as **"string"** type by default to improve handling of dirty or mixed-type datasets.
 
-- For full API reference, see [datalabx API Docs](https://theducky-2.github.io/datalabx/)
+- For full API reference, see [DataLabX API Docs](https://theducky-2.github.io/DataLabX/)
 
 #### 2. **CI/CD Workflows**:
 
@@ -398,7 +398,7 @@ Core preprocessing modules refactored for **API consistency** and **readability*
 ## v0.1.0b2 - Jan 22, 2026
 **Status:** Beta (pre-release - TestPyPI only)
 
-datalabx **v0.1.0b2** is a pre-release version with improvements in **performance, dirty data diagnosis, visualizations, and usability**.
+DataLabX **v0.1.0b2** is a pre-release version with improvements in **performance, dirty data diagnosis, visualizations, and usability**.
 
 It provides a **Pandas-facing API**, so users always work with familiar Pandas DataFrames, while internally using **Polars** for performance and memory-efficient computations.  
 
@@ -426,7 +426,7 @@ Datasets **≥ 100,000 rows** are automatically converted to PyArrow types for f
 
 #### 4. **DirtyDataDiagnosis performance & backend options:**
 
-**DirtyDataDiagnosis** is the first class in datalabx that **fully supports backend switching between NumPy and PyArrow.**
+**DirtyDataDiagnosis** is the first class in DataLabX that **fully supports backend switching between NumPy and PyArrow.**
 
 - **Performance note:** Regex-based checks on dirty data are inherently slow on any tool.
 
