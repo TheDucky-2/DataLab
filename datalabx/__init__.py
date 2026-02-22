@@ -1,7 +1,7 @@
 """
 <img src="assets/datalabx_logo.png" alt="datalabx logo" height: "80" style="display:block; margin: 20px auto;">
 
-"DataLabX v0.1.0b10 : First Public Release with Class-Based API & Flexible Data Loading"
+"DataLabX v0.1.0b10 : First Public Pre-Release with Class-Based API & Flexible Data Loading"
 
 """
 __version__ = '0.1.0b10'
