@@ -40,9 +40,10 @@ class DirtyDataDiagnosis:
 
         self.df = df
 
-        is_string_dtype = all(pd.api.types.is_string_dtype(df[col]) for col in self.df.columns)
+        is_string_dtype = all(pd.api.types.is_string_dtype(self.df[col]) for col in self.df.columns)
 
         if not is_string_dtype:
+            logger.info('Converting datatypes to string for Dirty Data Diagnosis')
             self.df = self.df.apply(lambda x: x.astype(str))
 
         if columns is None:
