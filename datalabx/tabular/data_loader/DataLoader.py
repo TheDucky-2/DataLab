@@ -52,17 +52,41 @@ class DataLoader:
         - 'excel'
         - 'parquet'
         - 'JSON'
+
+    array_type: str, optional
+
+        Determines the array/backend type used in pandas operations, by default 'auto'.
+
+        Options are:
+
+        - 'numpy' -> usual NumPy backend (slower for very large datasets with object types)
+        - 'pyarrow' -> PyArrow backend for better performance on large datasets
+        - 'auto' -> automatically selects backend based on input and dataset size 
+                
+    conversion_threshold: int, optional
+
+        The number of rows at which the conversion from Polars to pandas switches to Arrow-backed pandas arrays for performance, default is 100000.
+        Users can increase or decrease this threshold depending on their dataset size and memory availability.
     """
     def __init__(
         self,
         file_path:str,
-        file_type: str|None = None):
+        file_type: str|None = None,
+        array_type: str = 'auto',
+        conversion_threshold: int|None = None
+        ):
 
         if not isinstance(file_path, (str, Path)):
             raise TypeError(f'file path must be a string or a file path, got {type(file_path).__name__}')
 
         if not isinstance(file_type, (str, type(None))):
             raise TypeError(f'file type must be a string, got {type(file_type).__name__}')
+
+        if not isinstance(array_type, str):
+            raise TypeError(f'array type must be a string, got {type(array_type).__name__}')
+        
+        if not isinstance(conversion_threshold,(int, type(None))):
+            raise TypeError(f'conversion threshold must be an integer, got {type(conversion_threshold).__name__}')
 
         self.file_path = file_path   
 
@@ -72,6 +96,7 @@ class DataLoader:
 
             self.file_type = file_path.split('.')[-1].lower()
         else:
+
             self.file_type = file_type.lower()
 
         if self.file_type.lower() != self.file_path.split('.')[-1]:
@@ -82,38 +107,29 @@ class DataLoader:
                 file_path = self.file_path
                 )
 
+        self.array_type = array_type
+
+        # If conversion threshold is None, it defaults to 100k rows for converting to pyarrow datatype
+
+        if conversion_threshold is None:
+            self.conversion_threshold = 100_000 
+        else:
+            self.conversion_threshold = conversion_threshold
+
         logger.info(f'Data Loader initialized with {self.file_type} file.')
 
     def load_tabular(
             self,
             load_csv_as_string:bool = False,
-            array_type: str = 'auto',
-            conversion_threshold: int|None = None,
             **kwargs:dict) -> pd.DataFrame:
         """
         Use this function for loading your tabular data as a pandas DataFrame.
 
         Parameters
         ------------
-
         load_csv_as_string: bool, optional 
         
             Whether you would like to load your data as strings, instead of original datatypes, default is False
-
-        array_type: str, optional
-
-            Determines the array/backend type used in pandas operations, by default 'auto'.
-
-            Options are:
-
-            - 'numpy' -> usual NumPy backend (slower for very large datasets with object types)
-            - 'pyarrow' -> PyArrow backend for better performance on large datasets
-            - 'auto' -> automatically selects backend based on input and dataset size 
-                
-        conversion_threshold: int, optional
-
-            The number of rows at which the conversion from Polars to pandas switches to Arrow-backed pandas arrays for performance, default is 100000.
-            Users can increase or decrease this threshold depending on their dataset size and memory availability.
         
         kwargs: dict, optional
 
@@ -148,27 +164,17 @@ class DataLoader:
             df3 = DataLoader('example.xlsx').load_tabular()             
 
         >>> # Load a Parquet file using PyArrow backend
-            df4 = DataLoader('example.parquet').load_tabular(array_type='pyarrow')
+            df4 = DataLoader('example.parquet', array_type='pyarrow').load_tabular()
 
         >>> # Load a large CSV file with custom conversion threshold
-            df5 = DataLoader('large_dataset.csv').load_tabular(conversion_threshold=2000000)
+            df5 = DataLoader('large_dataset.csv', conversion_threshold=2000000).load_tabular()
 
         >>> # Load a JSON file from a subdirectory with auto array backend
             df6 = DataLoader('some/path/to/data.json').load_tabular()
         """    
-        if not isinstance(array_type, str):
-            raise TypeError(f'array type must be a string, got {type(array_type).__name__}')
         
-        if not isinstance(conversion_threshold,(int, type(None))):
-            raise TypeError(f'conversion threshold must be an integer, got {type(conversion_threshold).__name__} =')
-
         if not isinstance(load_csv_as_string, bool):
             raise TypeError(f'load_as_string must be a boolean, got {type(load_csv_as_string).__name__}')
-
-        # If conversion threshold is None, it defaults to 100k rows for converting to pyarrow datatype
-
-        if conversion_threshold is None:
-            conversion_threshold = 100_000 
 
         # ----- LOADING POLARS DATAFRAMES DEPENDING ON FILE TYPE ------
 
@@ -219,16 +225,16 @@ class DataLoader:
         df_size = polars_df.height 
 
         # ------ RETURNING ARRAY TYPE DEPENDING ON USER'S CHOICE
-        if array_type == 'auto':
-            if df_size >= conversion_threshold:
+        if self.array_type == 'auto':
+            if df_size >= self.conversion_threshold:
                 return polars_df.to_pandas(use_pyarrow_extension_array=True)
             else:
                 return polars_df.to_pandas()
 
-        elif array_type == 'numpy':
+        elif self.array_type == 'numpy':
             return polars_df.to_pandas()
 
-        elif array_type == 'pyarrow':
+        elif self.array_type == 'pyarrow':
             return polars_df.to_pandas(use_pyarrow_extension_array=True)
 
         else:
