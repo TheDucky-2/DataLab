@@ -24,9 +24,8 @@ class DirtyDataDiagnosis:
     conversion_threshold: int, optional
         The number of rows upon which backend automatically switches to 'pyarrow' in pandas, by default 100000.
     """
-
-    def __init__(self, df: pd.DataFrame, columns: list = None, array_type='auto', conversion_threshold: int= None):
-     
+    def __init__(self, df: pd.DataFrame, columns: list|None = None, array_type:str='auto', conversion_threshold: int|None= None):
+        
         if not isinstance(df, pd.DataFrame):
             raise TypeError(f'df must be a pandas DataFrame, got {type(df).__name__}')
 
@@ -40,7 +39,12 @@ class DirtyDataDiagnosis:
             raise TypeError(f'conversion threshold must be an integer or type None, got {type(conversion_threshold).__name__}')
 
         self.df = df
-     
+
+        is_string_dtype = all(pd.api.types.is_string_dtype(df[col]) for col in self.df.columns)
+
+        if not is_string_dtype:
+            self.df = self.df.apply(lambda x: x.astype(str))
+
         if columns is None:
             self.columns = self.df.columns.tolist()
         else:
