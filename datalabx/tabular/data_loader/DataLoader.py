@@ -99,7 +99,7 @@ class DataLoader:
 
             self.file_type = file_type.lower()
 
-        if self.file_type.lower() != self.file_path.split('.')[-1]:
+        if self.file_type.lower() != self.file_path.split('.')[-1].lower():
             raise _FileTypeMismatchError(
 
                 expected_type= self.file_path.split('.')[-1].lower(),
