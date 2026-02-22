@@ -1,4 +1,4 @@
-![DataLabX logo](assets/DataLabX_logo.png)
+![DataLabX logo](assets/datalabx_logo.png)
 
 # Contributing to DataLabX
 
