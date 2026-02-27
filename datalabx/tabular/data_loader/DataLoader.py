@@ -88,6 +88,9 @@ class DataLoader:
         if not isinstance(conversion_threshold,(int, type(None))):
             raise TypeError(f'conversion threshold must be an integer, got {type(conversion_threshold).__name__}')
 
+        if array_type not in ['numpy', 'pyarrow', 'auto']:
+            raise ValueError(f"array_type must either be 'numpy', 'pyarrow' or 'auto', got '{array_type}'")
+
         self.file_path = file_path   
 
         # ---- DETECTING FILE TYPES------
