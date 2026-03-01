@@ -41,7 +41,7 @@ class Diagnosis:
 
         logger.info(f'Data Diagnosis initialized with columns: {self.columns}')
 
-    def data_preview(self, number_of_rows:int=10)-> pd.DataFrame:
+    def data_preview(self, preview_type = 'head', number_of_rows:int=10)-> pd.DataFrame:
         """Shows a preview of N rows of your DataFrame.
 
         Parameters
@@ -49,6 +49,15 @@ class Diagnosis:
         number_of_rows : int (default is 10)
 
             N numbers of rows you would like to see 
+
+        preview_type: str, optional
+
+            Whether you would like to see data preview from start or from end
+
+            Available types:
+
+            - head -> shows first 10 rows of the dataframe
+            - tail -> shows last 10 rows of the dataframe
 
         Returns
         --------
@@ -64,16 +73,27 @@ class Diagnosis:
         Considerations
         ---------------
 
-            This function uses df.head() under the hood.
+            This function uses df.head() and df.tail() under the hood.
 
         Example
         --------
 
-        >>>     Diagnosis(df).data_preview(5)
+        >>>     Diagnosis(df).data_preview('head', 5)
+        >>>     Diagnosis(df).data_preview('tail', 5)
         """
         if not isinstance(number_of_rows, int):
             raise TypeError(f'number_of_rows must be an int, got {type(number_of_rows).__name__}')
-        return self.df.head(number_of_rows)
+
+        if not isinstance(preview_type, str):
+            raise TypeError(f'preview_type must be a str, got {type(preview_type).__name__}')
+
+        if preview_type not in ['head', 'tail']:
+            raise ValueError(f"preview_type must either be 'head'  or 'tail', got {preview_type}")
+
+        if preview_type == 'head':
+            return self.df.head(number_of_rows)
+        elif preview_type == 'tail':
+            return self.df.tail(number_of_rows)
 
     def data_summary(self)-> dict[str]:
         """
